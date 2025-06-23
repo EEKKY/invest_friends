@@ -1,0 +1,7 @@
+{
+    "scripts": {
+        "lint:backend": "eslint backend/src --config backend/eslint.config.js",
+        "lint:fix": "pnpm run lint:client -- --fix && pnpm run lint:server -- --fix",
+        "format": "prettier --write ."
+    }
+}
