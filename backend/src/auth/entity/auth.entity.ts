@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import { BeforeInsert, Column, Entity, Index, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class AuthEntity {
