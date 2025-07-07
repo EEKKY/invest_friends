@@ -12,7 +12,7 @@ export class AtuhService {
         private readonly AuthRepository: Repository<AuthEntity>,
     ) {}
 async createUser(input: CreateUserInput): Promise<AuthEntity> {
-    try{ //실패시 감싸 안음
+    try{
     const hashedPassword = await bcrypt.hash(input.password, 10);
     const user = this.AuthRepository.create({
         email: input.email,
@@ -31,7 +31,7 @@ async findUserAll(): Promise<AuthEntity[]> {
 
 async findUserOne(uid: string): Promise<AuthEntity> {
     const userOne = await this.AuthRepository.findOneBy({ uid });
-    if (!userOne) throw new NotFoundException('유저 조회가 안됩니다'); //이런 건 조회기 때문에 실패할 수가 없음 그러기에 if문
+    if (!userOne) throw new NotFoundException('유저 조회가 안됩니다');
     return userOne;
 }
 async updateUser(uid: string, updateUserDto: UpdateUserDto): Promise<AuthEntity> {
