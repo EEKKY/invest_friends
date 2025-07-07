@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types'
 
 export class CreateUserInput {
@@ -6,9 +6,11 @@ export class CreateUserInput {
     password: string;
 
     @IsEmail()
+    @MaxLength(50)
     email: string;
 
     @IsString()
+    @MaxLength(20)
     nick: string;
 }
 
