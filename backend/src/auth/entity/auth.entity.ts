@@ -1,11 +1,12 @@
 import { randomUUID } from "crypto";
-import { BeforeInsert, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, Index, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class AuthEntity {
 @PrimaryGeneratedColumn()
 id: number;
 
+@Index()
 @Column({ unique: true })
 uid: string;
 
