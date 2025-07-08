@@ -35,7 +35,6 @@ async findUserOne(uid: string): Promise<AuthEntity> {
     return userOne;
 }
 async updateUser(uid: string, updateUserDto: UpdateUserDto): Promise<AuthEntity> {
-    //await this.AuthRepository.update(uid, UpdateUserDto);
     const userUpdate = await this.AuthRepository.findOneBy({ uid });
     if(!userUpdate) throw new NotFoundException('회원 정보 수정 실패');
     try{
