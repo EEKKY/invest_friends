@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { AxiosFilter } from './axios-filter.interface';
+import { axiosErrorStrategies } from './axios-filter.handler';
 
 @Injectable()
-export class AxiosFilterService implements AxiosFilter<unknown>{
+export class AxiosFilterService implements AxiosFilter<unknown> {
   // thisis axios filter service
   // it will handle axios errors and return a response with status code 500 and error message
 
   handle(error) {
     const url = error.config?.url;
-    const status = error.response?.status;
+    const matched = Object.entries(axiosErrorStrategies).find(([pattern]) =>
+      new RegExp(pattern).test(url),
+    );
 
-    if (url?.includes(''))
-      return {
-        statusCode: 500,
-        message: 'Internal Server Error',
-      };
+    const strategy = matched?.[1] ?? axiosErrorStrategies['.*'];
+    return strategy(error);
   }
 }
