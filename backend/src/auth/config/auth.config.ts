@@ -6,7 +6,7 @@ import { AuthEntity } from '../entity/auth.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, 
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -18,7 +18,7 @@ import { AuthEntity } from '../entity/auth.entity';
         username: config.get('DB_USERNAME'),
         password: config.get('DB_PASSWORD'),
         database: config.get('DB_NAME'),
-        entities: [AuthEntity], 
+        entities: [AuthEntity],
         synchronize: true,
       }),
     }),

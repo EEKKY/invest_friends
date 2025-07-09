@@ -1,30 +1,40 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
-import { CreateUserInput, UpdateUserDto } from "./dto/auth.dto";
-import { AtuhService } from "./auth.service";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { CreateUserInput, UpdateUserDto } from './dto/auth.dto';
+import { AtuhService } from './auth.service';
+import { AuthEntity } from './entity/auth.entity';
 
 @Controller('user')
 export class AuthController {
-    constructor(private readonly service: AtuhService) {}
+  constructor(private readonly service: AtuhService) {}
 
-    @Get()
-    findAll() {
-        return this.service.findUserAll();
-    }
+  @Get()
+  findAll(): Promise<AuthEntity[]> {
+    return this.service.findUserAll();
+  }
 
-    @Post()
-    create(@Body() dto: CreateUserInput) {
-        return this.service.createUser(dto);
-    }
+  @Post()
+  create(@Body() dto: CreateUserInput): Promise<AuthEntity> {
+    return this.service.createUser(dto);
+  }
 
-    @Patch(':uid')
-    update(@Param('uid') uid: string, @Body() updateUserDto: UpdateUserDto) {
-        return this.service.updateUser(uid, updateUserDto);
-    }
+  @Patch(':uid')
+  update(
+    @Param('uid') uid: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<AuthEntity> {
+    return this.service.updateUser(uid, updateUserDto);
+  }
 
-    @Delete(':uid')
-    remove(@Param('uid') uid: string) {
-        return this.service.userDelete(uid);
-    }
-
-
+  @Delete(':uid')
+  remove(@Param('uid') uid: string): Promise<void> {
+    return this.service.userDelete(uid);
+  }
 }
