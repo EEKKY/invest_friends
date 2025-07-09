@@ -3,24 +3,24 @@ import { BeforeInsert, Column, Entity, Index, PrimaryGeneratedColumn } from "typ
 
 @Entity()
 export class AuthEntity {
-@PrimaryGeneratedColumn()
-id: number;
+@PrimaryGeneratedColumn({ name: 'user_id'})
+userId: number;
 
 @Index()
-@Column({ unique: true })
-uid: string;
+@Column({ name: 'user_uid', unique: true })
+userUid: string;
 
-@Column()
-password: string;
+@Column({ name: 'user_password' })
+userPassword: string;
 
-@Column({ unique: true })
-email: string;
+@Column({ name: 'user_email', unique: true })
+userEmail: string;
 
-@Column({ unique: true })
-nick: string;
+@Column({ name: 'user_nick', unique: true })
+userNick: string;
 
 @BeforeInsert()
 generateUid() {
-this.uid = randomUUID();
+this.userUid = randomUUID();
 }
 }
