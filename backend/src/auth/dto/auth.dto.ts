@@ -3,15 +3,15 @@ import { PartialType } from '@nestjs/mapped-types'
 
 export class CreateUserInput {
     @MinLength(10)
-    password: string;
+    userPassword: string;
 
     @IsEmail()
     @MaxLength(50)
-    email: string;
+    userEmail: string;
 
     @IsString()
     @MaxLength(20)
-    nick: string;
+    userNick: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserInput) {}

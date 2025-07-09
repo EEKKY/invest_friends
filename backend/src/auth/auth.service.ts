@@ -13,11 +13,11 @@ export class AtuhService {
     ) {}
 async createUser(input: CreateUserInput): Promise<AuthEntity> {
     try{
-    const hashedPassword = await bcrypt.hash(input.password, 10);
+    const hashedPassword = await bcrypt.hash(input.userPassword, 10);
     const user = this.AuthRepository.create({
-        email: input.email,
-        nick: input.nick,
-        password: hashedPassword,
+        userEmail: input.userEmail,
+        userNick: input.userNick,
+        userPassword: hashedPassword,
 });
     return this.AuthRepository.save(user); 
 } catch(err) {
@@ -29,13 +29,13 @@ async findUserAll(): Promise<AuthEntity[]> {
     return this.AuthRepository.find();
 }
 
-async findUserOne(uid: string): Promise<AuthEntity> {
-    const userOne = await this.AuthRepository.findOneBy({ uid });
+async findUserOne(userUid: string): Promise<AuthEntity> {
+    const userOne = await this.AuthRepository.findOneBy({ userUid });
     if (!userOne) throw new NotFoundException('유저 조회가 안됩니다');
     return userOne;
 }
-async updateUser(uid: string, updateUserDto: UpdateUserDto): Promise<AuthEntity> {
-    const userUpdate = await this.AuthRepository.findOneBy({ uid });
+async updateUser(userUid: string, updateUserDto: UpdateUserDto): Promise<AuthEntity> {
+    const userUpdate = await this.AuthRepository.findOneBy({ userUid });
     if(!userUpdate) throw new NotFoundException('회원 정보 수정 실패');
     try{
     const merged = this.AuthRepository.merge(userUpdate, updateUserDto);
@@ -44,9 +44,9 @@ async updateUser(uid: string, updateUserDto: UpdateUserDto): Promise<AuthEntity>
         throw new InternalServerErrorException('회원 정보 저장 중 실패');
     }
 }
-async userDelete(uid: string): Promise<void> {
+async userDelete(userUid: string): Promise<void> {
     try{
-    const userDelete = await this.findUserOne( uid );
+    const userDelete = await this.findUserOne( userUid );
     await this.AuthRepository.remove(userDelete);
     } catch (err) {
         throw new InternalServerErrorException('회원 정보 삭제 실패');
