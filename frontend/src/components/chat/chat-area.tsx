@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
-  Bot,
   User,
   Copy,
   ThumbsUp,
@@ -12,8 +11,16 @@ import {
   ChevronDown,
 } from "lucide-react";
 
+type Message = {
+  id: number;
+  type: "ai" | "user";
+  content: string;
+  timestamp: Date;
+  isTyping: boolean;
+};
+
 const ChatArea = () => {
-  const [messages, setMessages] = useState([
+  const [messages] = useState<Message[]>([
     {
       id: 1,
       type: "ai",
@@ -54,7 +61,7 @@ const ChatArea = () => {
     },
   ]);
 
-  const [typingMessage, setTypingMessage] = useState(null);
+  const [typingMessage] = useState(null);
   const [isScrolledUp, setIsScrolledUp] = useState(false);
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
@@ -90,7 +97,7 @@ const ChatArea = () => {
   // }, [messages, typingMessage]);
 
   // 메시지 복사
-  const copyMessage = (content) => {
+  const copyMessage = (content: string): void => {
     navigator.clipboard.writeText(content);
     console.log("메시지 복사됨:", content);
   };
@@ -120,14 +127,20 @@ const ChatArea = () => {
   //   }, 3000);
   // };
 
-  const formatTime = (timestamp) => {
+  const formatTime = (timestamp: Date) => {
     return timestamp.toLocaleTimeString("ko-KR", {
       hour: "2-digit",
       minute: "2-digit",
     });
   };
 
-  const MessageBubble = ({ message, showActions = true }) => {
+  const MessageBubble = ({
+    message,
+    showActions = true,
+  }: {
+    message: Message;
+    showActions: boolean;
+  }) => {
     const isUser = message.type === "user";
     const [showFullActions, setShowFullActions] = useState(false);
 
@@ -304,7 +317,11 @@ const ChatArea = () => {
 
           {/* 메시지 목록 */}
           {messages.map((message) => (
-            <MessageBubble key={message.id} message={message} />
+            <MessageBubble
+              key={message.id}
+              message={message}
+              showActions={true}
+            />
           ))}
 
           {/* 타이핑 중 메시지 */}

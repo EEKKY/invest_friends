@@ -9,14 +9,19 @@ import {
   FileText,
 } from "lucide-react";
 
+// 타입 정의 추가 (파일 상단에 추가)
+type FileUploadType = "image" | "file";
+
 const ChatInput = () => {
   const [message, setMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [showAttachMenu, setShowAttachMenu] = useState(false);
-  const textareaRef = useRef(null);
-  const fileInputRef = useRef(null);
-  const imageInputRef = useRef(null);
+
+  // useRef 타입 명시
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   // 텍스트가 변경될 때 textarea 높이 자동 조절
   useEffect(() => {
@@ -27,21 +32,21 @@ const ChatInput = () => {
     }
   }, [message]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (): void => {
     if (message.trim()) {
       console.log("메시지 전송:", message);
       setMessage("");
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>): void => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
     }
   };
 
-  const handleFileUpload = (type) => {
+  const handleFileUpload = (type: FileUploadType): void => {
     if (type === "image") {
       imageInputRef.current?.click();
     } else {
@@ -50,14 +55,14 @@ const ChatInput = () => {
     setShowAttachMenu(false);
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const files = e.target.files;
     if (files && files.length > 0) {
       console.log("파일 업로드:", files[0]);
     }
   };
 
-  const toggleRecording = () => {
+  const toggleRecording = (): void => {
     setIsRecording(!isRecording);
     console.log(isRecording ? "녹음 중지" : "녹음 시작");
   };
