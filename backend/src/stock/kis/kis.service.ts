@@ -41,7 +41,7 @@ export class KisService {
       }),
     );
 
-    const [
+    const {
       rprs_mrkt_kor_name,
       stck_shrn_iscd,
       stck_prpr,
@@ -49,7 +49,7 @@ export class KisService {
       prdy_ctrt,
       per,
       pbr,
-    ] = data.output;
+    } = data.output;
 
     return {
       rprs_mrkt_kor_name,
