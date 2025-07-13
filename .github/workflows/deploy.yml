@@ -1,0 +1,25 @@
+name: invest_friends
+
+on:
+  push:
+    branches: [setting/continuous-deployment]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: invest_friends
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 8080
+          script: |
+            cd /home/ubuntu/your-project
+            git pull origin main
+            docker-compose down
+            docker-compose up -d --build
