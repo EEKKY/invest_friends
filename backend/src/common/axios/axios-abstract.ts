@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { HttpService } from '@nestjs/axios';
 import { ApiResponse } from './axios.dto';
 import { AxiosFilterService } from './error_handler/axios-filter.service';
