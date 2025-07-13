@@ -4,7 +4,6 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { of } from 'rxjs';
 import * as AdmZip from 'adm-zip';
-import { XMLParser } from 'fast-xml-parser';
 
 jest.mock('adm-zip'); // ZIP 모킹
 
@@ -58,7 +57,7 @@ describe('DartService', () => {
       const mockZip = {
         readAsText: jest.fn().mockReturnValue(xml),
       };
-      (AdmZip as any).mockImplementation(() => mockZip);
+      AdmZip.mockImplementation(() => mockZip);
 
       // httpService.get 응답 모킹
       (httpService.get as jest.Mock).mockReturnValueOnce(

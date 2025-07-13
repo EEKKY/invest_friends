@@ -14,6 +14,44 @@ export class KisService {
 
   constructor(private readonly httpService: HttpService) {}
 
+  async getPrice(dto: GetPriceRequestDto): Promise<PriceResponseDto> {
+    const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
+    const token = await this.getValidAccessToken();
+    const tr_id = 'FHKST01010100';
+
+    const { data } = await firstValueFrom(
+      this.httpService.get(
+        'https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-price',
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+            appkey: this.appKey,
+            appsecret: this.appSecret,
+            tr_id,
+            custtype: 'P',
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+          params: {
+            FID_COND_MRKT_DIV_CODE,
+            FID_INPUT_ISCD,
+          },
+        },
+      ),
+    );
+
+    const output = data.output;
+
+    return {
+      rprs_mrkt_kor_name: output.rprs_mrkt_kor_name,
+      stck_shrn_iscd: output.stck_shrn_iscd,
+      stck_prpr: output.stck_prpr,
+      prdy_vrss: output.prdy_vrss,
+      prdy_ctrt: output.prdy_ctrt,
+      per: output.per,
+      pbr: output.pbr,
+    };
+  }
+
   async fetchAccessToken(): Promise<void> {
     const { data } = await firstValueFrom(
       this.httpService.post(
@@ -51,43 +89,5 @@ export class KisService {
       await this.fetchAccessToken();
     }
     return this.accessToken!;
-  }
-
-  async getPrice(dto: GetPriceRequestDto): Promise<PriceResponseDto> {
-    const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
-    const token = await this.getValidAccessToken();
-    const tr_id = 'FHKST01010100';
-
-    const { data } = await firstValueFrom(
-      this.httpService.get(
-        'https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-price',
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-            appkey: this.appKey,
-            appsecret: this.appSecret,
-            tr_id,
-            custtype: 'P',
-            'Content-Type': 'application/json; charset=utf-8',
-          },
-          params: {
-            FID_COND_MRKT_DIV_CODE,
-            FID_INPUT_ISCD,
-          },
-        },
-      ),
-    );
-
-    const output = data.output;
-
-    return {
-      rprs_mrkt_kor_name: output.rprs_mrkt_kor_name,
-      stck_shrn_iscd: output.stck_shrn_iscd,
-      stck_prpr: output.stck_prpr,
-      prdy_vrss: output.prdy_vrss,
-      prdy_ctrt: output.prdy_ctrt,
-      per: output.per,
-      pbr: output.pbr,
-    };
   }
 }
