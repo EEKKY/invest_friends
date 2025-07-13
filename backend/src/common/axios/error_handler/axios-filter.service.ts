@@ -1,18 +1,37 @@
+import axios, { AxiosError, AxiosInstance } from 'axios';
 import { Injectable } from '@nestjs/common';
 import { AxiosFilter } from './axios-filter.interface';
 import { axiosErrorStrategies } from './axios-filter.handler';
+import { ApiError } from '../axios.dto';
 
 @Injectable()
-export class AxiosFilterService implements AxiosFilter<any> {
-  // thisis axios filter service
-  // it will handle axios errors and return a response with status code 500 and error message
-  handle(error) {
-    const url = error.config?.url;
-    const matched = Object.entries(axiosErrorStrategies).find(([pattern]) =>
-      new RegExp(pattern).test(url),
-    );
+export class AxiosFilterService implements AxiosFilter {
+  private attachedInstances: WeakSet<AxiosInstance> = new WeakSet();
+  private readonly compiledStrategies = Object.entries(axiosErrorStrategies).map(
+    ([pattern, handler]) => ({ regex: new RegExp(pattern), handler }),
+  );
 
-    const strategy = matched?.[1] ?? axiosErrorStrategies['.*'];
-    return strategy(error);
+  attach(instance: AxiosInstance) {
+    if (this.attachedInstances.has(instance)) {
+      return ;
+    }
+
+    this.attachedInstances.add(instance);
+    instance.interceptors.response.use(
+      (res) => res,
+      (err) => {
+        if (axios.isAxiosError(err)) {
+          return Promise.reject(this.handle(err));
+        }
+
+        return Promise.reject(err);
+      },
+    );
+  }
+  handle(error: AxiosError) : ApiError {
+    const url = error.config?.url;
+    const strategy = this.compiledStrategies.find(({ regex }) => regex.test(url));
+
+    return strategy.handler(error);
   }
 }

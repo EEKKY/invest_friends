@@ -1,24 +1,34 @@
+import axios from "axios";
+import { HttpService } from "@nestjs/axios";
 import { ApiResponse } from "./axios.dto";
+import { AxiosFilterService } from "./error_handler/axios-filter.service";
 
-export abstract class AbstractHttpExecutor<T> {
+export interface ExecutorDependencies {
+  httpService: HttpService;
+  axiosFilterService: AxiosFilterService;
+}
 
-  async execute(url: string): Promise<T> {
+export abstract class AbstractHttpExecutor<T, E = unknown> {
+  protected readonly httpService: HttpService;
+  protected readonly axiosFilterService: AxiosFilterService;
+  constructor(deps: ExecutorDependencies) {
+    this.axiosFilterService = deps.axiosFilterService;
+    this.httpService = deps.httpService;
+    this.axiosFilterService.attach(this.httpService.axiosRef);
+
+  }
+
+  async execute(url: string, data?: T, type: 'GET' | 'POST' = 'GET'): Promise<T | E> {
     try {
-      const response = await this.request(url);
-      return this.after(response);
-    } catch (err){
-      this.handleError(err);
+      const res = type === 'POST' ? await this.post(url, data!) : await this.get(url);
+      return this.after(res);
+    } catch (err) {
+      return this.handleError(err);
     }
   }
-  /**
-   * This method should be overridden by the implementing class.
-   * It's supposed to request the given URL and return the response data.
-   * @param url - The URL to request
-   * @returns The response data
-   */
-  protected abstract request(url: string): Promise<ApiResponse<T>>;
-  protected abstract handleError(error): Promise<ApiResponse<T>>;
-  protected after(res: ApiResponse<T>): T {
-    return res.data;
-  }
+
+  protected abstract get(url: string): Promise<ApiResponse<T>>;
+  protected abstract post(url: string, data: T): Promise<ApiResponse<T>>;
+  protected abstract handleError(error: unknown): Promise<E>;
+  protected abstract after(res: ApiResponse<T>): T;
 }

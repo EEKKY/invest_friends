@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
+import { ApiError } from '../axios.dto';
 
-export interface AxiosFilter<T> {
-    handle(error: AxiosError) : T;
+export interface AxiosFilter {
+    handle(error: AxiosError) : ApiError;
 }
