@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AxiosFilterService } from './error_handler/axios-filter.service';
 import { AbstractHttpExecutor } from './axios-abstract';
 import { AxiosInstance, AxiosError } from 'axios';
+import { HttpService } from '@nestjs/axios';
+import { ApiError, ApiResponse } from './axios.dto';
 
 class MockHttpService {
   axiosRef: AxiosInstance = {
@@ -15,17 +17,25 @@ class MockHttpService {
   } as unknown as AxiosInstance;
 }
 
-class TestExecutor extends AbstractHttpExecutor<any, any> {
-  protected async get(url: string) {
+// 제네릭 명시적으로 지정
+class TestExecutor extends AbstractHttpExecutor<string, ApiError> {
+  protected async get(url: string): Promise<ApiResponse<string>> {
     return { data: `GET:${url}`, statusCode: 200 };
   }
-  protected async post(url: string, data: any) {
+
+  protected async post(url: string, data: string): Promise<ApiResponse<string>> {
     return { data: `POST:${url}:${data}`, statusCode: 201 };
   }
-  protected async handleError(error: unknown) {
-    return `Handled: ${(error as Error).message}`;
+
+  protected async handleError(error: unknown): Promise<ApiError> {
+    return {
+      data: 'error',
+      message: (error as Error).message,
+      statusCode: 500,
+    };
   }
-  protected after(res: any) {
+
+  protected after(res: ApiResponse<string>): string {
     return res.data;
   }
 }
@@ -42,7 +52,7 @@ describe('AxiosFilterService', () => {
   });
 
   it('should attach interceptor only once', () => {
-    const instance = { interceptors: { response: { use: jest.fn() } } } as any;
+    const instance = { interceptors: { response: { use: jest.fn() } } } as unknown as AxiosInstance;
     service.attach(instance);
     service.attach(instance);
     expect(instance.interceptors.response.use).toBeCalledTimes(1);
@@ -50,7 +60,7 @@ describe('AxiosFilterService', () => {
 
   it('should handle error with matched strategy', () => {
     const error = {
-      config: { url: 'https://test.com/any' },
+      config: { url: 'https://test.com/unknown' },
       isAxiosError: true,
     } as AxiosError;
 
@@ -106,7 +116,7 @@ describe('AbstractHttpExecutor', () => {
     mockHttpService = new MockHttpService();
     axiosFilterService = new AxiosFilterService();
     executor = new TestExecutor({
-      httpService: mockHttpService as any,
+      httpService: mockHttpService as HttpService,
       axiosFilterService,
     });
   });
@@ -127,16 +137,22 @@ describe('AbstractHttpExecutor', () => {
 
   it('should handle errors in execute', async () => {
     class ErrorExecutor extends TestExecutor {
-      protected override async get(url: any): Promise<any> {
+      protected override async get(url: string): Promise<ApiResponse<string>> {
         throw new Error('fail');
       }
     }
+
     const failExec = new ErrorExecutor({
-      httpService: mockHttpService as any,
+      httpService: mockHttpService as HttpService,
       axiosFilterService,
     });
+
     const result = await failExec.execute('https://fail.com');
-    expect(result).toBe('Handled: fail');
+    expect(result).toEqual({
+      data: 'error',
+      message: 'fail',
+      statusCode: 500,
+    });
   });
 
   it('should attach interceptor during executor construction', () => {
@@ -144,10 +160,12 @@ describe('AbstractHttpExecutor', () => {
       mockHttpService.axiosRef.interceptors.response,
       'use',
     );
+
     new TestExecutor({
-      httpService: mockHttpService as any,
+      httpService: mockHttpService as HttpService,
       axiosFilterService,
     });
+
     expect(spy).toBeCalledTimes(1);
   });
 });
