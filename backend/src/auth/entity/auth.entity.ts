@@ -1,10 +1,14 @@
 import { randomUUID } from 'crypto';
+import { get } from 'http';
 import {
   BeforeInsert,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   Index,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -24,6 +28,15 @@ export class AuthEntity {
 
   @Column({ name: 'user_nick', unique: true })
   userNick: string;
+
+  @CreateDateColumn({ name: 'create_at' })
+  createAt: Date;
+
+  @UpdateDateColumn({ name: 'update_at' })
+  updateAt: Date;
+
+  @DeleteDateColumn({ name: 'delete_at' })
+  deleteAt: Date | null;
 
   @BeforeInsert()
   generateUid(): void {

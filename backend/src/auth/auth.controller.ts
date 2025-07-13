@@ -20,6 +20,11 @@ export class AuthController {
     return this.service.findUserAll();
   }
 
+  @Get()
+  findUserOne(@Param('uid') uid: string): Promise<AuthEntity> {
+    return this.service.findUserOne(uid);
+  }
+
   @Post()
   create(@Body() dto: CreateUserInput): Promise<AuthEntity> {
     return this.service.createUser(dto);

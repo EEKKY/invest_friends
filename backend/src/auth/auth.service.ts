@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -47,6 +48,9 @@ export class AtuhService {
   ): Promise<AuthEntity> {
     const logger = new Logger('AuthService');
     const userUpdate = await this.AuthRepository.findOneBy({ userUid });
+    if (!Object.values(updateUserDto).some((v) => v !== undefined)) {
+      throw new BadRequestException('수정할 필드가 존재하지 않음');
+    }
     if (!userUpdate) throw new NotFoundException('회원 정보 수정 실패');
     try {
       const merged = this.AuthRepository.merge(userUpdate, updateUserDto);
@@ -60,7 +64,10 @@ export class AtuhService {
     const logger = new Logger('AuthService');
     try {
       const userDelete = await this.findUserOne(userUid);
-      await this.AuthRepository.remove(userDelete);
+      if (userDelete.deleteAt !== null) {
+        throw new BadRequestException('이미 탈퇴한 회원');
+      }
+      await this.AuthRepository.softRemove(userDelete);
     } catch (err) {
       logger.error('회원 정보 삭제 실패', err.stack);
       throw new InternalServerErrorException();
