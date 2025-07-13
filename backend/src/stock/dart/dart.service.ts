@@ -36,7 +36,10 @@ export class DartService {
     const parser = new XMLParser();
     const parsed = parser.parse(xmlContent);
 
-    return parsed.result.list;
+    const list = parsed.result.list;
+    const corpList = Array.isArray(list) ? list : [list];
+
+    return corpList;
   }
 
   async getSingleIndex(

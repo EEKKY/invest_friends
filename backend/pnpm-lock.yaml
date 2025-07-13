@@ -29,6 +29,9 @@ importers:
       adm-zip:
         specifier: ^0.5.16
         version: 0.5.16
+      axios:
+        specifier: ^1.10.0
+        version: 1.10.0
       class-validator:
         specifier: ^0.14.2
         version: 0.14.2

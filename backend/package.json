@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "adm-zip": "^0.5.16",
+    "axios": "^1.10.0",
     "class-validator": "^0.14.2",
     "fast-xml-parser": "^5.2.5",
     "pg": "^8.16.3",
