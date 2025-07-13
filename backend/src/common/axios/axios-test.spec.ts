@@ -58,8 +58,7 @@ describe('AxiosFilterService', () => {
     expect(handled.message).toMatch(/Test API Error/);
   });
 
-
-   it('should handle test.com strategy', () => {
+  it('should handle test.com strategy', () => {
     const error = {
       config: { url: 'https://test.com/endpoint' },
       isAxiosError: true,
@@ -91,7 +90,9 @@ describe('AxiosFilterService', () => {
 
     const handled = service.handle(error);
     expect(handled.data).toBe('No matched api');
-    expect(handled.message).toMatch(/Unhandled error at https:\/\/unknown\.com\/something/);
+    expect(handled.message).toMatch(
+      /Unhandled error at https:\/\/unknown\.com\/something/,
+    );
     expect(handled.statusCode).toBe(500);
   });
 });
@@ -126,7 +127,7 @@ describe('AbstractHttpExecutor', () => {
 
   it('should handle errors in execute', async () => {
     class ErrorExecutor extends TestExecutor {
-      protected override async get(url: any): Promise<any>{
+      protected override async get(url: any): Promise<any> {
         throw new Error('fail');
       }
     }
@@ -137,9 +138,12 @@ describe('AbstractHttpExecutor', () => {
     const result = await failExec.execute('https://fail.com');
     expect(result).toBe('Handled: fail');
   });
-  
+
   it('should attach interceptor during executor construction', () => {
-    const spy = jest.spyOn(mockHttpService.axiosRef.interceptors.response, 'use');
+    const spy = jest.spyOn(
+      mockHttpService.axiosRef.interceptors.response,
+      'use',
+    );
     new TestExecutor({
       httpService: mockHttpService as any,
       axiosFilterService,

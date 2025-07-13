@@ -1,7 +1,7 @@
-import axios from "axios";
-import { HttpService } from "@nestjs/axios";
-import { ApiResponse } from "./axios.dto";
-import { AxiosFilterService } from "./error_handler/axios-filter.service";
+import axios from 'axios';
+import { HttpService } from '@nestjs/axios';
+import { ApiResponse } from './axios.dto';
+import { AxiosFilterService } from './error_handler/axios-filter.service';
 
 export interface ExecutorDependencies {
   httpService: HttpService;
@@ -15,12 +15,16 @@ export abstract class AbstractHttpExecutor<T, E = unknown> {
     this.axiosFilterService = deps.axiosFilterService;
     this.httpService = deps.httpService;
     this.axiosFilterService.attach(this.httpService.axiosRef);
-
   }
 
-  async execute(url: string, data?: T, type: 'GET' | 'POST' = 'GET'): Promise<T | E> {
+  async execute(
+    url: string,
+    data?: T,
+    type: 'GET' | 'POST' = 'GET',
+  ): Promise<T | E> {
     try {
-      const res = type === 'POST' ? await this.post(url, data!) : await this.get(url);
+      const res =
+        type === 'POST' ? await this.post(url, data!) : await this.get(url);
       return this.after(res);
     } catch (err) {
       return this.handleError(err);
