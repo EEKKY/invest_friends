@@ -10,6 +10,11 @@ export class KisService {
   private accessToken: string | null = null;
   private accessTokenExpiresAt: Date | null = null;
 
+  private readonly KIS_API_BASE_URL =
+    'https://openapi.koreainvestment.com:9443';
+  private readonly TOKEN_ENDPOINT = '/oauth2/tokenP';
+  private readonly INQUIRE_PRICE =
+    '/uapi/domestic-stock/v1/quotations/inquire-price';
   private readonly logger = new Logger(KisService.name);
 
   constructor(private readonly httpService: HttpService) {}
@@ -20,42 +25,47 @@ export class KisService {
     const tr_id = 'FHKST01010100';
 
     const { data } = await firstValueFrom(
-      this.httpService.get(
-        'https://openapi.koreainvestment.com:9443/uapi/domestic-stock/v1/quotations/inquire-price',
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-            appkey: this.appKey,
-            appsecret: this.appSecret,
-            tr_id,
-            custtype: 'P',
-            'Content-Type': 'application/json; charset=utf-8',
-          },
-          params: {
-            FID_COND_MRKT_DIV_CODE,
-            FID_INPUT_ISCD,
-          },
+      this.httpService.get(`${this.KIS_API_BASE_URL}${this.INQUIRE_PRICE}`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+          appkey: this.appKey,
+          appsecret: this.appSecret,
+          tr_id,
+          custtype: 'P',
+          'Content-Type': 'application/json; charset=utf-8',
         },
-      ),
+        params: {
+          FID_COND_MRKT_DIV_CODE,
+          FID_INPUT_ISCD,
+        },
+      }),
     );
 
-    const output = data.output;
+    const [
+      rprs_mrkt_kor_name,
+      stck_shrn_iscd,
+      stck_prpr,
+      prdy_vrss,
+      prdy_ctrt,
+      per,
+      pbr,
+    ] = data.output;
 
     return {
-      rprs_mrkt_kor_name: output.rprs_mrkt_kor_name,
-      stck_shrn_iscd: output.stck_shrn_iscd,
-      stck_prpr: output.stck_prpr,
-      prdy_vrss: output.prdy_vrss,
-      prdy_ctrt: output.prdy_ctrt,
-      per: output.per,
-      pbr: output.pbr,
+      rprs_mrkt_kor_name,
+      stck_shrn_iscd,
+      stck_prpr,
+      prdy_vrss,
+      prdy_ctrt,
+      per,
+      pbr,
     };
   }
 
   async fetchAccessToken(): Promise<void> {
     const { data } = await firstValueFrom(
       this.httpService.post(
-        'https://openapi.koreainvestment.com:9443/oauth2/tokenP',
+        `${this.KIS_API_BASE_URL}${this.TOKEN_ENDPOINT}`,
         {
           grant_type: 'client_credentials',
           appkey: this.appKey,
@@ -74,9 +84,8 @@ export class KisService {
     this.accessTokenExpiresAt = new Date(
       Date.now() + expiresIn * 1000 - 60 * 1000,
     ); // 만료 1분 전 갱신
-    this.logger.log(`${this.accessToken}`);
     this.logger.log(
-      `✅ KIS AccessToken 갱신 완료 (만료시각: ${this.accessTokenExpiresAt.toISOString()})`,
+      `KIS AccessToken 갱신 완료 (만료시각: ${this.accessTokenExpiresAt.toISOString()})`,
     );
   }
 

@@ -37,7 +37,7 @@ export class DartService {
     const parsed = parser.parse(xmlContent);
 
     const list = parsed.result.list;
-    const corpList = Array.isArray(list) ? list : [list];
+    const corpList: CorpCodeDto[] = Array.isArray(list) ? list : [list];
 
     return corpList;
   }
