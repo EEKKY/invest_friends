@@ -1,6 +1,6 @@
 import { CustomHttpService } from './custom-http.service';
 import { HttpService } from '@nestjs/axios';
-import { AxiosFilterService } from './axios/axios-filter.service';
+import { AxiosFilterService } from './axios/error_handler/axios-filter.service';
 import { Test, TestingModule } from '@nestjs/testing';
 
 describe('CustomHttpService', () => {

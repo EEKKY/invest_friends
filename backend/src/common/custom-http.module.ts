@@ -1,6 +1,6 @@
 import { HttpModule } from "@nestjs/axios";
 import { CustomHttpService } from "./custom-http.service";
-import { AxiosFilterModule } from "./axios/axios-filter.module";
+import { AxiosFilterModule } from "./axios/error_handler/axios-filter.module";
 import { Module } from "@nestjs/common";
 
 @Module({
