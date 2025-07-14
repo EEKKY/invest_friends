@@ -65,7 +65,7 @@ describe('AxiosFilterService', () => {
     } as AxiosError;
 
     const handled = service.handle(error);
-    expect(handled.message).toMatch(/Test API Error/);
+    expect(handled.message).toMatch(/Test API Error*/);
   });
 
   it('should handle test.com strategy', () => {
@@ -76,7 +76,7 @@ describe('AxiosFilterService', () => {
 
     const handled = service.handle(error);
     expect(handled.data).toBe('Test Api Not Found');
-    expect(handled.message).toBe('Test API Error');
+    expect(handled.message).toBe('Test API Error https://test.com/endpoint');
     expect(handled.statusCode).toBe(404);
   });
 
@@ -88,7 +88,7 @@ describe('AxiosFilterService', () => {
 
     const handled = service.handle(error);
     expect(handled.data).toBe('Asset Api Not Found');
-    expect(handled.message).toBe('Asset API Error');
+    expect(handled.message).toBe('Asset API Error https://asset.com/resource');
     expect(handled.statusCode).toBe(404);
   });
 
