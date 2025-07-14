@@ -1,5 +1,4 @@
 import { randomUUID } from 'crypto';
-import { get } from 'http';
 import {
   BeforeInsert,
   Column,
@@ -23,6 +22,7 @@ export class AuthEntity {
   @Column({ name: 'user_password' })
   userPassword: string;
 
+  @Index()
   @Column({ name: 'user_email', unique: true })
   userEmail: string;
 
