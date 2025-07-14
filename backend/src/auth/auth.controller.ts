@@ -20,7 +20,7 @@ export class AuthController {
     return this.service.findUserAll();
   }
 
-  @Get()
+  @Get(':uid')
   findUserOne(@Param('uid') uid: string): Promise<AuthEntity> {
     return this.service.findUserOne(uid);
   }
