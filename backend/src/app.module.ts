@@ -11,7 +11,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     StockModule,
     DatabaseModule,
-    AuthModule
+    AuthModule,
   ],
 })
 export class AppModule {}
