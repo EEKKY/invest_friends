@@ -3,5 +3,5 @@ import { ApiError } from '../axios.dto';
 
 export interface AxiosFilter {
   attach(instance: AxiosInstance): void;
-  handle(error: AxiosError): ApiError;
+  handle(error: AxiosError): ApiError<unknown>;
 }

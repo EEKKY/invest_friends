@@ -1,8 +1,11 @@
 import { AxiosError } from 'axios';
 import { ApiError } from '../axios.dto';
 
-type AxiosErrorStrategy<T> = (error: AxiosError) => ApiError<T>;
-export const axiosErrorStrategies: Record<string, AxiosErrorStrategy<any>> = {
+export type AxiosErrorStrategy<T> = (error: AxiosError) => ApiError<T>;
+export const axiosErrorStrategies: Record<
+  string,
+  AxiosErrorStrategy<unknown>
+> = {
   'https://test.com/.*': (error) => ({
     data: 'Test Api Not Found',
     message: `Test API Error ${error.config?.url}`,

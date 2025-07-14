@@ -23,7 +23,10 @@ class TestExecutor extends AbstractHttpExecutor<string, ApiError> {
     return { data: `GET:${url}`, statusCode: 200 };
   }
 
-  protected async post(url: string, data: string): Promise<ApiResponse<string>> {
+  protected async post(
+    url: string,
+    data: string,
+  ): Promise<ApiResponse<string>> {
     return { data: `POST:${url}:${data}`, statusCode: 201 };
   }
 
@@ -52,7 +55,9 @@ describe('AxiosFilterService', () => {
   });
 
   it('should attach interceptor only once', () => {
-    const instance = { interceptors: { response: { use: jest.fn() } } } as unknown as AxiosInstance;
+    const instance = {
+      interceptors: { response: { use: jest.fn() } },
+    } as unknown as AxiosInstance;
     service.attach(instance);
     service.attach(instance);
     expect(instance.interceptors.response.use).toBeCalledTimes(1);
@@ -138,7 +143,7 @@ describe('AbstractHttpExecutor', () => {
   it('should handle errors in execute', async () => {
     class ErrorExecutor extends TestExecutor {
       protected override async get(url: string): Promise<ApiResponse<string>> {
-        throw new Error('fail');
+        throw new Error(`fail ${url}`);
       }
     }
 
@@ -150,7 +155,7 @@ describe('AbstractHttpExecutor', () => {
     const result = await failExec.execute('https://fail.com');
     expect(result).toEqual({
       data: 'error',
-      message: 'fail',
+      message: 'fail https://fail.com',
       statusCode: 500,
     });
   });

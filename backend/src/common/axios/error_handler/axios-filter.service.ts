@@ -1,18 +1,26 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { Injectable } from '@nestjs/common';
 import { AxiosFilter } from './axios-filter.interface';
-import { axiosErrorStrategies } from './axios-filter.handler';
+import {
+  axiosErrorStrategies,
+  AxiosErrorStrategy,
+} from './axios-filter.handler';
+import { ApiError } from '../axios.dto';
 
 @Injectable()
 export class AxiosFilterService implements AxiosFilter {
   private attachedInstances: WeakSet<AxiosInstance> = new WeakSet();
-  private readonly compiledStrategies = Object.entries(
-    axiosErrorStrategies,
-  ).map(([pattern, handler]) => ({ regex: new RegExp(pattern), handler }));
+  private readonly compiledStrategies: {
+    regex: RegExp;
+    handler: AxiosErrorStrategy<unknown>;
+  }[] = Object.entries(axiosErrorStrategies).map(([pattern, handler]) => ({
+    regex: new RegExp(pattern),
+    handler,
+  }));
 
-  attach(instance: AxiosInstance) {
+  attach(instance: AxiosInstance): void {
     if (this.attachedInstances.has(instance)) {
-      return ;
+      return;
     }
 
     this.attachedInstances.add(instance);
@@ -27,7 +35,7 @@ export class AxiosFilterService implements AxiosFilter {
       },
     );
   }
-  handle(error) {
+  handle(error: AxiosError): ApiError<unknown> {
     const url = error.config?.url;
     const strategy = this.compiledStrategies.find(({ regex }) =>
       regex.test(url),
