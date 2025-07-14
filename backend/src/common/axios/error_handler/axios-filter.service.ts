@@ -2,7 +2,6 @@ import axios, { AxiosError, AxiosInstance } from 'axios';
 import { Injectable } from '@nestjs/common';
 import { AxiosFilter } from './axios-filter.interface';
 import { axiosErrorStrategies } from './axios-filter.handler';
-import { ApiError } from '../axios.dto';
 
 @Injectable()
 export class AxiosFilterService implements AxiosFilter {
@@ -13,7 +12,7 @@ export class AxiosFilterService implements AxiosFilter {
 
   attach(instance: AxiosInstance) {
     if (this.attachedInstances.has(instance)) {
-      return;
+      return ;
     }
 
     this.attachedInstances.add(instance);
@@ -28,7 +27,7 @@ export class AxiosFilterService implements AxiosFilter {
       },
     );
   }
-  handle(error: AxiosError): ApiError {
+  handle(error) {
     const url = error.config?.url;
     const strategy = this.compiledStrategies.find(({ regex }) =>
       regex.test(url),

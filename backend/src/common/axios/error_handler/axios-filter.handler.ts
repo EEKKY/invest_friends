@@ -5,12 +5,12 @@ type AxiosErrorStrategy<T> = (error: AxiosError) => ApiError<T>;
 export const axiosErrorStrategies: Record<string, AxiosErrorStrategy<any>> = {
   'https://test.com/.*': (error) => ({
     data: 'Test Api Not Found',
-    message: 'Test API Error',
+    message: `Test API Error ${error.config?.url}`,
     statusCode: 404,
   }),
   'https://asset.com/.*': (error) => ({
     data: 'Asset Api Not Found',
-    message: 'Asset API Error',
+    message: `Asset API Error ${error.config?.url}`,
     statusCode: 404,
   }),
   '.*': (error) => ({
