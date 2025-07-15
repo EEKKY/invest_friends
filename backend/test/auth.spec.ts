@@ -2,9 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 
-import { AtuhService } from './auth/auth.service';
-import { AuthEntity } from './auth/entity/auth.entity';
-import { CreateUserInput } from './auth/dto/auth.dto';
+import { AtuhService } from '../src/auth/auth.service';
+import { AuthEntity } from '../src/auth/entity/auth.entity';
+import { CreateUserInput } from '../src/auth/dto/auth.dto';
 
 describe('AtuhService', () => {
   let service: AtuhService;
