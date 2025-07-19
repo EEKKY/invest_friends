@@ -4,6 +4,7 @@ import { useApi } from "@/hooks/use-api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/auth";
 
 // 로그인 응답 타입
 type LoginResponse = {
@@ -17,6 +18,8 @@ type LoginResponse = {
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { socialLogin } = useAuth();
+
   const { loading, post, error } = useApi<LoginResponse>();
   const [formData, setFormData] = useState({
     email: "",
@@ -129,6 +132,33 @@ export function LoginPage() {
               className="w-full"
             >
               에러 테스트
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => socialLogin("kakao")}
+              className="w-full"
+            >
+              카카오 로그인
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => socialLogin("naver")}
+              className="w-full"
+            >
+              네이버 로그인
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => socialLogin("google")}
+              className="w-full"
+            >
+              구글 로그인
             </Button>
 
             <Button

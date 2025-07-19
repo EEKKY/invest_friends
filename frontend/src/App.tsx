@@ -15,6 +15,8 @@ import { useCommon } from "@/hooks/useCommon";
 import { CommonProvider } from "@/contexts/common";
 import { AppLeft } from "@/components/layouts/app-left";
 import { LoginPage } from "@/pages/login";
+import { AuthProvider } from "@/contexts/auth";
+import { AuthCallbackPage } from "@/pages/auth/callback";
 
 function AppContent() {
   const { sideBarOpen, handleSideBarOpen, canvasMode } = useCommon();
@@ -29,6 +31,7 @@ function AppContent() {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route
             path="/"
             element={
@@ -68,9 +71,11 @@ function AppContent() {
 
 function App() {
   return (
-    <CommonProvider>
-      <AppContent />
-    </CommonProvider>
+    <AuthProvider>
+      <CommonProvider>
+        <AppContent />
+      </CommonProvider>
+    </AuthProvider>
   );
 }
 
