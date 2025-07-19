@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 // 기본 axios 인스턴스 생성
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5173",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
