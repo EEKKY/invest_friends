@@ -21,6 +21,15 @@ interface ValidationErrors {
   submit?: string;
 }
 
+interface ApiError {
+  response?: {
+    status: number;
+    data: {
+      message: string | string[];
+    };
+  };
+}
+
 const SignupPage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     userEmail: '',
@@ -39,7 +48,7 @@ const SignupPage: React.FC = () => {
     const newErrors = { ...errors };
     
     switch (name) {
-      case 'userEmail':
+      case 'userEmail': {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!value) {
           newErrors.userEmail = '이메일을 입력해주세요';
@@ -51,6 +60,7 @@ const SignupPage: React.FC = () => {
           delete newErrors.userEmail;
         }
         break;
+      }
         
       case 'userNick':
         if (!value) {
@@ -102,7 +112,7 @@ const SignupPage: React.FC = () => {
   };
 
   const handleSubmit = async (): Promise<void> => {
-    // 클라이언트 측 validation 먼저 실행
+
     const requiredFields: (keyof FormData)[] = ['userEmail', 'userNick', 'userPassword', 'confirmPassword'];
     
     const newErrors: ValidationErrors = {};
@@ -131,15 +141,14 @@ const SignupPage: React.FC = () => {
       setErrors(newErrors);
       return;
     }
-    
-    // 기존 에러가 있다면 제출하지 않음
+
     if (Object.keys(errors).length > 0) {
       return;
     }
     
     setIsLoading(true);
     setSuccess(false);
-    setErrors({}); // submit 에러 초기화
+    setErrors({}); 
     
     try {
       const requestBody: CreateUserInput = {
@@ -150,7 +159,7 @@ const SignupPage: React.FC = () => {
 
       const response = await api.post('/user', requestBody);
       
-      // 성공 처리
+  
       console.log('User created:', response.data);
       setSuccess(true);
       setFormData({
@@ -162,25 +171,20 @@ const SignupPage: React.FC = () => {
       setErrors({});
       toast.success('회원가입이 완료되었습니다!');
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Signup error:', error);
-      
-      // axios 인터셉터에서 이미 토스트가 표시되지만, 
-      // 특정 validation 에러는 폼에도 표시
-      if (error.response?.status === 400) {
-        const errorData = error.response.data;
+      const apiError = error as ApiError;
+      if (apiError.response?.status === 400) {
+        const errorData = apiError.response.data;
         
         if (errorData.message && Array.isArray(errorData.message)) {
-          // 백엔드 validation 에러 배열인 경우
           setErrors({ submit: errorData.message.join(', ') });
         } else if (typeof errorData.message === 'string') {
-          // 단일 에러 메시지인 경우
           setErrors({ submit: errorData.message });
         } else {
           setErrors({ submit: '입력값을 확인해주세요' });
         }
       }
-      // 다른 에러들은 이미 axios 인터셉터에서 toast로 처리됨
     } finally {
       setIsLoading(false);
     }

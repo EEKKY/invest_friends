@@ -15,7 +15,7 @@ import { useCommon } from "@/hooks/useCommon";
 import { CommonProvider } from "@/contexts/common";
 import { AppLeft } from "@/components/layouts/app-left";
 import { LoginPage } from "@/pages/login";
-import SignupPage from "./pages/auth/signup-page";
+import SignupPage from "./pages/auth/signup.page";
 
 function AppContent() {
   const { sideBarOpen, handleSideBarOpen, canvasMode } = useCommon();
