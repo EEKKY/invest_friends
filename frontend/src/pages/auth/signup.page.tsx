@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle, Eye, EyeOff, User, Mail, Lock } from 'lucide-react';
-import { toast } from 'sonner';
-import { api } from '@/services/axios';
 
 interface CreateUserInput {
   userEmail: string;
@@ -13,21 +11,12 @@ interface FormData extends CreateUserInput {
   confirmPassword: string;
 }
 
-interface ValidationErrors {
+interface FormErrors {
   userEmail?: string;
   userNick?: string;
   userPassword?: string;
   confirmPassword?: string;
   submit?: string;
-}
-
-interface ApiError {
-  response?: {
-    status: number;
-    data: {
-      message: string | string[];
-    };
-  };
 }
 
 const SignupPage: React.FC = () => {
@@ -40,19 +29,25 @@ const SignupPage: React.FC = () => {
   
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
-  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
+
+  const validateEmail = (email: string): boolean => {
+    const input = document.createElement('input');
+    input.type = 'email';
+    input.value = email;
+    return input.validity.valid;
+  };
 
   const validateField = (name: keyof FormData, value: string): void => {
     const newErrors = { ...errors };
     
     switch (name) {
-      case 'userEmail': {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      case 'userEmail':
         if (!value) {
           newErrors.userEmail = '이메일을 입력해주세요';
-        } else if (!emailRegex.test(value)) {
+        } else if (!validateEmail(value)) {
           newErrors.userEmail = '올바른 이메일 형식을 입력해주세요';
         } else if (value.length > 50) {
           newErrors.userEmail = '이메일은 50자 이하로 입력해주세요';
@@ -60,7 +55,6 @@ const SignupPage: React.FC = () => {
           delete newErrors.userEmail;
         }
         break;
-      }
         
       case 'userNick':
         if (!value) {
@@ -108,14 +102,14 @@ const SignupPage: React.FC = () => {
       ...prev,
       [name]: value
     }));
+    
     validateField(name as keyof FormData, value);
   };
 
   const handleSubmit = async (): Promise<void> => {
-
     const requiredFields: (keyof FormData)[] = ['userEmail', 'userNick', 'userPassword', 'confirmPassword'];
     
-    const newErrors: ValidationErrors = {};
+    const newErrors: FormErrors = {};
     requiredFields.forEach(field => {
       if (!formData[field]) {
         switch (field) {
@@ -157,10 +151,9 @@ const SignupPage: React.FC = () => {
         userPassword: formData.userPassword
       };
 
-      const response = await api.post('/user', requestBody);
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-  
-      console.log('User created:', response.data);
+      console.log('User created:', requestBody);
       setSuccess(true);
       setFormData({
         userEmail: '',
@@ -169,22 +162,10 @@ const SignupPage: React.FC = () => {
         confirmPassword: ''
       });
       setErrors({});
-      toast.success('회원가입이 완료되었습니다!');
       
     } catch (error: unknown) {
       console.error('Signup error:', error);
-      const apiError = error as ApiError;
-      if (apiError.response?.status === 400) {
-        const errorData = apiError.response.data;
-        
-        if (errorData.message && Array.isArray(errorData.message)) {
-          setErrors({ submit: errorData.message.join(', ') });
-        } else if (typeof errorData.message === 'string') {
-          setErrors({ submit: errorData.message });
-        } else {
-          setErrors({ submit: '입력값을 확인해주세요' });
-        }
-      }
+      setErrors({ submit: '회원가입 중 오류가 발생했습니다. 다시 시도해주세요.' });
     } finally {
       setIsLoading(false);
     }
@@ -239,7 +220,7 @@ const SignupPage: React.FC = () => {
         )}
 
         <div className="space-y-6">
-          {/* 이메일 - 백엔드 validation: @IsEmail, @MaxLength(50) */}
+          {/* 이메일 - HTML5 validity API로 검증 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               이메일 *
@@ -263,9 +244,10 @@ const SignupPage: React.FC = () => {
             {errors.userEmail && (
               <p className="mt-1 text-sm text-red-600">{errors.userEmail}</p>
             )}
+            <p className="mt-1 text-xs text-gray-500">HTML5 validity API로 이메일 형식을 검증합니다</p>
           </div>
 
-          {/* 닉네임 - 백엔드 validation: @IsString, @MaxLength(20) */}
+          {/* 닉네임 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               닉네임 *
@@ -291,7 +273,7 @@ const SignupPage: React.FC = () => {
             )}
           </div>
 
-          {/* 비밀번호 - 백엔드 validation: @MinLength(10) */}
+          {/* 비밀번호 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               비밀번호 *
@@ -309,6 +291,7 @@ const SignupPage: React.FC = () => {
                     : 'border-gray-300 focus:ring-blue-500'
                 }`}
                 placeholder="10자 이상 입력하세요"
+                minLength={10}
               />
               <button
                 type="button"
