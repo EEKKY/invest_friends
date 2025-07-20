@@ -13,7 +13,7 @@ import { JwtAuthModule } from './authguard/authguard.module';
     StockModule,
     DatabaseModule,
     AuthModule,
-    JwtAuthModule
+    JwtAuthModule,
   ],
 })
 export class AppModule {}
