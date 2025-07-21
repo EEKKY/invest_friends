@@ -1,20 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
-
-type User = {
-  id: number;
-  email: string;
-  name: string;
-};
-
-type AuthContextType = {
-  token: string | null;
-  user: User | null;
-  setToken: (token: string | null) => void;
-  socialLogin: (provider: string) => void;
-  logout: () => void;
-};
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { useState } from "react";
+import type { User } from "@/types/user";
+import { AuthContext } from "./AuthContext";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -33,9 +19,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   //   initAuth();
   // }, []);
 
-  const login = (user: User) => {
-    setUser(user);
-  };
+  // const login = (user: User) => {
+  //   setUser(user);
+  // };
 
   const socialLogin = (provider: string) => {
     // 소셜 로그인 로직 구현
@@ -59,15 +45,3 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     </AuthContext.Provider>
   );
 }
-
-export { AuthContext };
-
-const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
-
-export { useAuth };

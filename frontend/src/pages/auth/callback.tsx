@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/auth";
+import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 export function AuthCallbackPage() {

@@ -4,7 +4,7 @@ import { useApi } from "@/hooks/use-api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/auth";
+import { useAuth } from "@/hooks/use-auth";
 
 // 로그인 응답 타입
 type LoginResponse = {
