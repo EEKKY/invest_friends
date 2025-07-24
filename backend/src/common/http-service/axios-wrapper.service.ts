@@ -1,11 +1,9 @@
 import { AxiosError } from 'axios';
 import { Injectable } from '@nestjs/common';
-import {
-  resolveErrorStrategy,
-} from './error_handler/axios-strategy.handler.ts.js';
-import { ApiError } from './axios.dto.js';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { ApiError } from './dto/axios.dto';
+import { resolveErrorStrategy } from './error_handler/axios-strategy.handler';
 
 @Injectable()
 export class AxiosWrapper {

@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { ApiError } from '../axios.dto';
+import { ApiError } from '../dto/axios.dto';
 import { HttpException } from '@nestjs/common';
 
 export type ErrorStrategy<T> = (error: AxiosError | HttpException) => ApiError<T>;

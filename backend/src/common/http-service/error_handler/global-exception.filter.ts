@@ -1,5 +1,5 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from "@nestjs/common";
-import { resolveErrorStrategy } from "./axios-strategy.handler.ts";
+import { resolveErrorStrategy } from "./axios-strategy.handler";
 import { Response, Request} from "express";
 
 @Catch()
