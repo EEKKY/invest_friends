@@ -1,19 +1,24 @@
 import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { LoginService } from './login.service';
-import { CustomJwtService } from 'src/authguard/jwt.service';
+import { JwtAuthService } from 'src/authguard/jwt.service';
 import { Public } from 'src/authguard/jwt.decorator';
+import { RefreshDto } from 'src/authguard/refreshtoken/dto/refresh.dto';
+import {
+  RefreshResponse,
+  TokenPairResponse,
+} from 'src/authguard/interface/jwt.token.interface';
 
 @Controller('login')
 export class LoginController {
   constructor(
     private readonly loginService: LoginService,
-    private readonly customJwtService: CustomJwtService,
+    private readonly jwtAuthService: JwtAuthService,
   ) {}
 
   @Public()
   @Post()
-  async login(@Body() loginDto: LoginDto) {
+  async login(@Body() loginDto: LoginDto): Promise<TokenPairResponse> {
     const user = await this.loginService.findUserByEmail(loginDto.userEmail);
     if (!user) {
       throw new UnauthorizedException(
@@ -32,6 +37,12 @@ export class LoginController {
       );
     }
 
-    return this.customJwtService.generateToken(user);
+    return this.jwtAuthService.generateTokenPair(user);
+  }
+
+  @Public()
+  @Post('refresh')
+  async refresh(@Body() refreshTokenDto: RefreshDto): Promise<RefreshResponse> {
+    return this.jwtAuthService.refreshAccessToken(refreshTokenDto.refreshToken);
   }
 }
