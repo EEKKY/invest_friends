@@ -26,10 +26,8 @@ export class RefreshTokenService {
       secret: this.jwtConfig.refreshToken.secret,
       expiresIn: this.jwtConfig.refreshToken.expiresIn,
     });
-
     return {
       refreshToken,
-      expiresIn: this.jwtConfig.refreshToken.expiresIn,
     };
   }
 

@@ -4,8 +4,4 @@ export class RefreshDto {
   @IsNotEmpty()
   @IsString()
   refreshToken: string;
-
-  @IsNotEmpty()
-  @IsString()
-  expiresIn: string;
 }
