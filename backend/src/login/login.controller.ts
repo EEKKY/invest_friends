@@ -19,8 +19,8 @@ export class LoginController {
 
   @Public()
   @Post()
-  @ApiOperation({ summary: '로그인'})
-  @ApiResponse({ status: 200, description: '로그인 성공'})
+  @ApiOperation({ summary: '로그인' })
+  @ApiResponse({ status: 200, description: '로그인 성공' })
   async login(@Body() loginDto: LoginDto): Promise<TokenPairResponse> {
     const user = await this.loginService.findUserByEmail(loginDto.userEmail);
     if (!user) {
