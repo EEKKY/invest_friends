@@ -8,6 +8,7 @@ import {
   RefreshResponse,
   TokenPairResponse,
 } from 'src/authguard/interface/jwt.token.interface';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('login')
 export class LoginController {
@@ -18,6 +19,8 @@ export class LoginController {
 
   @Public()
   @Post()
+  @ApiOperation({ summary: '로그인'})
+  @ApiResponse({ status: 200, description: '로그인 성공'})
   async login(@Body() loginDto: LoginDto): Promise<TokenPairResponse> {
     const user = await this.loginService.findUserByEmail(loginDto.userEmail);
     if (!user) {
@@ -42,6 +45,8 @@ export class LoginController {
 
   @Public()
   @Post('refresh')
+  @ApiOperation({ summary: '토큰 갱신' })
+  @ApiResponse({ status: 200, description: '토큰 갱신 성공' })
   async refresh(@Body() refreshTokenDto: RefreshDto): Promise<RefreshResponse> {
     return this.jwtAuthService.refreshAccessToken(refreshTokenDto.refreshToken);
   }

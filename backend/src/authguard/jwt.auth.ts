@@ -27,6 +27,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       return true;
     }
 
+    const request = context.switchToHttp().getRequest();
+    const authHeader = request.headers['authorization'];
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new UnauthorizedException('토큰이 필요합니다');
+    }
     return super.canActivate(context);
   }
 

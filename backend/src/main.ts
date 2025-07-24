@@ -1,9 +1,13 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { JwtAuthGuard } from './authguard/jwt.auth';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+
+  const reflector = app.get(Reflector);
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
 
   app.enableCors({
     origin: ['http://localhost:5173', 'http://localhost:3000'], // 프론트엔드 주소
@@ -18,6 +22,7 @@ async function bootstrap(): Promise<void> {
       .setTitle('Invest friends API')
       .setDescription('The invest friends API description')
       .setVersion('1.0')
+      .addBearerAuth()
       .build();
 
     const document = SwaggerModule.createDocument(app, config);

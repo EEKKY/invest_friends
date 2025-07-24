@@ -9,6 +9,7 @@ import { AccessTokenService } from './accesstoken/access.token.service';
 import { RefreshTokenService } from './refreshtoken/refresh.token.service';
 import { JwtAuthService } from './jwt.service';
 import { JwtConfig } from './interface/jwt.token.interface';
+import { JwtAuthGuard } from './jwt.auth';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { JwtConfig } from './interface/jwt.token.interface';
     RefreshTokenService,
     JwtStrategy,
     JwtAuthService,
+    JwtAuthGuard,
     {
       provide: 'JWT_CONFIG',
       useFactory: (configService: ConfigService): JwtConfig => ({
@@ -54,6 +56,7 @@ import { JwtConfig } from './interface/jwt.token.interface';
     RefreshTokenService,
     JwtAuthService,
     PassportModule,
+    JwtAuthGuard,
     'JWT_CONFIG',
   ],
 })
