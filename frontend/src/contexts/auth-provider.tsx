@@ -16,10 +16,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setToken(accessToken);
       } else {
         //TODO: 리프레쉬로 엑세스토큰 갱신 구현
-
         // TODO: 리프레쉬 만료및 엑세스토큰 만료시 로그아웃 구현
-
-        setToken(null);
+        // setToken(null);
       }
     };
 
