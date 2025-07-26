@@ -10,32 +10,54 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+export enum Social {
+  KAKAO = 'kakao',
+  GOOGLE = 'google',
+  NAVER = 'naver',
+}
+
+export enum Assist {
+  ASSIST_1 = 'assist_1',
+  ASSIST_2 = 'assist_2',
+  ASSIST_3 = 'assist_3',
+  ASSIST_4 = 'assist_4',
+  ASSIST_5 = 'assist_5',
+  ASSIST_6 = 'assist_6',
+  ASSIST_7 = 'assist_7',
+}
+
 @Entity()
 export class AuthEntity {
-  @PrimaryGeneratedColumn({ name: 'user_id' })
+  @PrimaryGeneratedColumn()
   userId: number;
 
   @Index()
-  @Column({ name: 'user_uid', unique: true })
+  @Column({ unique: true })
   userUid: string;
 
-  @Column({ name: 'user_password' })
+  @Column({ nullable: true })
   userPassword: string;
 
   @Index()
-  @Column({ name: 'user_email', unique: true })
+  @Column({ unique: true })
   userEmail: string;
 
-  @Column({ name: 'user_nick', unique: true })
+  @Column({ unique: true })
   userNick: string;
 
-  @CreateDateColumn({ name: 'create_at' })
+  @Column({ type: 'enum', enum: Social, nullable: true })
+  social: Social | null;
+
+  @Column({ type: 'enum', enum: Assist, nullable: true })
+  assist: Assist | null;
+
+  @CreateDateColumn()
   createAt: Date;
 
-  @UpdateDateColumn({ name: 'update_at' })
+  @UpdateDateColumn()
   updateAt: Date;
 
-  @DeleteDateColumn({ name: 'delete_at' })
+  @DeleteDateColumn()
   deleteAt: Date | null;
 
   @BeforeInsert()

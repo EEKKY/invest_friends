@@ -14,6 +14,7 @@ export class JwtAuthService {
     private readonly refreshTokenService: RefreshTokenService,
   ) {}
 
+  // 토큰 생성
   async generateTokenPair(user: AuthEntity): Promise<TokenPairResponse> {
     const accessTokenResponse =
       await this.accessTokenService.generateAccessToken(user);
@@ -28,6 +29,7 @@ export class JwtAuthService {
     };
   }
 
+  // 토큰 갱신
   async refreshAccessToken(refreshToken: string): Promise<RefreshResponse> {
     const user =
       await this.refreshTokenService.getUserFromRefreshToken(refreshToken);

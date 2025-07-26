@@ -6,8 +6,14 @@ import { JwtAuthGuard } from './authguard/jwt.auth';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
 
-  const reflector = app.get(Reflector);
-  app.useGlobalGuards(new JwtAuthGuard(reflector));
+  // CORS 설정
+  app.enableCors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+  // const reflector = app.get(Reflector);
+  // app.useGlobalGuards(new JwtAuthGuard(reflector));
 
   // set swagger in development mode
   if (process.env.NODE_ENV !== 'production') {

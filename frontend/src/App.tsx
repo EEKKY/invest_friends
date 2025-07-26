@@ -14,15 +14,14 @@ import {
 import { useCommon } from "@/hooks/useCommon";
 import { CommonProvider } from "@/contexts/common";
 import { AppLeft } from "@/components/layouts/app-left";
-import { LoginPage } from "./pages/login/login.page";
-import SignupPage from "./pages/auth/signup.page";
+import { LoginPage } from "@/pages/login";
+import { AuthProvider } from "@/contexts/auth-provider";
+import { AuthCallbackPage } from "@/pages/auth/callback";
+// import { LoginPage } from "./pages/login/login.page";
+// import SignupPage from "./pages/auth/signup.page";
 
 function AppContent() {
   const { sideBarOpen, handleSideBarOpen, canvasMode } = useCommon();
-
-  useEffect(() => {
-    console.log(canvasMode);
-  }, [canvasMode]);
 
   return (
     <>
@@ -30,7 +29,7 @@ function AppContent() {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route
             path="/"
             element={
@@ -70,9 +69,11 @@ function AppContent() {
 
 function App() {
   return (
-    <CommonProvider>
-      <AppContent />
-    </CommonProvider>
+    <AuthProvider>
+      <CommonProvider>
+        <AppContent />
+      </CommonProvider>
+    </AuthProvider>
   );
 }
 

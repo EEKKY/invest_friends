@@ -10,14 +10,41 @@ import { AuthEntity } from './entity/auth.entity';
 import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class AtuhService {
+export class AuthService {
   logger = new Logger('AuthService');
   constructor(
     @InjectRepository(AuthEntity)
     private readonly AuthRepository: Repository<AuthEntity>,
+    // private readonly jwtService: JwtService,
+    public readonly configService: ConfigService,
   ) {}
+
+  async socialLogin(req): Promise<AuthEntity> {
+    if (!req.user) {
+      throw new BadRequestException('소셜 유저 정보가 없습니다.');
+    }
+
+    const { email, provider, name } = req.user;
+
+    let user = await this.AuthRepository.findOne({
+      where: { userEmail: email },
+    });
+
+    if (!user) {
+      const newUser = this.AuthRepository.create({
+        userEmail: email,
+        userNick: name || email.split('@')[0],
+        social: provider,
+      });
+      user = await this.AuthRepository.save(newUser);
+    }
+
+    return user;
+  }
+
   async createUser(input: CreateUserInput): Promise<AuthEntity> {
     try {
       const hashedPassword = await bcrypt.hash(input.userPassword, 10);
