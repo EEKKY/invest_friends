@@ -92,7 +92,7 @@ export const cookieUtils = {
 export const tokenCookies = {
   setAccessToken(token: string) {
     cookieUtils.set("accessToken", token, {
-      expires: 60 * 60, // 1시간으로 변경해줘야함
+      expires: 60 * 60 * 1000, // 1시간으로 변경해줘야함
       //   secure: true, // HTTPS에서만
       sameSite: "strict",
       path: "/",
@@ -101,7 +101,7 @@ export const tokenCookies = {
 
   setRefreshToken(token: string) {
     cookieUtils.set("refreshToken", token, {
-      expires: 60 * 60 * 24 * 7, // 7일
+      expires: 60 * 60 * 24 * 7 * 1000, // 7일
       //   secure: true,
       sameSite: "strict",
       path: "/",

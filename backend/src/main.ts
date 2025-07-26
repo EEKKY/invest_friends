@@ -12,6 +12,7 @@ async function bootstrap(): Promise<void> {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
+  //사용법:@Public()
   // const reflector = app.get(Reflector);
   // app.useGlobalGuards(new JwtAuthGuard(reflector));
 
