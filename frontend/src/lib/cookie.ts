@@ -91,7 +91,7 @@ export const cookieUtils = {
 // 토큰 전용 쿠키 관리 함수
 export const tokenCookies = {
   setAccessToken(token: string) {
-    cookieUtils.set("access_token", token, {
+    cookieUtils.set("accessToken", token, {
       expires: 60 * 60, // 1시간으로 변경해줘야함
       //   secure: true, // HTTPS에서만
       sameSite: "strict",
@@ -100,7 +100,7 @@ export const tokenCookies = {
   },
 
   setRefreshToken(token: string) {
-    cookieUtils.set("refresh_token", token, {
+    cookieUtils.set("refreshToken", token, {
       expires: 60 * 60 * 24 * 7, // 7일
       //   secure: true,
       sameSite: "strict",
@@ -109,15 +109,15 @@ export const tokenCookies = {
   },
 
   getAccessToken(): string | null {
-    return cookieUtils.get("access_token");
+    return cookieUtils.get("accessToken");
   },
 
   getRefreshToken(): string | null {
-    return cookieUtils.get("refresh_token");
+    return cookieUtils.get("refreshToken");
   },
 
   removeTokens() {
-    cookieUtils.remove("access_token");
-    cookieUtils.remove("refresh_token");
+    cookieUtils.remove("accessToken");
+    cookieUtils.remove("refreshToken");
   },
 };

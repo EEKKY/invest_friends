@@ -1,23 +1,30 @@
 import { useState } from "react";
 import type { User } from "@/types/user";
 import { AuthContext } from "./auth-context";
+import { useEffect } from "react";
+import { tokenCookies } from "@/lib/cookie";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
   // 새로고침시 토큰 체크
-  // useEffect(() => {
-  //   const initAuth = async () => {
-  //     const token = localStorage.getItem("token");
-  //     if (token) {
-  //       const user = await getUser(token);
-  //       setUser(user);
-  //     }
-  //   };
+  useEffect(() => {
+    const initAuth = async () => {
+      const accessToken = tokenCookies.getAccessToken();
+      if (accessToken) {
+        setToken(accessToken);
+      } else {
+        //TODO: 리프레쉬로 엑세스토큰 갱신 구현
 
-  //   initAuth();
-  // }, []);
+        // TODO: 리프레쉬 만료및 엑세스토큰 만료시 로그아웃 구현
+
+        setToken(null);
+      }
+    };
+
+    initAuth();
+  }, []);
 
   // const login = (user: User) => {
   //   setUser(user);
