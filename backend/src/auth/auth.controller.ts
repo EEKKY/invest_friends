@@ -38,9 +38,7 @@ export class AuthController {
     description: '구글 로그인을 위한 리다이렉션 API',
   })
   @ApiResponse({ status: 302, description: '구글 로그인 페이지로 리다이렉트' })
-  async googleAuth(@Req() req) {
-    console.log('googleAuth');
-  }
+  async googleAuth(@Req() req) {}
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
@@ -54,7 +52,6 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: '인증 실패' })
   async googleAuthRedirect(@Req() req, @Res() res) {
-    console.log('googleAuthRedirect');
     const user = await this.service.socialLogin(req);
     if (user) {
       const tokenPair = await this.jwtAuthService.generateTokenPair(user); // 토큰 생성

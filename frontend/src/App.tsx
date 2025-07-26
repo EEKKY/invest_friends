@@ -23,10 +23,6 @@ import { AuthCallbackPage } from "@/pages/auth/callback";
 function AppContent() {
   const { sideBarOpen, handleSideBarOpen, canvasMode } = useCommon();
 
-  useEffect(() => {
-    console.log(canvasMode);
-  }, [canvasMode]);
-
   return (
     <>
       <Toaster position="top-center" />

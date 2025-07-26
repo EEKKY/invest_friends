@@ -28,8 +28,9 @@ export type LoginResponse = {
 };
 
 const authApi = {
-  socialLogin: (provider: string) => {
-    return api.get(`/auth/${provider}`);
+  socialLogin: async (provider: string) => {
+    const response = await api.get(`/auth/${provider}`);
+    return response.data;
   },
 
   async login(data: LoginRequest): Promise<ApiResponse<LoginResponse>> {
@@ -37,16 +38,6 @@ const authApi = {
       "/auth/login",
       data
     );
-
-    console.log(response.data);
-
-    // // 토큰을 쿠키에 저장
-    // if (response.data..accessToken) {
-    //   tokenCookies.setAccessToken(response.data.accessToken);
-    // }
-    // if (response.data.refreshToken) {
-    //   tokenCookies.setRefreshToken(response.data.refreshToken);
-    // }
 
     return response.data;
   },

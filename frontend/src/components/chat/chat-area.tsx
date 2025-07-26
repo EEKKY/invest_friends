@@ -99,7 +99,6 @@ const ChatArea = () => {
   // 메시지 복사
   const copyMessage = (content: string): void => {
     navigator.clipboard.writeText(content);
-    console.log("메시지 복사됨:", content);
   };
 
   // 타이핑 애니메이션 시뮬레이션
