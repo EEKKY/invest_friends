@@ -22,10 +22,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { JwtAuthService } from 'src/authguard/jwt.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly service: AuthService) {}
+  constructor(
+    private readonly service: AuthService,
+    private readonly jwtAuthService: JwtAuthService,
+  ) {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -34,7 +38,9 @@ export class AuthController {
     description: '구글 로그인을 위한 리다이렉션 API',
   })
   @ApiResponse({ status: 302, description: '구글 로그인 페이지로 리다이렉트' })
-  async googleAuth(@Req() req) {}
+  async googleAuth(@Req() req) {
+    console.log('googleAuth');
+  }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
@@ -48,8 +54,26 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: '인증 실패' })
   async googleAuthRedirect(@Req() req, @Res() res) {
+    console.log('googleAuthRedirect');
     const user = await this.service.socialLogin(req);
     if (user) {
+      const tokenPair = await this.jwtAuthService.generateTokenPair(user); // 토큰 생성
+
+      res.cookie('accessToken', tokenPair.accessToken, {
+        httpOnly: true, // JavaScript에서 접근 불가 (XSS 방어)
+        secure: this.service.configService.get('NODE_ENV') === 'production', // HTTPS에서만 전송
+        sameSite: 'Lax', // 또는 'Strict', CSRF 방어
+        maxAge: 3600000, // 1시간 (밀리초 단위) - 액세스 토큰 만료 시간에 맞춰 설정
+      });
+
+      res.cookie('refreshToken', tokenPair.refreshToken, {
+        httpOnly: true, // JavaScript에서 접근 불가
+        secure: this.service.configService.get('NODE_ENV') === 'production', // HTTPS에서만 전송
+        sameSite: 'Lax', // 또는 'Strict'
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7일 (밀리초 단위) - 리프레시 토큰 만료 시간에 맞춰 설정
+        // path: '/api/auth', // 리프레시 토큰 재발급 엔드포인트 경로로 제한 (선택 사항)
+      });
+
       res.redirect(
         `${this.service.configService.get(
           'FRONTEND_URL',
@@ -90,6 +114,23 @@ export class AuthController {
   async naverAuthRedirect(@Req() req, @Res() res) {
     const user = await this.service.socialLogin(req);
     if (user) {
+      const tokenPair = await this.jwtAuthService.generateTokenPair(user); // 토큰 생성
+
+      res.cookie('accessToken', tokenPair.accessToken, {
+        httpOnly: true, // JavaScript에서 접근 불가 (XSS 방어)
+        secure: this.service.configService.get('NODE_ENV') === 'production', // HTTPS에서만 전송
+        sameSite: 'Lax', // 또는 'Strict', CSRF 방어
+        maxAge: 3600000, // 1시간 (밀리초 단위) - 액세스 토큰 만료 시간에 맞춰 설정
+      });
+
+      res.cookie('refreshToken', tokenPair.refreshToken, {
+        httpOnly: true, // JavaScript에서 접근 불가
+        secure: this.service.configService.get('NODE_ENV') === 'production', // HTTPS에서만 전송
+        sameSite: 'Lax', // 또는 'Strict'
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7일 (밀리초 단위) - 리프레시 토큰 만료 시간에 맞춰 설정
+        // path: '/api/auth', // 리프레시 토큰 재발급 엔드포인트 경로로 제한 (선택 사항)
+      });
+
       res.redirect(
         `${this.service.configService.get(
           'FRONTEND_URL',
@@ -127,6 +168,23 @@ export class AuthController {
   async kakaoAuthRedirect(@Req() req, @Res() res) {
     const user = await this.service.socialLogin(req);
     if (user) {
+      const tokenPair = await this.jwtAuthService.generateTokenPair(user); // 토큰 생성
+
+      res.cookie('accessToken', tokenPair.accessToken, {
+        httpOnly: true, // JavaScript에서 접근 불가 (XSS 방어)
+        secure: this.service.configService.get('NODE_ENV') === 'production', // HTTPS에서만 전송
+        sameSite: 'Lax', // 또는 'Strict', CSRF 방어
+        maxAge: 3600000, // 1시간 (밀리초 단위) - 액세스 토큰 만료 시간에 맞춰 설정
+        // path: '/',
+      });
+
+      res.cookie('refreshToken', tokenPair.refreshToken, {
+        httpOnly: true, // JavaScript에서 접근 불가
+        secure: this.service.configService.get('NODE_ENV') === 'production', // HTTPS에서만 전송
+        sameSite: 'Lax', // 또는 'Strict'
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7일 (밀리초 단위) - 리프레시 토큰 만료 시간에 맞춰 설정
+        path: '/api/callback', // 리프레시 토큰 재발급 엔드포인트 경로로 제한 (선택 사항)
+      });
       res.redirect(
         `${this.service.configService.get(
           'FRONTEND_URL',
