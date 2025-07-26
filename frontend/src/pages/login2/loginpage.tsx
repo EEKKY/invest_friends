@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { AlertCircle, Eye, EyeOff, Mail, Lock, LogIn } from 'lucide-react';
 import { toast } from "sonner";
 import { api } from '@/services/axios';
+import { tokenCookies } from '@/lib/cookie';
 
 interface LoginResponse {
   accessToken: string;
@@ -48,11 +49,8 @@ export function LoginPage() {
       const response = await api.post<LoginResponse>('/login', data);
 
       if (response.data?.accessToken) {
-        localStorage.setItem("accessToken", response.data.accessToken);
-        localStorage.setItem("refreshToken", response.data.refreshToken);
-        localStorage.setItem("tokenType", response.data.tokenType);
-        localStorage.setItem("expiresIn", response.data.expiresIn);
-        
+        tokenCookies.setAccessToken(response.data.accessToken);
+        tokenCookies.setRefreshToken(response.data.refreshToken);
         toast.success("로그인 성공!");
         navigate("/");
       }
