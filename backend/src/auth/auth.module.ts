@@ -8,19 +8,13 @@ import { KakaoStrategy } from './strategy/kakao.strategy';
 import { NaverStrategy } from './strategy/naver.strategy';
 // import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtAuthModule } from 'src/authguard/authguard.module';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([AuthEntity]),
-    // JwtModule.registerAsync({
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    //   useFactory: (configService: ConfigService) => ({
-    //     secret: configService.get<string>('JWT_SECRET'),
-    //     signOptions: { expiresIn: '1d' },
-    //   }),
-    // }),
+    JwtAuthModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy, KakaoStrategy, NaverStrategy],

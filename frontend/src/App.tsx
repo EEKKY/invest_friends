@@ -17,6 +17,8 @@ import { AppLeft } from "@/components/layouts/app-left";
 import { LoginPage } from "@/pages/login";
 import { AuthProvider } from "@/contexts/auth";
 import { AuthCallbackPage } from "@/pages/auth/callback";
+// import { LoginPage } from "./pages/login/login.page";
+// import SignupPage from "./pages/auth/signup.page";
 
 function AppContent() {
   const { sideBarOpen, handleSideBarOpen, canvasMode } = useCommon();
