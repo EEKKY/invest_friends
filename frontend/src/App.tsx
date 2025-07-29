@@ -14,11 +14,12 @@ import {
 import { useCommon } from "@/hooks/useCommon";
 import { CommonProvider } from "@/contexts/common";
 import { AppLeft } from "@/components/layouts/app-left";
-import { LoginPage } from "@/pages/login";
+// import { LoginPage } from "@/pages/login2";
 import { AuthProvider } from "@/contexts/auth-provider";
 import { AuthCallbackPage } from "@/pages/auth/callback";
-import { LoginPage2 } from "@/pages/login2/loginpage";
+// import { LoginPage2 } from "@/pages/login2/loginpage";
 import SignupPage from "@/pages/auth/signuppage";
+import { UnifiedLoginPage } from "./pages/login";
 // import { LoginPage } from "./pages/login/login.page";
 // import SignupPage from "./pages/auth/signup.page";
 
@@ -30,8 +31,8 @@ function AppContent() {
       <Toaster position="top-center" />
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/login2" element={<LoginPage2 />} />
+          <Route path="/login" element={<UnifiedLoginPage />} />
+          {/* <Route path="/login2" element={<LoginPage2 />} /> */}
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route

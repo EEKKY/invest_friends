@@ -6,6 +6,7 @@ import { AxiosFilterModule } from './common/axios/error_handler/axios-filter.mod
 import { ConfigModule } from '@nestjs/config';
 import { LoginModule } from './login/login.module';
 import { JwtAuthModule } from './authguard/authguard.module';
+import { SocialModule } from './social/social.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { JwtAuthModule } from './authguard/authguard.module';
     AxiosFilterModule,
     LoginModule,
     JwtAuthModule,
+    SocialModule,
   ],
   controllers: [],
   providers: [],
