@@ -30,7 +30,7 @@ export class AxiosWrapper {
   }
 
   handle(error: AxiosError): ApiError<unknown> {
-    const url = error.config?.url;
+    const url = error.config?.url ?? "unknown_url";
     const strategy = this.compiledStrategies(url);
     return strategy(error);
   }
