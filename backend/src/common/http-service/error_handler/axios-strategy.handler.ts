@@ -29,17 +29,17 @@ const errorStrategies: Record<
   "EXTERNAL": {
     'https://test.com/.*': (error: AxiosError) => ({
       data: 'Test Api Not Found',
-      message: `Test API Error ${error.config?.url}`,
+      message: `Test API Error ${error.config?.url ?? "unknown URL"}`,
       statusCode: 404,
     }),
     'https://asset.com/.*': (error: AxiosError) => ({
       data: 'Asset Api Not Found',
-      message: `Asset API Error ${error.config?.url}`,
+      message: `Asset API Error ${error.config?.url ?? "unknown URL"}`,
       statusCode: 404,
     }),
     '.*': (error: AxiosError) => ({
       data: 'No matched api',
-      message: `Unhandled error at ${error.config?.url}`,
+      message: `Unhandled error at ${error.config?.url ?? "unknown URL"}`,
       statusCode: 500,
     }),
   } satisfies Record<string, ExternalStrategy>
