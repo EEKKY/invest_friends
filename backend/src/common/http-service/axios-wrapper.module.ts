@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+import { HttpService } from '@nestjs/axios';
 import { AxiosWrapper } from './axios-wrapper.service';
 
 @Module({
-  imports: [],
+  imports: [HttpService],
   providers: [AxiosWrapper],
   exports: [AxiosWrapper],
 })
