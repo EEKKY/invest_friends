@@ -18,19 +18,19 @@ pipeline {
             steps {
                 dir('backend') {
                     sh 'pnpm install --frozen-lockfile'
+                    sh 'pnpm lint'
                     sh 'pnpm build'
-                    sh 'pnpm lint'   // 필요하면 테스트도
-                    sh 'pnpm start:dev'
+                    sh 'pnpm start'
                 }
             }
         }
         stage('Install & Build - Frontend (Next.js)') {
             steps {
-                dir('next') {
+                dir('frontend') {
                     sh 'pnpm install --frozen-lockfile'
+                    sh 'pnpm lint'
                     sh 'pnpm build'
-                    sh 'pnpm lint'   // 필요하면 린트도
-                    sh 'pnpm dev'
+                    sh 'pnpm preview'
                 }
             }
         }
