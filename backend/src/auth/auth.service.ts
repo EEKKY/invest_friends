@@ -45,6 +45,7 @@ export class AuthService {
     if (!userOne) throw new NotFoundException('유저 조회가 안됩니다');
     return userOne;
   }
+
   async updateUser(
     userUid: string,
     updateUserDto: UpdateUserDto,

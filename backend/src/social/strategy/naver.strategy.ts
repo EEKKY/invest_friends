@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-naver';
 import { ConfigService } from '@nestjs/config';
+import { NaverUser } from '../interface/social.interface';
 
 @Injectable()
 export class NaverStrategy extends PassportStrategy(Strategy, 'naver') {
@@ -13,9 +14,13 @@ export class NaverStrategy extends PassportStrategy(Strategy, 'naver') {
     });
   }
 
-  async validate(accessToken: string, refreshToken: string, profile: Profile) {
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: Profile,
+  ): Promise<NaverUser> {
     const { id, displayName, _json } = profile;
-    const user = {
+    const user: NaverUser = {
       provider: 'naver',
       providerId: id,
       name: displayName || '',

@@ -33,7 +33,7 @@ function AppContent() {
         <Routes>
           <Route path="/login" element={<UnifiedLoginPage />} />
           {/* <Route path="/login2" element={<LoginPage2 />} /> */}
-          <Route path="/auth/callback" element={<AuthCallbackPage />} />
+          <Route path="/social-callback" element={<AuthCallbackPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route
             path="/"

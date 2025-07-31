@@ -1,21 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthEntity, Social } from 'src/auth/entity/auth.entity';
 import { JwtAuthService } from 'src/authguard/jwt.service';
 import { Repository } from 'typeorm';
 import { Request, Response } from 'express';
-
-interface SocialUser {
-  email: string;
-  provider: string;
-  name?: string;
-  firstName?: string;
-  lastName?: string;
-}
+import { SocialUser } from './interface/social.interface';
 
 @Injectable()
 export class SocialService {
+  logger = new Logger('sociallogin');
   constructor(
     @InjectRepository(AuthEntity)
     private readonly authRepository: Repository<AuthEntity>,
@@ -32,11 +26,10 @@ export class SocialService {
     const { email, provider, name, firstName } = user;
     const displayName = name || firstName || email.split('@')[0];
 
-    let authUser = await this.authRepository.findOne({
-      where: { userEmail: email },
-    });
+    let authUser = await this.authRepository.findOneBy({ userEmail: email }); //소셜은 Uid말고 메일로 조회
 
-    if (!user) {
+    if (!authUser) {
+      //없을시 생성
       let socialProvider: Social;
       switch (provider) {
         case 'google':
@@ -58,10 +51,10 @@ export class SocialService {
         userEmail: email,
         userNick: displayName,
         social: socialProvider,
+        userPassword: null,
       });
       authUser = await this.authRepository.save(newUser);
     }
-
     return authUser;
   }
 
@@ -70,7 +63,7 @@ export class SocialService {
       const user = await this.socialLogin(req);
       await this.setAuthCookiesAndRedirect(res, user, true);
     } catch (error) {
-      console.error('Social login error:', error);
+      this.logger.error('소셜 로그인 에러', error.stack);
       await this.redirectToFrontend(res, false);
     }
   }
@@ -82,7 +75,6 @@ export class SocialService {
   ): Promise<void> {
     if (success && user) {
       const tokenPair = await this.jwtAuthService.generateTokenPair(user);
-
       this.setSecureCookie(res, 'accessToken', tokenPair.accessToken, 3600000); // 1시간
       this.setSecureCookie(
         res,
@@ -94,7 +86,6 @@ export class SocialService {
 
     await this.redirectToFrontend(res, success);
   }
-
   private setSecureCookie(
     res: Response,
     name: string,
@@ -102,7 +93,7 @@ export class SocialService {
     maxAge: number,
   ): void {
     res.cookie(name, value, {
-      httpOnly: true,
+      httpOnly: false,
       secure: this.configService.get('NODE_ENV') === 'production',
       sameSite: 'lax',
       maxAge,
@@ -115,6 +106,6 @@ export class SocialService {
   ): Promise<void> {
     const frontendUrl = this.configService.get('FRONTEND_URL');
     const status = success ? 'success' : 'fail';
-    res.redirect(`${frontendUrl}/auth/callback?login=${status}`);
+    res.redirect(`${frontendUrl}/social-callback?login=${status}`);
   }
 }

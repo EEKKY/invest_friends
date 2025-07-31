@@ -26,14 +26,6 @@ export class AuthController {
     return this.service.findUserAll();
   }
 
-  @Get(':uid')
-  @ApiOperation({ summary: '사용자 상세히 조회' })
-  @ApiResponse({ status: 200, type: [AuthEntity] })
-  @ApiBearerAuth()
-  findUserOne(@Param('uid') uid: string): Promise<AuthEntity> {
-    return this.service.findUserOne(uid);
-  }
-
   @Public()
   @Post()
   @ApiOperation({ summary: '회원가입' })
@@ -60,5 +52,13 @@ export class AuthController {
   @ApiBearerAuth()
   remove(@Param('uid') uid: string): Promise<void> {
     return this.service.userDelete(uid);
+  }
+
+  @Get(':uid')
+  @ApiOperation({ summary: '사용자 상세히 조회' })
+  @ApiResponse({ status: 200, type: [AuthEntity] })
+  @ApiBearerAuth()
+  findUserOne(@Param('uid') uid: string): Promise<AuthEntity> {
+    return this.service.findUserOne(uid);
   }
 }
