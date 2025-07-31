@@ -1,7 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { firstValueFrom } from 'rxjs';
-import { GetPriceRequestDto, PriceResponseDto } from './dto/get-price.dto';
+import { firstValueFrom, catchError } from 'rxjs';
+import {
+  KisChartRequestDto,
+  GetPriceRequestDto,
+  PriceResponseDto,
+  KisChartResponseDto,
+  KisTimeDailyChartRequestDto,
+  KisTimeItemChartRequestDto,
+  KisTimeDailyChartResponseDto,
+  KisTimeItemChartResponseDto,
+  KisIndexChartRequestDto,
+  KisIndexChartResponseDto,
+} from './dto/kis.dto';
 
 @Injectable()
 export class KisService {
@@ -15,88 +26,414 @@ export class KisService {
   private readonly TOKEN_ENDPOINT = '/oauth2/tokenP';
   private readonly INQUIRE_PRICE =
     '/uapi/domestic-stock/v1/quotations/inquire-price';
+  private readonly INQUIRE_TIME_DAILY_CHART =
+    '/uapi/domestic-stock/v1/quotations/inquire-time-dailychartprice';
+  private readonly INQUIRE_TIME_ITEM_CHART =
+    '/uapi/domestic-stock/v1/quotations/inquire-time-itemchartprice';
+  private readonly INQUIRE_INDEX_CHART =
+    '/uapi/domestic-stock/v1/quotations/inquire-index-daily-price';
   private readonly logger = new Logger(KisService.name);
 
   constructor(private readonly httpService: HttpService) {}
 
   async getPrice(dto: GetPriceRequestDto): Promise<PriceResponseDto> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
-    const token = await this.getValidAccessToken();
-    const tr_id = 'FHKST01010100';
+    
+    try {
+      const token = await this.getValidAccessToken();
+      const tr_id = 'FHKST01010100';
 
-    const { data } = await firstValueFrom(
-      this.httpService.get(`${this.KIS_API_BASE_URL}${this.INQUIRE_PRICE}`, {
-        headers: {
-          authorization: `Bearer ${token}`,
-          appkey: this.appKey,
-          appsecret: this.appSecret,
-          tr_id,
-          custtype: 'P',
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-        params: {
-          FID_COND_MRKT_DIV_CODE,
-          FID_INPUT_ISCD,
-        },
-      }),
-    );
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.KIS_API_BASE_URL}${this.INQUIRE_PRICE}`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+            appkey: this.appKey,
+            appsecret: this.appSecret,
+            tr_id,
+            custtype: 'P',
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+          params: {
+            FID_COND_MRKT_DIV_CODE,
+            FID_INPUT_ISCD,
+          },
+        }),
+      );
 
+      // Validate KIS API response
+      if (!data || data.rt_cd !== '0') {
+        const errorMsg = data?.msg1 || 'Unknown KIS API error';
+        this.logger.error(`KIS Price API Error: ${data?.rt_cd} - ${errorMsg}`);
+        throw new Error(`KIS API Error: ${errorMsg}`);
+      }
+
+      // Validate output data exists
+      if (!data.output) {
+        this.logger.error('KIS Price API returned no output data');
+        throw new Error('No price data available');
+      }
+
+      const output = data.output;
+      
+      // Extract and validate required fields
+      return {
+        rprs_mrkt_kor_name: output.rprs_mrkt_kor_name || '',
+        stck_shrn_iscd: output.stck_shrn_iscd || FID_INPUT_ISCD,
+        stck_prpr: output.stck_prpr || '0',
+        prdy_vrss: output.prdy_vrss || '0',
+        prdy_ctrt: output.prdy_ctrt || '0.00',
+        per: output.per || '0.00',
+        pbr: output.pbr || '0.00',
+      };
+    } catch (error) {
+      this.logger.error(`Failed to get price for ${FID_INPUT_ISCD}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async getChartData(dto: KisChartRequestDto): Promise<KisChartResponseDto> {
     const {
-      rprs_mrkt_kor_name,
-      stck_shrn_iscd,
-      stck_prpr,
-      prdy_vrss,
-      prdy_ctrt,
-      per,
-      pbr,
-    } = data.output;
+      FID_COND_MRKT_DIV_CODE,
+      FID_INPUT_ISCD,
+      FID_INPUT_DATE_1,
+      FID_INPUT_DATE_2,
+      FID_PERIOD_DIV_CODE,
+      FID_ORG_ADJ_PRC,
+    } = dto;
+    
+    try {
+      const token = await this.getValidAccessToken();
+      const tr_id = 'FHKST03010100';
+      const CHART_ENDPOINT = '/uapi/domestic-stock/v1/quotations/inquire-daily-price';
 
-    return {
-      rprs_mrkt_kor_name,
-      stck_shrn_iscd,
-      stck_prpr,
-      prdy_vrss,
-      prdy_ctrt,
-      per,
-      pbr,
-    };
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.KIS_API_BASE_URL}${CHART_ENDPOINT}`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+            appkey: this.appKey,
+            appsecret: this.appSecret,
+            tr_id,
+            custtype: 'P',
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+          params: {
+            FID_COND_MRKT_DIV_CODE,
+            FID_INPUT_ISCD,
+            FID_INPUT_DATE_1,
+            FID_INPUT_DATE_2,
+            FID_PERIOD_DIV_CODE,
+            FID_ORG_ADJ_PRC,
+          },
+        }),
+      );
+
+      // Validate KIS API response
+      if (!data || data.rt_cd !== '0') {
+        const errorMsg = data?.msg1 || 'Unknown KIS API error';
+        this.logger.error(`KIS Chart API Error: ${data?.rt_cd} - ${errorMsg}`);
+        throw new Error(`KIS API Error: ${errorMsg}`);
+      }
+
+      // Validate output data exists
+      if (!data.output2 || !Array.isArray(data.output2)) {
+        this.logger.error('KIS Chart API returned no chart data');
+        throw new Error('No chart data available');
+      }
+
+      // Return only necessary data
+      return {
+        rt_cd: data.rt_cd,
+        msg_cd: data.msg_cd || '',
+        msg1: data.msg1 || '',
+        output2: data.output2.map((item: any) => ({
+          stck_bsop_date: item.stck_bsop_date || '',
+          stck_oprc: item.stck_oprc || '0',
+          stck_hgpr: item.stck_hgpr || '0', 
+          stck_lwpr: item.stck_lwpr || '0',
+          stck_clpr: item.stck_clpr || '0',
+          acml_vol: item.acml_vol || '0',
+        })),
+      };
+    } catch (error) {
+      this.logger.error(`Failed to get chart data for ${FID_INPUT_ISCD}: ${error.message}`);
+      throw error;
+    }
   }
 
   async fetchAccessToken(): Promise<void> {
-    const { data } = await firstValueFrom(
-      this.httpService.post(
-        `${this.KIS_API_BASE_URL}${this.TOKEN_ENDPOINT}`,
-        {
-          grant_type: 'client_credentials',
-          appkey: this.appKey,
-          appsecret: this.appSecret,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      ),
-    );
+    try {
+      // Check if credentials are properly configured
+      if (!this.appKey || !this.appSecret) {
+        throw new Error('KIS API credentials are not configured. Please check KIS_APP_KEY and KIS_APP_SECRET in .env file');
+      }
 
-    this.accessToken = data.access_token;
-    const expiresIn = Number(data.expires_in); // 보통 초 단위로 제공
-    this.accessTokenExpiresAt = new Date(
-      Date.now() + expiresIn * 1000 - 60 * 1000,
-    ); // 만료 1분 전 갱신
-    this.logger.log(
-      `KIS AccessToken 갱신 완료 (만료시각: ${this.accessTokenExpiresAt.toISOString()})`,
-    );
+      // Remove any quotes or escape characters from credentials
+      const cleanAppKey = this.appKey.replace(/['"]/g, '');
+      const cleanAppSecret = this.appSecret.replace(/['"\\]/g, '');
+
+      const { data } = await firstValueFrom(
+        this.httpService.post(
+          `${this.KIS_API_BASE_URL}${this.TOKEN_ENDPOINT}`,
+          {
+            grant_type: 'client_credentials',
+            appkey: cleanAppKey,
+            appsecret: cleanAppSecret,
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        ).pipe(
+          catchError((error) => {
+            if (error.response) {
+              const errorMsg = error.response.data?.error_description || error.response.statusText;
+              const errorCode = error.response.data?.error_code || error.response.status;
+              this.logger.error(`KIS Token API Error [${errorCode}]: ${errorMsg}`);
+              
+              if (error.response.status === 403) {
+                throw new Error(`KIS API Authentication Failed: ${errorMsg}. Please check your KIS_APP_KEY and KIS_APP_SECRET in .env file`);
+              }
+            }
+            throw error;
+          }),
+        ),
+      );
+
+      // Validate token response
+      if (!data || !data.access_token) {
+        const errorMsg = data?.error_description || 'Failed to get access token';
+        this.logger.error(`KIS Token API Error: ${errorMsg}`);
+        throw new Error(`Token Error: ${errorMsg}`);
+      }
+
+      this.accessToken = data.access_token;
+      const expiresIn = Number(data.expires_in) || 86400; // Default 24 hours if not provided
+      this.accessTokenExpiresAt = new Date(
+        Date.now() + expiresIn * 1000 - 60 * 1000,
+      ); // 만료 1분 전 갱신
+      
+      this.logger.log(
+        `KIS AccessToken 갱신 완료 (만료시각: ${this.accessTokenExpiresAt.toISOString()})`,
+      );
+    } catch (error) {
+      this.logger.error(`Failed to fetch KIS access token: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async getTimeDailyChart(dto: KisTimeDailyChartRequestDto): Promise<KisTimeDailyChartResponseDto> {
+    const {
+      FID_COND_MRKT_DIV_CODE,
+      FID_INPUT_ISCD,
+      FID_INPUT_DATE_1,
+      FID_ORG_ADJ_PRC,
+    } = dto;
+    
+    try {
+      const token = await this.getValidAccessToken();
+      const tr_id = 'FHKST03010200';
+
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.KIS_API_BASE_URL}${this.INQUIRE_TIME_DAILY_CHART}`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+            appkey: this.appKey,
+            appsecret: this.appSecret,
+            tr_id,
+            custtype: 'P',
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+          params: {
+            FID_COND_MRKT_DIV_CODE,
+            FID_INPUT_ISCD,
+            FID_INPUT_DATE_1,
+            FID_ORG_ADJ_PRC,
+          },
+        }),
+      );
+
+      // Validate KIS API response
+      if (!data || data.rt_cd !== '0') {
+        const errorMsg = data?.msg1 || 'Unknown KIS API error';
+        this.logger.error(`KIS Time Daily Chart API Error: ${data?.rt_cd} - ${errorMsg}`);
+        throw new Error(`KIS API Error: ${errorMsg}`);
+      }
+
+      // Validate output data exists
+      if (!data.output2 || !Array.isArray(data.output2)) {
+        this.logger.error('KIS Time Daily Chart API returned no data');
+        throw new Error('No time daily chart data available');
+      }
+
+      // Return only necessary data
+      return {
+        rt_cd: data.rt_cd,
+        msg_cd: data.msg_cd || '',
+        msg1: data.msg1 || '',
+        output2: data.output2.map((item: any) => ({
+          stck_cntg_hour: item.stck_cntg_hour || '',
+          stck_oprc: item.stck_oprc || '0',
+          stck_hgpr: item.stck_hgpr || '0',
+          stck_lwpr: item.stck_lwpr || '0',
+          stck_prpr: item.stck_prpr || '0',
+          cntg_vol: item.cntg_vol || '0',
+          acml_vol: item.acml_vol || '0',
+        })),
+      };
+    } catch (error) {
+      this.logger.error(`Failed to get time daily chart for ${FID_INPUT_ISCD}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async getTimeItemChart(dto: KisTimeItemChartRequestDto): Promise<KisTimeItemChartResponseDto> {
+    const {
+      FID_COND_MRKT_DIV_CODE,
+      FID_INPUT_ISCD,
+      FID_INPUT_HOUR_1,
+      FID_ORG_ADJ_PRC,
+      FID_PW_DATA_INCU_YN,
+    } = dto;
+    
+    try {
+      const token = await this.getValidAccessToken();
+      const tr_id = 'FHKST03010300';
+
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.KIS_API_BASE_URL}${this.INQUIRE_TIME_ITEM_CHART}`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+            appkey: this.appKey,
+            appsecret: this.appSecret,
+            tr_id,
+            custtype: 'P',
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+          params: {
+            FID_COND_MRKT_DIV_CODE,
+            FID_INPUT_ISCD,
+            FID_INPUT_HOUR_1,
+            FID_ORG_ADJ_PRC,
+            FID_PW_DATA_INCU_YN,
+          },
+        }),
+      );
+
+      // Validate KIS API response
+      if (!data || data.rt_cd !== '0') {
+        const errorMsg = data?.msg1 || 'Unknown KIS API error';
+        this.logger.error(`KIS Time Item Chart API Error: ${data?.rt_cd} - ${errorMsg}`);
+        throw new Error(`KIS API Error: ${errorMsg}`);
+      }
+
+      // Validate output data exists
+      if (!data.output2 || !Array.isArray(data.output2)) {
+        this.logger.error('KIS Time Item Chart API returned no data');
+        throw new Error('No time item chart data available');
+      }
+
+      // Return only necessary data
+      return {
+        rt_cd: data.rt_cd,
+        msg_cd: data.msg_cd || '',
+        msg1: data.msg1 || '',
+        output2: data.output2.map((item: any) => ({
+          stck_cntg_hour: item.stck_cntg_hour || '',
+          stck_oprc: item.stck_oprc || '0',
+          stck_hgpr: item.stck_hgpr || '0',
+          stck_lwpr: item.stck_lwpr || '0',
+          stck_prpr: item.stck_prpr || '0',
+          cntg_vol: item.cntg_vol || '0',
+          acml_vol: item.acml_vol || '0',
+        })),
+      };
+    } catch (error) {
+      this.logger.error(`Failed to get time item chart for ${FID_INPUT_ISCD}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async getIndexChart(dto: KisIndexChartRequestDto): Promise<KisIndexChartResponseDto> {
+    const {
+      FID_INPUT_ISCD,
+      FID_INPUT_DATE_1,
+      FID_INPUT_DATE_2,
+      FID_PERIOD_DIV_CODE,
+    } = dto;
+    
+    try {
+      const token = await this.getValidAccessToken();
+      const tr_id = 'FHKUP03500100';
+
+      const { data } = await firstValueFrom(
+        this.httpService.get(`${this.KIS_API_BASE_URL}${this.INQUIRE_INDEX_CHART}`, {
+          headers: {
+            authorization: `Bearer ${token}`,
+            appkey: this.appKey,
+            appsecret: this.appSecret,
+            tr_id,
+            custtype: 'P',
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+          params: {
+            FID_COND_MRKT_DIV_CODE: FID_INPUT_ISCD === '0001' ? 'U' : 'Q', // U: 코스피, Q: 코스닥
+            FID_INPUT_ISCD,
+            FID_INPUT_DATE_1,
+            FID_INPUT_DATE_2,
+            FID_PERIOD_DIV_CODE,
+            FID_ORG_ADJ_PRC: '0',
+          },
+        }),
+      );
+
+      // Validate KIS API response
+      if (!data || data.rt_cd !== '0') {
+        const errorMsg = data?.msg1 || 'Unknown KIS API error';
+        this.logger.error(`KIS Index Chart API Error: ${data?.rt_cd} - ${errorMsg}`);
+        throw new Error(`KIS API Error: ${errorMsg}`);
+      }
+
+      // Validate output data exists
+      if (!data.output2 || !Array.isArray(data.output2)) {
+        this.logger.error('KIS Index Chart API returned no data');
+        throw new Error('No index chart data available');
+      }
+
+      // Return only necessary data
+      return {
+        rt_cd: data.rt_cd,
+        msg_cd: data.msg_cd || '',
+        msg1: data.msg1 || '',
+        output2: data.output2.map((item: any) => ({
+          stck_bsop_date: item.stck_bsop_date || '',
+          bsop_hour: item.bsop_hour || '',
+          indx_prpr: item.indx_prpr || '0',
+          indx_prdy_vrss: item.indx_prdy_vrss || '0',
+          indx_prdy_ctrt: item.indx_prdy_ctrt || '0.00',
+          acml_vol: item.acml_vol || '0',
+          acml_tr_pbmn: item.acml_tr_pbmn || '0',
+        })),
+      };
+    } catch (error) {
+      this.logger.error(`Failed to get index chart for ${FID_INPUT_ISCD}: ${error.message}`);
+      throw error;
+    }
   }
 
   private async getValidAccessToken(): Promise<string> {
-    if (
-      !this.accessToken ||
-      !this.accessTokenExpiresAt ||
-      new Date() >= this.accessTokenExpiresAt
-    ) {
-      await this.fetchAccessToken();
+    try {
+      if (
+        !this.accessToken ||
+        !this.accessTokenExpiresAt ||
+        new Date() >= this.accessTokenExpiresAt
+      ) {
+        await this.fetchAccessToken();
+      }
+      return this.accessToken!;
+    } catch (error) {
+      this.logger.error('Failed to get valid access token', error);
+      throw new Error('Unable to authenticate with KIS API. Please check your credentials.');
     }
-    return this.accessToken!;
   }
 }
