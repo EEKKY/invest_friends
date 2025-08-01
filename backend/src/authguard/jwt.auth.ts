@@ -36,13 +36,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  handleRequest<TUser = Express.User>( //밑에 3개 경고 뜨는데 핸들러 리퀘스트 시그니처 라서 없애니까 자꾸 에러가 뜸
-    err: unknown,
-    user: TUser,
-    _info: unknown,
-    _context: ExecutionContext,
-    _status?: unknown,
-  ): TUser {
+  handleRequest<TUser = Express.User>(err: unknown, user: TUser): TUser {
     if (err || !user) {
       throw err || new UnauthorizedException('인증이 필요합니다');
     }

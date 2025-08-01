@@ -93,7 +93,7 @@ export class SocialService {
     maxAge: number,
   ): void {
     res.cookie(name, value, {
-      httpOnly: false,
+      httpOnly: false, //펄스로 했음 이거 나중에 트루로 하고 api로 쏠 예정
       secure: this.configService.get('NODE_ENV') === 'production',
       sameSite: 'lax',
       maxAge,

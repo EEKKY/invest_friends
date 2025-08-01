@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { StockModule } from './stock/stock.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database.module';
-import { AxiosFilterModule } from './common/axios/error_handler/axios-filter.module';
 import { ConfigModule } from '@nestjs/config';
 import { LoginModule } from './login/login.module';
 import { JwtAuthModule } from './authguard/authguard.module';
 import { SocialModule } from './social/social.module';
+import { AxiosWrapperModule } from './common/http-service/axios-wrapper.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { SocialModule } from './social/social.module';
     StockModule,
     AuthModule,
     DatabaseModule,
-    AxiosFilterModule,
+    AxiosWrapperModule, //예전 파일 모듈로 되어 있길래 바꿔놓음
     LoginModule,
     JwtAuthModule,
     SocialModule,

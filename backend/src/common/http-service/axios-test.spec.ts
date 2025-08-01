@@ -37,7 +37,9 @@ describe('AxiosWrapper', () => {
         toJSON: () => ({}),
       } as AxiosError;
 
-      jest.spyOn(httpService, 'get').mockReturnValueOnce(throwError(() => fakeError));
+      jest
+        .spyOn(httpService, 'get')
+        .mockReturnValueOnce(throwError(() => fakeError));
 
       await expect(axiosWrapper.get(testUrl)).rejects.toEqual({
         data: 'Test Api Not Found',
@@ -55,7 +57,9 @@ describe('AxiosWrapper', () => {
         toJSON: () => ({}),
       } as AxiosError;
 
-      jest.spyOn(httpService, 'get').mockReturnValueOnce(throwError(() => fakeError));
+      jest
+        .spyOn(httpService, 'get')
+        .mockReturnValueOnce(throwError(() => fakeError));
 
       await expect(axiosWrapper.get(url)).rejects.toEqual({
         data: 'No matched api',
@@ -93,7 +97,10 @@ describe('AxiosWrapper', () => {
 
       jest.spyOn(httpService, 'post').mockReturnValueOnce(of(result));
 
-      const res = await axiosWrapper.post<typeof result.data, typeof postData>(url, postData);
+      const res = await axiosWrapper.post<typeof result.data, typeof postData>(
+        url,
+        postData,
+      );
       expect(res).toEqual('posted');
     });
   });
