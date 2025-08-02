@@ -3,11 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthEntity } from './entity/auth.entity';
-import { GoogleStrategy } from './strategy/google.strategy';
-import { KakaoStrategy } from './strategy/kakao.strategy';
-import { NaverStrategy } from './strategy/naver.strategy';
-// import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { JwtAuthModule } from 'src/authguard/authguard.module';
 
 @Module({
@@ -17,6 +13,7 @@ import { JwtAuthModule } from 'src/authguard/authguard.module';
     JwtAuthModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy, KakaoStrategy, NaverStrategy],
+  providers: [AuthService],
+  exports: [AuthService], //재사용 대비
 })
 export class AuthModule {}

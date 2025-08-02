@@ -36,13 +36,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return super.canActivate(context);
   }
 
-  handleRequest<TUser = Express.User>(
-    err: unknown,
-    user: TUser,
-    _info: unknown,
-    _context: ExecutionContext,
-    _status?: unknown,
-  ): TUser {
+  handleRequest<TUser = Express.User>(err: unknown, user: TUser): TUser {
     if (err || !user) {
       throw err || new UnauthorizedException('인증이 필요합니다');
     }

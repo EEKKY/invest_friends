@@ -20,6 +20,8 @@ describe('JwtAuthService', () => {
     userEmail: 'test@example.com',
     userNick: 'testuser',
     userPassword: 'hashedPassword123',
+    social: null,
+    assist: null,
     createAt: new Date(),
     updateAt: new Date(),
     deleteAt: null,
