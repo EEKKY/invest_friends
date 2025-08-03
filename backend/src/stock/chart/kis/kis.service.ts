@@ -20,6 +20,8 @@ export class KisService {
   private readonly appSecret = process.env.KIS_APP_SECRET;
   private accessToken: string | null = null;
   private accessTokenExpiresAt: Date | null = null;
+  private indexCache = new Map<string, { data: any; timestamp: Date }>();
+  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes during market hours
 
   private readonly KIS_API_BASE_URL =
     'https://openapi.koreainvestment.com:9443';
@@ -399,6 +401,22 @@ export class KisService {
       FID_PERIOD_DIV_CODE,
     } = dto;
 
+    // Check if market is open and use appropriate caching strategy
+    const isMarketOpen = this.isMarketOpen();
+    const cacheKey = `${FID_INPUT_ISCD}_${FID_INPUT_DATE_1}_${FID_INPUT_DATE_2}_${FID_PERIOD_DIV_CODE}`;
+    
+    // For market closed, use longer cache duration (until next market open)
+    const cacheData = this.indexCache.get(cacheKey);
+    if (cacheData) {
+      const age = Date.now() - cacheData.timestamp.getTime();
+      const maxAge = isMarketOpen ? this.CACHE_DURATION : this.getTimeUntilMarketOpen();
+      
+      if (age < maxAge) {
+        this.logger.log(`Using cached index data for ${FID_INPUT_ISCD} (market ${isMarketOpen ? 'open' : 'closed'})`);
+        return cacheData.data;
+      }
+    }
+
     try {
       const token = await this.getValidAccessToken();
       const tr_id = 'FHKUP03500100';
@@ -441,21 +459,33 @@ export class KisService {
         throw new Error('No index chart data available');
       }
 
-      // Return only necessary data
-      return {
+      // Return only necessary data with proper sorting (oldest to newest)
+      const result = {
         rt_cd: data.rt_cd,
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
-        output2: data.output2.map((item: any) => ({
-          stck_bsop_date: item.stck_bsop_date || '',
-          bsop_hour: item.bsop_hour || '',
-          indx_prpr: item.indx_prpr || '0',
-          indx_prdy_vrss: item.indx_prdy_vrss || '0',
-          indx_prdy_ctrt: item.indx_prdy_ctrt || '0.00',
-          acml_vol: item.acml_vol || '0',
-          acml_tr_pbmn: item.acml_tr_pbmn || '0',
-        })),
+        output2: data.output2
+          .map((item: any) => ({
+            stck_bsop_date: item.stck_bsop_date || '',
+            bsop_hour: item.bsop_hour || '',
+            indx_prpr: item.indx_prpr || '0',
+            indx_prdy_vrss: item.indx_prdy_vrss || '0',
+            indx_prdy_ctrt: item.indx_prdy_ctrt || '0.00',
+            acml_vol: item.acml_vol || '0',
+            acml_tr_pbmn: item.acml_tr_pbmn || '0',
+          }))
+          .sort((a, b) => {
+            // Sort by date (oldest to newest)
+            const dateA = a.stck_bsop_date + (a.bsop_hour || '000000');
+            const dateB = b.stck_bsop_date + (b.bsop_hour || '000000');
+            return dateA.localeCompare(dateB);
+          }),
       };
+
+      // Cache the result
+      this.indexCache.set(cacheKey, { data: result, timestamp: new Date() });
+      
+      return result;
     } catch (error) {
       this.logger.error(
         `Failed to get index chart for ${FID_INPUT_ISCD}: ${error.message}`,
@@ -466,6 +496,46 @@ export class KisService {
 
   private tokenRequestInProgress = false;
   private tokenRequestPromise: Promise<void> | null = null;
+
+  private isMarketOpen(): boolean {
+    const now = new Date();
+    const koreaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+    const hour = koreaTime.getHours();
+    const minute = koreaTime.getMinutes();
+    const day = koreaTime.getDay(); // 0 = Sunday, 6 = Saturday
+
+    // Weekend check
+    if (day === 0 || day === 6) {
+      return false;
+    }
+
+    // Market hours: 9:00 - 15:30 KST
+    const marketStart = 9 * 60; // 9:00 in minutes
+    const marketEnd = 15 * 60 + 30; // 15:30 in minutes
+    const currentTime = hour * 60 + minute;
+
+    return currentTime >= marketStart && currentTime <= marketEnd;
+  }
+
+  private getTimeUntilMarketOpen(): number {
+    const now = new Date();
+    const koreaTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Seoul"}));
+    const nextMarketOpen = new Date(koreaTime);
+    
+    // If it's weekend, set to next Monday 9:00
+    if (koreaTime.getDay() === 0) { // Sunday
+      nextMarketOpen.setDate(koreaTime.getDate() + 1); // Monday
+    } else if (koreaTime.getDay() === 6) { // Saturday
+      nextMarketOpen.setDate(koreaTime.getDate() + 2); // Monday
+    } else if (koreaTime.getHours() >= 15 && koreaTime.getMinutes() > 30) {
+      // After market close, set to next day
+      nextMarketOpen.setDate(koreaTime.getDate() + 1);
+    }
+    
+    nextMarketOpen.setHours(9, 0, 0, 0);
+    
+    return nextMarketOpen.getTime() - koreaTime.getTime();
+  }
 
   private async getValidAccessToken(): Promise<string> {
     try {

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { StockModule } from './stock/stock.module';
+import { ChartModule } from './stock/chart/chart.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database.module';
 import { AxiosFilterModule } from './common/axios/error_handler/axios-filter.module';
@@ -13,7 +13,7 @@ import { JwtAuthModule } from './authguard/authguard.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    StockModule,
+    ChartModule,
     AuthModule,
     DatabaseModule,
     AxiosFilterModule,
