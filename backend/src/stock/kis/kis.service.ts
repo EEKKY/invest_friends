@@ -31,14 +31,14 @@ export class KisService {
   private readonly INQUIRE_TIME_ITEM_CHART =
     '/uapi/domestic-stock/v1/quotations/inquire-time-itemchartprice';
   private readonly INQUIRE_INDEX_CHART =
-    '/uapi/domestic-stock/v1/quotations/inquire-index-daily-price';
+    '/uapi/domestic-stock/v1/quotations/inquire-daily-indexchartprice';
   private readonly logger = new Logger(KisService.name);
 
   constructor(private readonly httpService: HttpService) {}
 
   async getPrice(dto: GetPriceRequestDto): Promise<PriceResponseDto> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
-    
+
     try {
       const token = await this.getValidAccessToken();
       const tr_id = 'FHKST01010100';
@@ -74,7 +74,7 @@ export class KisService {
       }
 
       const output = data.output;
-      
+
       // Extract and validate required fields
       return {
         rprs_mrkt_kor_name: output.rprs_mrkt_kor_name || '',
@@ -86,7 +86,9 @@ export class KisService {
         pbr: output.pbr || '0.00',
       };
     } catch (error) {
-      this.logger.error(`Failed to get price for ${FID_INPUT_ISCD}: ${error.message}`);
+      this.logger.error(
+        `Failed to get price for ${FID_INPUT_ISCD}: ${error.message}`,
+      );
       throw error;
     }
   }
@@ -100,11 +102,12 @@ export class KisService {
       FID_PERIOD_DIV_CODE,
       FID_ORG_ADJ_PRC,
     } = dto;
-    
+
     try {
       const token = await this.getValidAccessToken();
       const tr_id = 'FHKST03010100';
-      const CHART_ENDPOINT = '/uapi/domestic-stock/v1/quotations/inquire-daily-price';
+      const CHART_ENDPOINT =
+        '/uapi/domestic-stock/v1/quotations/inquire-daily-price';
 
       const { data } = await firstValueFrom(
         this.httpService.get(`${this.KIS_API_BASE_URL}${CHART_ENDPOINT}`, {
@@ -148,14 +151,16 @@ export class KisService {
         output2: data.output2.map((item: any) => ({
           stck_bsop_date: item.stck_bsop_date || '',
           stck_oprc: item.stck_oprc || '0',
-          stck_hgpr: item.stck_hgpr || '0', 
+          stck_hgpr: item.stck_hgpr || '0',
           stck_lwpr: item.stck_lwpr || '0',
           stck_clpr: item.stck_clpr || '0',
           acml_vol: item.acml_vol || '0',
         })),
       };
     } catch (error) {
-      this.logger.error(`Failed to get chart data for ${FID_INPUT_ISCD}: ${error.message}`);
+      this.logger.error(
+        `Failed to get chart data for ${FID_INPUT_ISCD}: ${error.message}`,
+      );
       throw error;
     }
   }
@@ -164,7 +169,9 @@ export class KisService {
     try {
       // Check if credentials are properly configured
       if (!this.appKey || !this.appSecret) {
-        throw new Error('KIS API credentials are not configured. Please check KIS_APP_KEY and KIS_APP_SECRET in .env file');
+        throw new Error(
+          'KIS API credentials are not configured. Please check KIS_APP_KEY and KIS_APP_SECRET in .env file',
+        );
       }
 
       // Remove any quotes or escape characters from credentials
@@ -172,37 +179,47 @@ export class KisService {
       const cleanAppSecret = this.appSecret.replace(/['"\\]/g, '');
 
       const { data } = await firstValueFrom(
-        this.httpService.post(
-          `${this.KIS_API_BASE_URL}${this.TOKEN_ENDPOINT}`,
-          {
-            grant_type: 'client_credentials',
-            appkey: cleanAppKey,
-            appsecret: cleanAppSecret,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
+        this.httpService
+          .post(
+            `${this.KIS_API_BASE_URL}${this.TOKEN_ENDPOINT}`,
+            {
+              grant_type: 'client_credentials',
+              appkey: cleanAppKey,
+              appsecret: cleanAppSecret,
             },
-          },
-        ).pipe(
-          catchError((error) => {
-            if (error.response) {
-              const errorMsg = error.response.data?.error_description || error.response.statusText;
-              const errorCode = error.response.data?.error_code || error.response.status;
-              this.logger.error(`KIS Token API Error [${errorCode}]: ${errorMsg}`);
-              
-              if (error.response.status === 403) {
-                throw new Error(`KIS API Authentication Failed: ${errorMsg}. Please check your KIS_APP_KEY and KIS_APP_SECRET in .env file`);
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            },
+          )
+          .pipe(
+            catchError((error) => {
+              if (error.response) {
+                const errorMsg =
+                  error.response.data?.error_description ||
+                  error.response.statusText;
+                const errorCode =
+                  error.response.data?.error_code || error.response.status;
+                this.logger.error(
+                  `KIS Token API Error [${errorCode}]: ${errorMsg}`,
+                );
+
+                if (error.response.status === 403) {
+                  throw new Error(
+                    `KIS API Authentication Failed: ${errorMsg}. Please check your KIS_APP_KEY and KIS_APP_SECRET in .env file`,
+                  );
+                }
               }
-            }
-            throw error;
-          }),
-        ),
+              throw error;
+            }),
+          ),
       );
 
       // Validate token response
       if (!data || !data.access_token) {
-        const errorMsg = data?.error_description || 'Failed to get access token';
+        const errorMsg =
+          data?.error_description || 'Failed to get access token';
         this.logger.error(`KIS Token API Error: ${errorMsg}`);
         throw new Error(`Token Error: ${errorMsg}`);
       }
@@ -210,9 +227,9 @@ export class KisService {
       this.accessToken = data.access_token;
       const expiresIn = Number(data.expires_in) || 86400; // Default 24 hours if not provided
       this.accessTokenExpiresAt = new Date(
-        Date.now() + expiresIn * 1000 - 60 * 1000,
-      ); // 만료 1분 전 갱신
-      
+        Date.now() + expiresIn * 1000 - 5 * 60 * 1000,
+      ); // 만료 5분 전 갱신으로 변경
+
       this.logger.log(
         `KIS AccessToken 갱신 완료 (만료시각: ${this.accessTokenExpiresAt.toISOString()})`,
       );
@@ -222,41 +239,48 @@ export class KisService {
     }
   }
 
-  async getTimeDailyChart(dto: KisTimeDailyChartRequestDto): Promise<KisTimeDailyChartResponseDto> {
+  async getTimeDailyChart(
+    dto: KisTimeDailyChartRequestDto,
+  ): Promise<KisTimeDailyChartResponseDto> {
     const {
       FID_COND_MRKT_DIV_CODE,
       FID_INPUT_ISCD,
       FID_INPUT_DATE_1,
       FID_ORG_ADJ_PRC,
     } = dto;
-    
+
     try {
       const token = await this.getValidAccessToken();
       const tr_id = 'FHKST03010200';
 
       const { data } = await firstValueFrom(
-        this.httpService.get(`${this.KIS_API_BASE_URL}${this.INQUIRE_TIME_DAILY_CHART}`, {
-          headers: {
-            authorization: `Bearer ${token}`,
-            appkey: this.appKey,
-            appsecret: this.appSecret,
-            tr_id,
-            custtype: 'P',
-            'Content-Type': 'application/json; charset=utf-8',
+        this.httpService.get(
+          `${this.KIS_API_BASE_URL}${this.INQUIRE_TIME_DAILY_CHART}`,
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+              appkey: this.appKey,
+              appsecret: this.appSecret,
+              tr_id,
+              custtype: 'P',
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+            params: {
+              FID_COND_MRKT_DIV_CODE,
+              FID_INPUT_ISCD,
+              FID_INPUT_DATE_1,
+              FID_ORG_ADJ_PRC,
+            },
           },
-          params: {
-            FID_COND_MRKT_DIV_CODE,
-            FID_INPUT_ISCD,
-            FID_INPUT_DATE_1,
-            FID_ORG_ADJ_PRC,
-          },
-        }),
+        ),
       );
 
       // Validate KIS API response
       if (!data || data.rt_cd !== '0') {
         const errorMsg = data?.msg1 || 'Unknown KIS API error';
-        this.logger.error(`KIS Time Daily Chart API Error: ${data?.rt_cd} - ${errorMsg}`);
+        this.logger.error(
+          `KIS Time Daily Chart API Error: ${data?.rt_cd} - ${errorMsg}`,
+        );
         throw new Error(`KIS API Error: ${errorMsg}`);
       }
 
@@ -282,12 +306,16 @@ export class KisService {
         })),
       };
     } catch (error) {
-      this.logger.error(`Failed to get time daily chart for ${FID_INPUT_ISCD}: ${error.message}`);
+      this.logger.error(
+        `Failed to get time daily chart for ${FID_INPUT_ISCD}: ${error.message}`,
+      );
       throw error;
     }
   }
 
-  async getTimeItemChart(dto: KisTimeItemChartRequestDto): Promise<KisTimeItemChartResponseDto> {
+  async getTimeItemChart(
+    dto: KisTimeItemChartRequestDto,
+  ): Promise<KisTimeItemChartResponseDto> {
     const {
       FID_COND_MRKT_DIV_CODE,
       FID_INPUT_ISCD,
@@ -295,35 +323,40 @@ export class KisService {
       FID_ORG_ADJ_PRC,
       FID_PW_DATA_INCU_YN,
     } = dto;
-    
+
     try {
       const token = await this.getValidAccessToken();
       const tr_id = 'FHKST03010300';
 
       const { data } = await firstValueFrom(
-        this.httpService.get(`${this.KIS_API_BASE_URL}${this.INQUIRE_TIME_ITEM_CHART}`, {
-          headers: {
-            authorization: `Bearer ${token}`,
-            appkey: this.appKey,
-            appsecret: this.appSecret,
-            tr_id,
-            custtype: 'P',
-            'Content-Type': 'application/json; charset=utf-8',
+        this.httpService.get(
+          `${this.KIS_API_BASE_URL}${this.INQUIRE_TIME_ITEM_CHART}`,
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+              appkey: this.appKey,
+              appsecret: this.appSecret,
+              tr_id,
+              custtype: 'P',
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+            params: {
+              FID_COND_MRKT_DIV_CODE,
+              FID_INPUT_ISCD,
+              FID_INPUT_HOUR_1,
+              FID_ORG_ADJ_PRC,
+              FID_PW_DATA_INCU_YN,
+            },
           },
-          params: {
-            FID_COND_MRKT_DIV_CODE,
-            FID_INPUT_ISCD,
-            FID_INPUT_HOUR_1,
-            FID_ORG_ADJ_PRC,
-            FID_PW_DATA_INCU_YN,
-          },
-        }),
+        ),
       );
 
       // Validate KIS API response
       if (!data || data.rt_cd !== '0') {
         const errorMsg = data?.msg1 || 'Unknown KIS API error';
-        this.logger.error(`KIS Time Item Chart API Error: ${data?.rt_cd} - ${errorMsg}`);
+        this.logger.error(
+          `KIS Time Item Chart API Error: ${data?.rt_cd} - ${errorMsg}`,
+        );
         throw new Error(`KIS API Error: ${errorMsg}`);
       }
 
@@ -349,48 +382,56 @@ export class KisService {
         })),
       };
     } catch (error) {
-      this.logger.error(`Failed to get time item chart for ${FID_INPUT_ISCD}: ${error.message}`);
+      this.logger.error(
+        `Failed to get time item chart for ${FID_INPUT_ISCD}: ${error.message}`,
+      );
       throw error;
     }
   }
 
-  async getIndexChart(dto: KisIndexChartRequestDto): Promise<KisIndexChartResponseDto> {
+  async getIndexChart(
+    dto: KisIndexChartRequestDto,
+  ): Promise<KisIndexChartResponseDto> {
     const {
       FID_INPUT_ISCD,
       FID_INPUT_DATE_1,
       FID_INPUT_DATE_2,
       FID_PERIOD_DIV_CODE,
     } = dto;
-    
+
     try {
       const token = await this.getValidAccessToken();
       const tr_id = 'FHKUP03500100';
 
       const { data } = await firstValueFrom(
-        this.httpService.get(`${this.KIS_API_BASE_URL}${this.INQUIRE_INDEX_CHART}`, {
-          headers: {
-            authorization: `Bearer ${token}`,
-            appkey: this.appKey,
-            appsecret: this.appSecret,
-            tr_id,
-            custtype: 'P',
-            'Content-Type': 'application/json; charset=utf-8',
+        this.httpService.get(
+          `${this.KIS_API_BASE_URL}${this.INQUIRE_INDEX_CHART}`,
+          {
+            headers: {
+              authorization: `Bearer ${token}`,
+              appkey: this.appKey,
+              appsecret: this.appSecret,
+              tr_id,
+              custtype: 'P',
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+            params: {
+              fid_cond_mrkt_div_code: 'U',
+              fid_input_iscd: FID_INPUT_ISCD,
+              fid_input_date_1: FID_INPUT_DATE_1,
+              fid_input_date_2: FID_INPUT_DATE_2,
+              fid_period_div_code: FID_PERIOD_DIV_CODE,
+            },
           },
-          params: {
-            FID_COND_MRKT_DIV_CODE: FID_INPUT_ISCD === '0001' ? 'U' : 'Q', // U: 코스피, Q: 코스닥
-            FID_INPUT_ISCD,
-            FID_INPUT_DATE_1,
-            FID_INPUT_DATE_2,
-            FID_PERIOD_DIV_CODE,
-            FID_ORG_ADJ_PRC: '0',
-          },
-        }),
+        ),
       );
 
       // Validate KIS API response
       if (!data || data.rt_cd !== '0') {
         const errorMsg = data?.msg1 || 'Unknown KIS API error';
-        this.logger.error(`KIS Index Chart API Error: ${data?.rt_cd} - ${errorMsg}`);
+        this.logger.error(
+          `KIS Index Chart API Error: ${data?.rt_cd} - ${errorMsg}`,
+        );
         throw new Error(`KIS API Error: ${errorMsg}`);
       }
 
@@ -416,24 +457,58 @@ export class KisService {
         })),
       };
     } catch (error) {
-      this.logger.error(`Failed to get index chart for ${FID_INPUT_ISCD}: ${error.message}`);
+      this.logger.error(
+        `Failed to get index chart for ${FID_INPUT_ISCD}: ${error.message}`,
+      );
       throw error;
     }
   }
 
+  private tokenRequestInProgress = false;
+  private tokenRequestPromise: Promise<void> | null = null;
+
   private async getValidAccessToken(): Promise<string> {
     try {
+      // 토큰이 유효하면 바로 반환
       if (
-        !this.accessToken ||
-        !this.accessTokenExpiresAt ||
-        new Date() >= this.accessTokenExpiresAt
+        this.accessToken &&
+        this.accessTokenExpiresAt &&
+        new Date() < this.accessTokenExpiresAt
       ) {
-        await this.fetchAccessToken();
+        return this.accessToken;
       }
-      return this.accessToken!;
+
+      // 이미 토큰 요청이 진행 중이면 대기
+      if (this.tokenRequestInProgress && this.tokenRequestPromise) {
+        await this.tokenRequestPromise;
+        if (this.accessToken) {
+          return this.accessToken;
+        }
+      }
+
+      // 새로운 토큰 요청
+      this.tokenRequestInProgress = true;
+      this.tokenRequestPromise = this.fetchAccessToken();
+      
+      try {
+        await this.tokenRequestPromise;
+        return this.accessToken!;
+      } finally {
+        this.tokenRequestInProgress = false;
+        this.tokenRequestPromise = null;
+      }
     } catch (error) {
       this.logger.error('Failed to get valid access token', error);
-      throw new Error('Unable to authenticate with KIS API. Please check your credentials.');
+      
+      // 토큰 발급 제한 오류인 경우 기존 토큰이 있으면 사용
+      if (error.message.includes('1분당 1회') && this.accessToken) {
+        this.logger.warn('Using existing token due to rate limit');
+        return this.accessToken;
+      }
+      
+      throw new Error(
+        'Unable to authenticate with KIS API. Please check your credentials.',
+      );
     }
   }
 }

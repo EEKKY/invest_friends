@@ -130,6 +130,33 @@ export const IndexChart: React.FC<IndexChartProps> = ({ indexCode, className }) 
         });
 
         const indexName = chartData.indexName;
+        
+        // 지수 값이 모두 0인지 확인
+        const hasValidData = chartData.data.some(item => item.index > 0);
+        
+        if (!hasValidData) {
+            // 모든 지수가 0인 경우 거래량 데이터로 대체 표시
+            const isPositive = chartData.data.length > 1 && 
+                chartData.data[chartData.data.length - 1].volume > chartData.data[0].volume;
+
+            return {
+                labels,
+                datasets: [
+                    {
+                        label: `${indexName} (거래량)`,
+                        data: chartData.data.map((item) => item.volume),
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                    },
+                ],
+            };
+        }
+
         const isPositive = chartData.data.length > 1 && 
             chartData.data[chartData.data.length - 1].index > chartData.data[0].index;
 
@@ -193,43 +220,63 @@ export const IndexChart: React.FC<IndexChartProps> = ({ indexCode, className }) 
                     
                     {chartData.data.length > 0 && (
                         <div className="border-t pt-4">
-                            <h5 className="font-medium mb-2">최근 지수 현황</h5>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                                <div className="text-center">
-                                    <div className="font-medium text-gray-600">현재 지수</div>
-                                    <div className="text-lg font-bold">
-                                        {chartData.data[chartData.data.length - 1].index.toLocaleString()}
+                            {chartData.data.some(item => item.index > 0) ? (
+                                <>
+                                    <h5 className="font-medium mb-2">최근 지수 현황</h5>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                        <div className="text-center">
+                                            <div className="font-medium text-gray-600">현재 지수</div>
+                                            <div className="text-lg font-bold">
+                                                {chartData.data[chartData.data.length - 1].index.toLocaleString()}
+                                            </div>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="font-medium text-gray-600">전일 대비</div>
+                                            <div className={`text-lg font-bold ${
+                                                chartData.data[chartData.data.length - 1].change >= 0 
+                                                    ? 'text-green-600' 
+                                                    : 'text-red-600'
+                                            }`}>
+                                                {chartData.data[chartData.data.length - 1].change >= 0 ? '+' : ''}
+                                                {chartData.data[chartData.data.length - 1].change.toLocaleString()}
+                                            </div>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="font-medium text-gray-600">등락률</div>
+                                            <div className={`text-lg font-bold ${
+                                                chartData.data[chartData.data.length - 1].changeRate >= 0 
+                                                    ? 'text-green-600' 
+                                                    : 'text-red-600'
+                                            }`}>
+                                                {chartData.data[chartData.data.length - 1].changeRate >= 0 ? '+' : ''}
+                                                {chartData.data[chartData.data.length - 1].changeRate.toFixed(2)}%
+                                            </div>
+                                        </div>
+                                        <div className="text-center">
+                                            <div className="font-medium text-gray-600">거래량</div>
+                                            <div className="text-lg font-bold text-blue-600">
+                                                {chartData.data[chartData.data.length - 1].volume.toLocaleString()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="text-center py-4">
+                                    <div className="text-amber-500 font-medium mb-2">⚠️ 지수 데이터 조회 제한</div>
+                                    <div className="text-sm text-gray-700 mb-2">
+                                        현재 KIS API에서 지수 데이터를 조회할 수 없습니다.
+                                    </div>
+                                    <div className="text-sm text-gray-600">
+                                        대신 거래량 데이터로 시장 활동을 확인하실 수 있습니다.
+                                    </div>
+                                    <div className="mt-3 p-3 bg-blue-50 rounded">
+                                        <div className="font-medium text-blue-800">최근 거래량</div>
+                                        <div className="text-lg font-bold text-blue-600">
+                                            {chartData.data[chartData.data.length - 1].volume.toLocaleString()}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="text-center">
-                                    <div className="font-medium text-gray-600">전일 대비</div>
-                                    <div className={`text-lg font-bold ${
-                                        chartData.data[chartData.data.length - 1].change >= 0 
-                                            ? 'text-green-600' 
-                                            : 'text-red-600'
-                                    }`}>
-                                        {chartData.data[chartData.data.length - 1].change >= 0 ? '+' : ''}
-                                        {chartData.data[chartData.data.length - 1].change.toLocaleString()}
-                                    </div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="font-medium text-gray-600">등락률</div>
-                                    <div className={`text-lg font-bold ${
-                                        chartData.data[chartData.data.length - 1].changeRate >= 0 
-                                            ? 'text-green-600' 
-                                            : 'text-red-600'
-                                    }`}>
-                                        {chartData.data[chartData.data.length - 1].changeRate >= 0 ? '+' : ''}
-                                        {chartData.data[chartData.data.length - 1].changeRate.toFixed(2)}%
-                                    </div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="font-medium text-gray-600">거래량</div>
-                                    <div className="text-lg font-bold text-blue-600">
-                                        {chartData.data[chartData.data.length - 1].volume.toLocaleString()}
-                                    </div>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     )}
                 </div>
