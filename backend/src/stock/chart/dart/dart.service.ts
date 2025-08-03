@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SinglIndxRequest, SinglIndxResponse } from './dto/singl-indx.dto';
-import { CorpCode } from '../entities/corp-code.entity';
+import { CorpCode } from './entities/corp-code.entity';
 import * as AdmZip from 'adm-zip';
 import { XMLParser } from 'fast-xml-parser';
 import { firstValueFrom } from 'rxjs';

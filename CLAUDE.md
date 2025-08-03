@@ -9,12 +9,14 @@ This is an investment analysis application (invest_friends) with a NestJS backen
 ## Tech Stack
 
 **Backend:**
+
 - NestJS with TypeScript
 - PostgreSQL with TypeORM
 - JWT authentication with Passport.js (Google, Naver, Kakao OAuth)
 - External APIs: KIS (Korea Investment Securities), DART (Financial Supervisory Service)
 
 **Frontend:**
+
 - React 19 with TypeScript
 - Vite as build tool
 - TailwindCSS for styling
@@ -25,49 +27,52 @@ This is an investment analysis application (invest_friends) with a NestJS backen
 ## Development Commands
 
 ### Backend Commands (run from /backend directory)
+
 ```bash
 # Install dependencies
 pnpm install
 
 # Run development server
-npm run start:dev  # or npm run dev
+pnpm start:dev  # or pnpm dev
 
 # Build
-npm run build
+pnpm build
 
 # Run tests
 npm test
-npm run test:watch  # Watch mode
-npm run test:cov    # Coverage
-npm run test:e2e    # E2E tests
+pnpm test:watch  # Watch mode
+pnpm test:cov    # Coverage
+pnpm test:e2e    # E2E tests
 
 # Linting and formatting
-npm run lint
-npm run prettier
-npm run prettier:fix
+pnpm lint
+pnpm prettier
+pnpm prettier:fix
 ```
 
 ### Frontend Commands (run from /frontend directory)
+
 ```bash
 # Install dependencies
 pnpm install
 
 # Run development server
-npm run dev
+pnpm dev
 
 # Build
-npm run build
+pnpm build
 
 # Lint
-npm run lint
+pnpm lint
 
 # Preview production build
-npm run preview
+pnpm preview
 ```
 
 ## Environment Setup
 
 Backend requires a `.env` file with:
+
 - Database connection (PostgreSQL)
 - JWT secrets
 - OAuth credentials (Google, Naver, Kakao)
@@ -79,6 +84,7 @@ Backend requires a `.env` file with:
 ### Backend Architecture
 
 **Module Structure:**
+
 - `AppModule` - Root module importing all feature modules
 - `StockModule` - Stock market data features
   - `KisModule` - KIS API integration for real-time stock/index prices
@@ -89,17 +95,20 @@ Backend requires a `.env` file with:
 - `DatabaseModule` - PostgreSQL/TypeORM configuration
 
 **Key Services:**
+
 - `KisService` - Handles KIS API token management and stock/index price queries
 - `DartService` - Manages corp codes and financial statement data with fallback to mock data
 - `ChartService` - Aggregates data from KIS/DART for frontend consumption
 
 **Database Entities:**
+
 - `CorpCode` - Corporation codes mapping (stock code ↔ corp code)
 - `Auth` - User authentication data
 
 ### Frontend Architecture
 
 **Component Structure:**
+
 - `/components/charts/` - Reusable chart components
   - `StockChart` - Individual stock price charts
   - `FinancialChart` - Financial statement visualizations
@@ -111,12 +120,14 @@ Backend requires a `.env` file with:
   - `auth/index.ts` - Authentication API calls
 
 **State Management:**
+
 - Context API for authentication state
 - Local component state for chart data
 
 ## API Integration Notes
 
 ### KIS API
+
 - Requires access token (auto-refreshed by `KisService`)
 - Endpoints used:
   - `/uapi/domestic-stock/v1/quotations/inquire-price` - Current price
@@ -125,6 +136,7 @@ Backend requires a `.env` file with:
   - `/uapi/domestic-stock/v1/quotations/inquire-index-daily-price` - Index charts
 
 ### DART API
+
 - Financial statements API with automatic fallback to mock data
 - Corp code management with auto-refresh on module initialization
 
@@ -137,6 +149,7 @@ Backend requires a `.env` file with:
 ## Common Development Tasks
 
 ### Adding a New Stock API Endpoint
+
 1. Add DTO in `/backend/src/stock/kis/dto/kis.dto.ts`
 2. Implement service method in `KisService`
 3. Add controller endpoint in `KisController`
@@ -144,12 +157,15 @@ Backend requires a `.env` file with:
 5. Create/update React components as needed
 
 ### Running with Mock Data
+
 The `DartService` automatically falls back to mock data when DART API fails, useful for development without API keys.
 
 ## Port Configuration
+
 - Backend: 3000 (configurable via PORT env var)
 - Frontend: 5173 (Vite default)
 - Database: PostgreSQL default (5432)
 
 ## Swagger Documentation
+
 Available at `http://localhost:3000/api/v1` in development mode.

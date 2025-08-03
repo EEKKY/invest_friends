@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { KisService } from '../kis/kis.service';
-import { DartService } from '../dart/dart.service';
+import { KisService } from './kis/kis.service';
+import { DartService } from './dart/dart.service';
 import {
   GetChartRequestDto,
   ChartResponseDto,
@@ -11,7 +11,7 @@ import {
   KisChartRequestDto,
   KisTimeDailyChartRequestDto,
   KisTimeItemChartRequestDto,
-} from '../kis/dto/kis.dto';
+} from './kis/dto/kis.dto';
 
 @Injectable()
 export class ChartService {
