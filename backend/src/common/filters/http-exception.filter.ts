@@ -24,7 +24,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const errorResponse = exception.getResponse();
-      
+
       if (typeof errorResponse === 'string') {
         message = errorResponse;
       } else if (typeof errorResponse === 'object' && errorResponse !== null) {
@@ -33,7 +33,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     } else if (exception instanceof Error) {
       message = exception.message;
-      
+
       // Log full error for debugging
       this.logger.error(
         `Error: ${exception.message}`,

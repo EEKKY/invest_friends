@@ -7,10 +7,10 @@ import {
   GetFinancialDataRequestDto,
   FinancialDataResponseDto,
 } from './dto/chart.dto';
-import { 
+import {
   KisChartRequestDto,
   KisTimeDailyChartRequestDto,
-  KisTimeItemChartRequestDto 
+  KisTimeItemChartRequestDto,
 } from '../kis/dto/kis.dto';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class ChartService {
         // Temporarily use mock data for 1d charts
         const mockData = this.generateMockIntradayData();
         this.logger.log(`Using mock intraday data for ${ticker} (${period})`);
-        
+
         return {
           ticker,
           period,
@@ -39,7 +39,7 @@ export class ChartService {
           endDate: startDate, // Same day for intraday
           data: mockData,
         };
-        
+
         // TODO: Uncomment when KIS API is properly configured
         // return await this.getIntradayChart(ticker, startDate);
       }
@@ -47,7 +47,7 @@ export class ChartService {
       // For other periods, use regular daily chart
       const periodMap = {
         '1w': 'D',
-        '1m': 'D', 
+        '1m': 'D',
         '1y': 'D',
       };
 
@@ -61,13 +61,13 @@ export class ChartService {
       };
 
       const chartData = await this.kisService.getChartData(kisChartDto);
-      
+
       return {
         ticker,
         period,
         startDate,
         endDate,
-        data: chartData.output2.map(item => ({
+        data: chartData.output2.map((item) => ({
           date: item.stck_bsop_date,
           open: parseFloat(item.stck_oprc),
           high: parseFloat(item.stck_hgpr),
@@ -78,11 +78,11 @@ export class ChartService {
       };
     } catch (error) {
       this.logger.error(`Failed to get chart data: ${error.message}`);
-      
+
       // Fallback to mock data
       const mockData = this.generateMockChartData(startDate, endDate, period);
       this.logger.log(`Using mock data for ${ticker} (${period})`);
-      
+
       return {
         ticker,
         period,
@@ -133,7 +133,10 @@ export class ChartService {
     */
   }
 
-  private async getIntradayChart(ticker: string, date: string): Promise<ChartResponseDto> {
+  private async getIntradayChart(
+    ticker: string,
+    date: string,
+  ): Promise<ChartResponseDto> {
     try {
       // Use time-item chart for intraday data with 30-minute intervals
       const kisTimeDto: KisTimeItemChartRequestDto = {
@@ -145,13 +148,13 @@ export class ChartService {
       };
 
       const chartData = await this.kisService.getTimeItemChart(kisTimeDto);
-      
+
       return {
         ticker,
         period: '1d',
         startDate: date,
         endDate: date,
-        data: chartData.output2.map(item => ({
+        data: chartData.output2.map((item) => ({
           date: item.stck_cntg_hour, // Time format: HHMMSS
           open: parseFloat(item.stck_oprc),
           high: parseFloat(item.stck_hgpr),
@@ -162,7 +165,7 @@ export class ChartService {
       };
     } catch (error) {
       this.logger.error(`Failed to get intraday chart data: ${error.message}`);
-      
+
       // Fallback: try daily chart for the date
       try {
         const kisDailyDto: KisTimeDailyChartRequestDto = {
@@ -173,13 +176,13 @@ export class ChartService {
         };
 
         const dailyData = await this.kisService.getTimeDailyChart(kisDailyDto);
-        
+
         return {
           ticker,
           period: '1d',
           startDate: date,
           endDate: date,
-          data: dailyData.output2.map(item => ({
+          data: dailyData.output2.map((item) => ({
             date: item.stck_cntg_hour,
             open: parseFloat(item.stck_oprc),
             high: parseFloat(item.stck_hgpr),
@@ -189,12 +192,14 @@ export class ChartService {
           })),
         };
       } catch (fallbackError) {
-        this.logger.error(`Daily chart fallback also failed: ${fallbackError.message}`);
-        
+        this.logger.error(
+          `Daily chart fallback also failed: ${fallbackError.message}`,
+        );
+
         // Final fallback: use mock intraday data
         const mockData = this.generateMockIntradayData();
         this.logger.log(`Using mock intraday data for ${ticker}`);
-        
+
         return {
           ticker,
           period: '1d',
@@ -206,7 +211,11 @@ export class ChartService {
     }
   }
 
-  private generateMockChartData(startDate: string, endDate: string, period: string) {
+  private generateMockChartData(
+    startDate: string,
+    endDate: string,
+    period: string,
+  ) {
     // For 1d period, generate intraday data
     if (period === '1d') {
       return this.generateMockIntradayData();
@@ -216,12 +225,12 @@ export class ChartService {
     const start = new Date(
       parseInt(startDate.slice(0, 4)),
       parseInt(startDate.slice(4, 6)) - 1,
-      parseInt(startDate.slice(6, 8))
+      parseInt(startDate.slice(6, 8)),
     );
     const end = new Date(
       parseInt(endDate.slice(0, 4)),
       parseInt(endDate.slice(4, 6)) - 1,
-      parseInt(endDate.slice(6, 8))
+      parseInt(endDate.slice(6, 8)),
     );
 
     const data = [];
@@ -256,15 +265,15 @@ export class ChartService {
   private generateMockIntradayData() {
     const data = [];
     let currentPrice = 75000; // Starting price
-    
+
     // Generate data from 9:00 to 15:30 in 30-minute intervals
     const startHour = 9;
     const endHour = 15;
     const endMinute = 30;
-    
+
     for (let hour = startHour; hour <= endHour; hour++) {
       const maxMinute = hour === endHour ? endMinute : 60;
-      
+
       for (let minute = 0; minute < maxMinute; minute += 30) {
         // Generate realistic intraday price movement (smaller changes)
         const change = (Math.random() - 0.5) * 0.01; // ±0.5% per 30min
@@ -273,9 +282,9 @@ export class ChartService {
         const high = Math.max(open, close) * (1 + Math.random() * 0.005);
         const low = Math.min(open, close) * (1 - Math.random() * 0.005);
         const volume = Math.floor(Math.random() * 1000000) + 100000;
-        
+
         const timeString = `${hour.toString().padStart(2, '0')}${minute.toString().padStart(2, '0')}00`;
-        
+
         data.push({
           date: timeString, // HHMMSS format for intraday
           open: Math.round(open),
@@ -284,11 +293,11 @@ export class ChartService {
           close: Math.round(close),
           volume,
         });
-        
+
         currentPrice = close;
       }
     }
-    
+
     return data;
   }
 
@@ -320,7 +329,7 @@ export class ChartService {
       };
     } catch (error) {
       this.logger.error(`Failed to get financial data: ${error.message}`);
-      
+
       // Return a simple error response instead of throwing
       return {
         corpCode,

@@ -197,7 +197,8 @@ export class KisTimeItemChartRequestDto {
   FID_ORG_ADJ_PRC: string;
 
   @ApiProperty({
-    description: '분봉주기 (1:1분, 3:3분, 5:5분, 10:10분, 15:15분, 30:30분, 60:60분)',
+    description:
+      '분봉주기 (1:1분, 3:3분, 5:5분, 10:10분, 15:15분, 30:30분, 60:60분)',
     example: '1',
     enum: ['1', '3', '5', '10', '15', '30', '60'],
   })
