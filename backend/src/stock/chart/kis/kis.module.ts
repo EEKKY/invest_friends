@@ -7,5 +7,6 @@ import { KisController } from './kis.controller';
   imports: [HttpModule],
   providers: [KisService],
   controllers: [KisController],
+  exports: [KisService],
 })
 export class KisModule {}

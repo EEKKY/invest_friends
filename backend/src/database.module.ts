@@ -17,6 +17,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: true, // 개발 중엔 true, 운영에서는 반드시 false
         logging: true,
         autoLoadEntities: true, // entity 자동 인식 (권장)
+        retryAttempts: 0, // DB 연결 재시도 하지 않음
       }),
     }),
   ],
