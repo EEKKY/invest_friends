@@ -1,12 +1,10 @@
 export interface JwtPayload {
   userUid: string;
   userEmail: string;
-  userNick: string;
 }
 export interface ReJwtPayload {
   userUid: string;
   userEmail: string;
-  userNick: string;
 }
 
 export interface TokenPairResponse {

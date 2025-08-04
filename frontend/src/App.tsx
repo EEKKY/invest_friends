@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
 import "./App.css";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppHeader } from "@/components/layouts/app-header";
@@ -14,13 +13,10 @@ import {
 import { useCommon } from "@/hooks/useCommon";
 import { CommonProvider } from "@/contexts/common";
 import { AppLeft } from "@/components/layouts/app-left";
-import { LoginPage } from "@/pages/login";
 import { AuthProvider } from "@/contexts/auth-provider";
 import { AuthCallbackPage } from "@/pages/auth/callback";
-import { LoginPage2 } from "@/pages/login2/loginpage";
 import SignupPage from "@/pages/auth/signuppage";
-// import { LoginPage } from "./pages/login/login.page";
-// import SignupPage from "./pages/auth/signup.page";
+import { UnifiedLoginPage } from "./pages/login";
 
 function AppContent() {
   const { sideBarOpen, handleSideBarOpen, canvasMode } = useCommon();
@@ -30,9 +26,8 @@ function AppContent() {
       <Toaster position="top-center" />
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/login2" element={<LoginPage2 />} />
-          <Route path="/auth/callback" element={<AuthCallbackPage />} />
+          <Route path="/login" element={<UnifiedLoginPage />} />
+          <Route path="/social-callback" element={<AuthCallbackPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route
             path="/"

@@ -1,5 +1,4 @@
 import { api } from "../axios";
-import { tokenCookies } from "@/lib/cookie";
 import type { ApiResponse, PaginatedResponse } from "../type";
 
 // 사용자 관련 타입
