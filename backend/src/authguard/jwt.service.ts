@@ -9,6 +9,7 @@ import {
 
 @Injectable()
 export class JwtAuthService {
+  //토큰 공장
   constructor(
     private readonly accessTokenService: AccessTokenService,
     private readonly refreshTokenService: RefreshTokenService,
