@@ -438,6 +438,10 @@ export class KisService implements OnModuleInit {
       const token = await this.getValidAccessToken();
       const tr_id = 'FHPUP02100000'; // 지수 일별 시세 조회
 
+      this.logger.log(
+        `Calling KIS Index Chart API for ${FID_INPUT_ISCD} (${FID_INPUT_DATE_1} to ${FID_INPUT_DATE_2}, period: ${FID_PERIOD_DIV_CODE})`,
+      );
+
       const { data } = await firstValueFrom(
         this.httpService.get(
           `${this.KIS_API_BASE_URL}${this.INQUIRE_INDEX_CHART}`,
@@ -451,11 +455,11 @@ export class KisService implements OnModuleInit {
               'Content-Type': 'application/json; charset=utf-8',
             },
             params: {
-              fid_cond_mrkt_div_code: 'U',
-              fid_input_iscd: FID_INPUT_ISCD,
-              fid_input_date_1: FID_INPUT_DATE_1,
-              fid_input_date_2: FID_INPUT_DATE_2,
-              fid_period_div_code: FID_PERIOD_DIV_CODE,
+              FID_COND_MRKT_DIV_CODE: 'J',
+              FID_INPUT_ISCD: FID_INPUT_ISCD,
+              FID_INPUT_DATE_1: FID_INPUT_DATE_1,
+              FID_INPUT_DATE_2: FID_INPUT_DATE_2,
+              FID_PERIOD_DIV_CODE: FID_PERIOD_DIV_CODE,
             },
           },
         ),
@@ -471,8 +475,15 @@ export class KisService implements OnModuleInit {
       }
 
       // Validate output data exists
-      if (!data.output2 || !Array.isArray(data.output2)) {
-        this.logger.error('KIS Index Chart API returned no data');
+      if (
+        !data.output2 ||
+        !Array.isArray(data.output2) ||
+        data.output2.length === 0
+      ) {
+        this.logger.warn(
+          `KIS Index Chart API returned empty data for ${FID_INPUT_ISCD} (${FID_INPUT_DATE_1} to ${FID_INPUT_DATE_2}). ` +
+            `Response: ${JSON.stringify({ rt_cd: data.rt_cd, msg_cd: data.msg_cd, msg1: data.msg1, output2_length: data.output2?.length || 0 })}`,
+        );
         throw new Error('No index chart data available');
       }
 
@@ -491,7 +502,7 @@ export class KisService implements OnModuleInit {
             acml_vol: item.acml_vol || '0',
             acml_tr_pbmn: item.acml_tr_pbmn || '0',
           }))
-          .sort((a, b) => {
+          .sort((a: any, b: any) => {
             // Sort by date (oldest to newest)
             const dateA = a.stck_bsop_date + (a.bsop_hour || '000000');
             const dateB = b.stck_bsop_date + (b.bsop_hour || '000000');

@@ -2,7 +2,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { JwtAuthGuard } from './authguard/jwt.auth';
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+// import { GlobalExceptionFilter } from './common/http-service/error_handler/global-exception.filter';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +15,7 @@ async function bootstrap(): Promise<void> {
   });
 
   // Global exception filter
-  app.useGlobalFilters(new HttpExceptionFilter());
+  // app.useGlobalFilters(new GlobalExceptionFilter());
 
   //사용법:@Public()
   // const reflector = app.get(Reflector);
