@@ -2,6 +2,7 @@ import { Controller, Get, Query, Param } from '@nestjs/common';
 import { DartService } from './dart.service';
 import { SinglIndxRequest, SinglIndxResponse } from './dto/singl-indx.dto';
 import { CorpCodeDto } from './dto/corp-code.dto';
+import { CorpCode } from './entities/corp-code.entity';
 
 @Controller('dart')
 export class DartController {
@@ -13,7 +14,9 @@ export class DartController {
   }
 
   @Get('corp-code/:corpCode')
-  async getByCorpCode(@Param('corpCode') corpCode: number) {
+  async getByCorpCode(
+    @Param('corpCode') corpCode: number,
+  ): Promise<CorpCode | null> {
     return this.dartService.getByCorpCode(corpCode);
   }
 
@@ -25,7 +28,7 @@ export class DartController {
   }
 
   @Get('refresh-corp-codes')
-  async refreshCorpCodes() {
+  async refreshCorpCodes(): Promise<{ message: string }> {
     await this.dartService.fetchAndStoreCorpCode();
     return { message: 'Corp codes refreshed successfully' };
   }

@@ -12,7 +12,7 @@ import { Request, Response } from 'express';
 export class HttpExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(HttpExceptionFilter.name);
 
-  catch(exception: unknown, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
@@ -28,8 +28,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       if (typeof errorResponse === 'string') {
         message = errorResponse;
       } else if (typeof errorResponse === 'object' && errorResponse !== null) {
-        message = (errorResponse as any).message || message;
-        error = (errorResponse as any).error || error;
+        const errorObj = errorResponse as Record<string, unknown>;
+        message = (errorObj.message as string) || message;
+        error = (errorObj.error as string) || error;
       }
     } else if (exception instanceof Error) {
       message = exception.message;

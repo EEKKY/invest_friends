@@ -1,6 +1,16 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, catchError } from 'rxjs';
+
+interface KisChartItem {
+  stck_bsop_date: string;
+  stck_oprc: string;
+  stck_hgpr: string;
+  stck_lwpr: string;
+  stck_clpr: string;
+  acml_vol: string;
+}
+
 import {
   KisChartRequestDto,
   GetPriceRequestDto,
@@ -12,6 +22,8 @@ import {
   KisTimeItemChartResponseDto,
   KisIndexChartRequestDto,
   KisIndexChartResponseDto,
+  TimeChartItemDto,
+  IndexChartItemDto,
 } from './dto/kis.dto';
 
 @Injectable()
@@ -20,7 +32,10 @@ export class KisService implements OnModuleInit {
   private readonly appSecret = process.env.KIS_APP_SECRET;
   private accessToken: string | null = null;
   private accessTokenExpiresAt: Date | null = null;
-  private indexCache = new Map<string, { data: any; timestamp: Date }>();
+  private indexCache = new Map<
+    string,
+    { data: KisIndexChartResponseDto; timestamp: Date }
+  >();
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes during market hours
 
   private readonly KIS_API_BASE_URL =
@@ -38,7 +53,7 @@ export class KisService implements OnModuleInit {
 
   constructor(private readonly httpService: HttpService) {}
 
-  async onModuleInit() {
+  async onModuleInit(): Promise<void> {
     // 서버 시작 시 토큰을 미리 발급받음
     try {
       await this.fetchAccessToken();
@@ -163,7 +178,7 @@ export class KisService implements OnModuleInit {
         rt_cd: data.rt_cd,
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
-        output2: data.output2.map((item: any) => ({
+        output2: data.output2.map((item: KisChartItem) => ({
           stck_bsop_date: item.stck_bsop_date || '',
           stck_oprc: item.stck_oprc || '0',
           stck_hgpr: item.stck_hgpr || '0',
@@ -310,7 +325,7 @@ export class KisService implements OnModuleInit {
         rt_cd: data.rt_cd,
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
-        output2: data.output2.map((item: any) => ({
+        output2: data.output2.map((item: TimeChartItemDto) => ({
           stck_cntg_hour: item.stck_cntg_hour || '',
           stck_oprc: item.stck_oprc || '0',
           stck_hgpr: item.stck_hgpr || '0',
@@ -386,7 +401,7 @@ export class KisService implements OnModuleInit {
         rt_cd: data.rt_cd,
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
-        output2: data.output2.map((item: any) => ({
+        output2: data.output2.map((item: TimeChartItemDto) => ({
           stck_cntg_hour: item.stck_cntg_hour || '',
           stck_oprc: item.stck_oprc || '0',
           stck_hgpr: item.stck_hgpr || '0',
@@ -482,7 +497,7 @@ export class KisService implements OnModuleInit {
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
         output2: data.output2
-          .map((item: any) => ({
+          .map((item: IndexChartItemDto) => ({
             stck_bsop_date: item.stck_bsop_date || '',
             bsop_hour: item.bsop_hour || '',
             indx_prpr: item.indx_prpr || '0',
@@ -491,7 +506,7 @@ export class KisService implements OnModuleInit {
             acml_vol: item.acml_vol || '0',
             acml_tr_pbmn: item.acml_tr_pbmn || '0',
           }))
-          .sort((a, b) => {
+          .sort((a: IndexChartItemDto, b: IndexChartItemDto) => {
             // Sort by date (oldest to newest)
             const dateA = a.stck_bsop_date + (a.bsop_hour || '000000');
             const dateB = b.stck_bsop_date + (b.bsop_hour || '000000');
@@ -641,7 +656,7 @@ export class KisService implements OnModuleInit {
     indexCode: string,
     startDate: string,
     endDate: string,
-  ) {
+  ): IndexChartItemDto[] {
     const baseIndex = indexCode === '0001' ? 2500 : 850; // KOSPI: 2500, KOSDAQ: 850
     const start = new Date(
       parseInt(startDate.slice(0, 4)),

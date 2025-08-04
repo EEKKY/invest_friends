@@ -8,7 +8,6 @@ import {
   FinancialDataResponseDto,
 } from './dto/chart.dto';
 import {
-  KisChartRequestDto,
   KisTimeDailyChartRequestDto,
   KisTimeItemChartRequestDto,
 } from './kis/dto/kis.dto';
@@ -133,6 +132,51 @@ export class ChartService {
     */
   }
 
+  async getFinancialData(
+    dto: GetFinancialDataRequestDto,
+  ): Promise<FinancialDataResponseDto> {
+    const { corpCode, year } = dto;
+
+    try {
+      // Get financial data from DART API (will use mock data if API fails)
+      const financialData = await this.dartService.getFinancialStatements(
+        corpCode,
+        year,
+      );
+
+      this.logger.log(`Financial data retrieved for ${corpCode} (${year})`);
+
+      return {
+        corpCode,
+        year,
+        revenue: financialData.revenue,
+        operatingProfit: financialData.operatingProfit,
+        netIncome: financialData.netIncome,
+        totalAssets: financialData.totalAssets,
+        totalEquity: financialData.totalEquity,
+        eps: financialData.eps,
+        roe: financialData.roe,
+        roa: financialData.roa,
+      };
+    } catch (error) {
+      this.logger.error(`Failed to get financial data: ${error.message}`);
+
+      // Return a simple error response instead of throwing
+      return {
+        corpCode,
+        year,
+        revenue: 0,
+        operatingProfit: 0,
+        netIncome: 0,
+        totalAssets: 0,
+        totalEquity: 0,
+        eps: 0,
+        roe: 0,
+        roa: 0,
+      };
+    }
+  }
+
   private async getIntradayChart(
     ticker: string,
     date: string,
@@ -215,7 +259,14 @@ export class ChartService {
     startDate: string,
     endDate: string,
     period: string,
-  ) {
+  ): Array<{
+    date: string;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+  }> {
     // For 1d period, generate intraday data
     if (period === '1d') {
       return this.generateMockIntradayData();
@@ -262,7 +313,14 @@ export class ChartService {
     return data;
   }
 
-  private generateMockIntradayData() {
+  private generateMockIntradayData(): Array<{
+    date: string;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
+  }> {
     const data = [];
     let currentPrice = 75000; // Starting price
 
@@ -325,50 +383,5 @@ export class ChartService {
     );
 
     return data;
-  }
-
-  async getFinancialData(
-    dto: GetFinancialDataRequestDto,
-  ): Promise<FinancialDataResponseDto> {
-    const { corpCode, year } = dto;
-
-    try {
-      // Get financial data from DART API (will use mock data if API fails)
-      const financialData = await this.dartService.getFinancialStatements(
-        corpCode,
-        year,
-      );
-
-      this.logger.log(`Financial data retrieved for ${corpCode} (${year})`);
-
-      return {
-        corpCode,
-        year,
-        revenue: financialData.revenue,
-        operatingProfit: financialData.operatingProfit,
-        netIncome: financialData.netIncome,
-        totalAssets: financialData.totalAssets,
-        totalEquity: financialData.totalEquity,
-        eps: financialData.eps,
-        roe: financialData.roe,
-        roa: financialData.roa,
-      };
-    } catch (error) {
-      this.logger.error(`Failed to get financial data: ${error.message}`);
-
-      // Return a simple error response instead of throwing
-      return {
-        corpCode,
-        year,
-        revenue: 0,
-        operatingProfit: 0,
-        netIncome: 0,
-        totalAssets: 0,
-        totalEquity: 0,
-        eps: 0,
-        roe: 0,
-        roa: 0,
-      };
-    }
   }
 }

@@ -56,7 +56,7 @@ export const resolveErrorStrategy = (
     handler,
   }));
 
-  return (url: string) => {
+  return (url: string): ExternalStrategy | InternalStrategy => {
     return (
       preCompiled.find(({ regex }) => regex.test(url))?.handler ??
       strategies['.*'] // fallback

@@ -1,13 +1,15 @@
 import { GlobalExceptionFilter } from './global-exception.filter';
-import { resolveErrorStrategy } from './axios-strategy.handler';
 import { ArgumentsHost, HttpException } from '@nestjs/common';
 
 describe('GlobalExceptionFilter', () => {
   let filter: GlobalExceptionFilter;
-  let mockRes: any;
+  let mockRes: {
+    status: jest.Mock;
+    json: jest.Mock;
+  };
   let mockHost: ArgumentsHost;
 
-  beforeEach(() => {
+  beforeEach((): void => {
     filter = new GlobalExceptionFilter();
 
     mockRes = {
@@ -16,14 +18,17 @@ describe('GlobalExceptionFilter', () => {
     };
 
     mockHost = {
-      switchToHttp: () => ({
-        getRequest: () => ({ url: 'http://localhost/fake' }),
-        getResponse: () => mockRes,
+      switchToHttp: (): {
+        getRequest: () => { url: string };
+        getResponse: () => typeof mockRes;
+      } => ({
+        getRequest: (): { url: string } => ({ url: 'http://localhost/fake' }),
+        getResponse: (): typeof mockRes => mockRes,
       }),
     } as unknown as ArgumentsHost;
   });
 
-  it('should handle HttpException and call res.json', () => {
+  it('should handle HttpException and call res.json', (): void => {
     const exception = new HttpException('test error', 500);
 
     filter.catch(exception, mockHost);

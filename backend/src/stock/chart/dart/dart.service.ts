@@ -24,7 +24,7 @@ export class DartService implements OnModuleInit {
     this.crtfcKey = this.config.get<string>('DART_API_KEY');
   }
 
-  async onModuleInit() {
+  async onModuleInit(): Promise<void> {
     const count = await this.corpCodeRepo.count();
     if (count > 0) {
       this.logger.log('corp_code 테이블에 데이터가 이미 존재합니다.');
@@ -80,7 +80,7 @@ export class DartService implements OnModuleInit {
     return data;
   }
 
-  async fetchAndStoreCorpCode() {
+  async fetchAndStoreCorpCode(): Promise<void> {
     const corpList = await this.getCorpCode();
 
     const entities = corpList.map((item) => {
@@ -108,11 +108,23 @@ export class DartService implements OnModuleInit {
     this.logger.log(`corp_code 데이터 ${entities.length}건 적재 완료!`);
   }
 
-  async getByCorpCode(corp_code: number) {
+  async getByCorpCode(corp_code: number): Promise<CorpCode | null> {
     return this.corpCodeRepo.findOne({ where: { corp_code } });
   }
 
-  async getFinancialStatements(corpCode: string, year: number) {
+  async getFinancialStatements(
+    corpCode: string,
+    year: number,
+  ): Promise<{
+    revenue: number;
+    operatingProfit: number;
+    netIncome: number;
+    totalAssets: number;
+    totalEquity: number;
+    eps: number;
+    roe: number;
+    roa: number;
+  }> {
     try {
       const params = {
         crtfc_key: this.crtfcKey,
@@ -137,7 +149,7 @@ export class DartService implements OnModuleInit {
       const list = data.list || [];
 
       // Helper function to extract value with multiple possible account names
-      const extractValue = (...accountNames: string[]) => {
+      const extractValue = (...accountNames: string[]): number => {
         for (const name of accountNames) {
           const item = list.find(
             (item) =>
@@ -186,7 +198,19 @@ export class DartService implements OnModuleInit {
     }
   }
 
-  private generateMockFinancialData(corpCode: string, year: number) {
+  private generateMockFinancialData(
+    corpCode: string,
+    year: number,
+  ): {
+    revenue: number;
+    operatingProfit: number;
+    netIncome: number;
+    totalAssets: number;
+    totalEquity: number;
+    eps: number;
+    roe: number;
+    roa: number;
+  } {
     // Generate realistic mock financial data
     const baseRevenue = 500000; // 50조원
     const yearFactor = 1 + (year - 2020) * 0.05; // 5% annual growth
