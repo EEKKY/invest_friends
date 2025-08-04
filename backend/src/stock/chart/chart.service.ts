@@ -176,7 +176,6 @@ export class ChartService {
       };
     }
   }
-
   private async getIntradayChart(
     ticker: string,
     date: string,
