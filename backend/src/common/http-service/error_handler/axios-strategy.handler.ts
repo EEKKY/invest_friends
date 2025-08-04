@@ -2,9 +2,7 @@ import { AxiosError } from 'axios';
 import { ApiError } from '../dto/axios.dto';
 import { HttpException } from '@nestjs/common';
 
-export type ErrorStrategy<T> = (
-  error: AxiosError | HttpException,
-) => ApiError<T>;
+export type ErrorStrategy<T, E = unknown> = (error: E) => ApiError<T>;
 
 type InternalStrategy = (error: HttpException) => ApiError<unknown>;
 type ExternalStrategy = (error: AxiosError) => ApiError<unknown>;
@@ -13,7 +11,7 @@ const frontendBaseUrl = process.env.FRONT_URL ?? 'https://localhost:3000';
 
 const errorStrategies: Record<
   'INTERNAL' | 'EXTERNAL',
-  Record<string, ErrorStrategy<unknown>>
+  Record<string, InternalStrategy | ExternalStrategy>
 > = {
   INTERNAL: {
     [`${frontendBaseUrl}/.*`]: (error: HttpException) => ({
@@ -47,19 +45,25 @@ const errorStrategies: Record<
   } satisfies Record<string, ExternalStrategy>,
 };
 
-export const resolveErrorStrategy = (
+export function resolveErrorStrategy(
+  type: 'EXTERNAL',
+): (url: string) => ExternalStrategy;
+export function resolveErrorStrategy(
+  type: 'INTERNAL',
+): (url: string) => InternalStrategy;
+export function resolveErrorStrategy(
   type: 'INTERNAL' | 'EXTERNAL' = 'EXTERNAL',
-) => {
+): (url: string) => ExternalStrategy | InternalStrategy {
   const strategies = errorStrategies[type];
   const preCompiled = Object.entries(strategies).map(([pattern, handler]) => ({
     regex: new RegExp(pattern),
     handler,
   }));
 
-  return (url: string): ExternalStrategy | InternalStrategy => {
+  return (url: string) => {
     return (
       preCompiled.find(({ regex }) => regex.test(url))?.handler ??
       strategies['.*'] // fallback
     );
   };
-};
+}
