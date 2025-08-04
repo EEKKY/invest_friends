@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Line } from 'react-chartjs-2';
+import type { TooltipItem, ScriptableScaleContext } from 'chart.js';
 import { chartApi } from '../../services/chart';
 import type { ChartResponse, IndexChartResponse, GetChartParams, GetIndexChartParams } from '../../services/chart';
 import { Button } from '../ui/button';
@@ -18,7 +19,7 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
     const [period, setPeriod] = useState<'1w' | '1m' | '1y'>('1m');
     const [showKosdaq, setShowKosdaq] = useState(true);
 
-    const fetchComparisonData = async (selectedPeriod: '1w' | '1m' | '1y') => {
+    const fetchComparisonData = useCallback(async (selectedPeriod: '1w' | '1m' | '1y') => {
         if (!ticker) return;
 
         setLoading(true);
@@ -68,7 +69,7 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
         } finally {
             setLoading(false);
         }
-    };
+    }, [ticker]);
 
     const getStartDate = (period: string): string => {
         const now = new Date();
@@ -91,7 +92,7 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
 
     useEffect(() => {
         fetchComparisonData(period);
-    }, [ticker, period]);
+    }, [ticker, period, fetchComparisonData]);
 
     const handlePeriodChange = (newPeriod: '1w' | '1m' | '1y') => {
         setPeriod(newPeriod);
@@ -119,8 +120,8 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                 mode: 'index' as const,
                 intersect: false,
                 callbacks: {
-                    label: function (context: any) {
-                        const value = context.raw;
+                    label: function (context: TooltipItem<'line'>) {
+                        const value = context.raw as number;
                         return `${context.dataset.label}: ${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
                     },
                 },
@@ -141,19 +142,20 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                     text: '수익률 (%)',
                 },
                 ticks: {
-                    callback: function (value: any) {
-                        return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
+                    callback: function (value: string | number) {
+                        const numValue = typeof value === 'string' ? parseFloat(value) : value;
+                        return `${numValue > 0 ? '+' : ''}${numValue.toFixed(1)}%`;
                     },
                 },
                 grid: {
                     drawBorder: false,
-                    color: function(context) {
+                    color: function(context: ScriptableScaleContext) {
                         if (context.tick.value === 0) {
                             return '#000000'; // 0% 라인은 검은색
                         }
                         return 'rgba(0, 0, 0, 0.1)';
                     },
-                    lineWidth: function(context) {
+                    lineWidth: function(context: ScriptableScaleContext) {
                         if (context.tick.value === 0) {
                             return 2; // 0% 라인은 굵게
                         }

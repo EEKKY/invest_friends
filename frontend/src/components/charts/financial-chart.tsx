@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import type { TooltipItem } from 'chart.js';
 import { chartApi } from '../../services/chart';
 import type { FinancialData, GetFinancialParams } from '../../services/chart';
 import { Button } from '../ui/button';
@@ -18,7 +19,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
     const [loading, setLoading] = useState(false);
     const [year, setYear] = useState(2023);
 
-    const fetchFinancialData = async (selectedYear: number) => {
+    const fetchFinancialData = useCallback(async (selectedYear: number) => {
         if (!corpCode) return;
 
         setLoading(true);
@@ -36,11 +37,11 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
         } finally {
             setLoading(false);
         }
-    };
+    }, [corpCode]);
 
     useEffect(() => {
         fetchFinancialData(year);
-    }, [corpCode, year]);
+    }, [corpCode, year, fetchFinancialData]);
 
     const handleYearChange = (newYear: number) => {
         setYear(newYear);
@@ -105,9 +106,9 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
             },
             tooltip: {
                 callbacks: {
-                    label: function (context: any) {
-                        const label = context.label;
-                        const value = context.raw;
+                    label: function (context: TooltipItem<'bar'>) {
+                        const label = context.dataset.label || '';
+                        const value = context.raw as number;
 
                         if (label.includes('EPS')) {
                             return `${label}: ${value.toLocaleString()}원`;
@@ -124,8 +125,9 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
             y: {
                 beginAtZero: true,
                 ticks: {
-                    callback: function (value: any) {
-                        return value.toLocaleString();
+                    callback: function (value: string | number) {
+                        const numValue = typeof value === 'string' ? parseFloat(value) : value;
+                        return numValue.toLocaleString();
                     },
                 },
             },
@@ -236,13 +238,14 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
                                         y: {
                                             beginAtZero: true,
                                             ticks: {
-                                                callback: function (value: any, index: number) {
+                                                callback: function (value: string | number, index: number) {
                                                     // EPS는 원 단위로 표시
                                                     const label = getLabels()[index];
+                                                    const numValue = typeof value === 'string' ? parseFloat(value) : value;
                                                     if (label && label.includes('EPS')) {
-                                                        return `${value.toLocaleString()}원`;
+                                                        return `${numValue.toLocaleString()}원`;
                                                     }
-                                                    return `${value}%`;
+                                                    return `${numValue}%`;
                                                 },
                                             },
                                         },

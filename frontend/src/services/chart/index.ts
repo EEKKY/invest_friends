@@ -102,8 +102,15 @@ export const chartApi = {
         const indexName = params.indexCode === '0001' ? 'KOSPI' : 'KOSDAQ';
         
         // 데이터를 날짜 순으로 정렬하고 전일 대비 계산
+        interface KisIndexItem {
+            indx_prpr: string;
+            stck_bsop_date: string;
+            acml_vol: string;
+            acml_tr_pbmn: string;
+        }
+
         const sortedData = response.data.output2
-            .map((item: any) => {
+            .map((item: KisIndexItem) => {
                 const index = parseFloat(item.indx_prpr);
                 console.log('Parsing index data:', {
                     raw: item.indx_prpr,
@@ -117,10 +124,10 @@ export const chartApi = {
                     tradingValue: parseFloat(item.acml_tr_pbmn) || 0,
                 };
             })
-            .sort((a: any, b: any) => a.date.localeCompare(b.date));
+            .sort((a: IndexDataPoint, b: IndexDataPoint) => a.date.localeCompare(b.date));
 
         // 전일 대비 계산
-        const dataWithChange = sortedData.map((item: any, index: number) => {
+        const dataWithChange = sortedData.map((item: IndexDataPoint, index: number) => {
             let change = 0;
             let changeRate = 0;
             

@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Line } from 'react-chartjs-2';
+import type { TooltipItem } from 'chart.js';
 import { chartApi } from '../../services/chart';
 import type { IndexChartResponse, GetIndexChartParams } from '../../services/chart';
 import { Button } from '../ui/button';
@@ -15,7 +16,7 @@ export const IndexChart: React.FC<IndexChartProps> = ({ indexCode, className }) 
     const [loading, setLoading] = useState(false);
     const [period, setPeriod] = useState<'D' | 'W' | 'M'>('D');
 
-    const fetchIndexData = async (selectedPeriod: 'D' | 'W' | 'M') => {
+    const fetchIndexData = useCallback(async (selectedPeriod: 'D' | 'W' | 'M') => {
         setLoading(true);
         try {
             const endDate = new Date().toISOString().slice(0, 10).replace(/-/g, '');
@@ -30,14 +31,18 @@ export const IndexChart: React.FC<IndexChartProps> = ({ indexCode, className }) 
 
             const data = await chartApi.getIndexChart(params);
             setChartData(data);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Failed to fetch index data:', error);
-            const errorMessage = error.response?.data?.message || error.message || '지수 데이터를 불러오는데 실패했습니다.';
+            const errorMessage = error instanceof Error && 'response' in error
+                ? (error as { response?: { data?: { message?: string } } }).response?.data?.message || error.message
+                : error instanceof Error
+                ? error.message
+                : '지수 데이터를 불러오는데 실패했습니다.';
             toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
-    };
+    }, [indexCode]);
 
     const getStartDate = (period: string): string => {
         const now = new Date();
@@ -60,7 +65,7 @@ export const IndexChart: React.FC<IndexChartProps> = ({ indexCode, className }) 
 
     useEffect(() => {
         fetchIndexData(period);
-    }, [indexCode, period]);
+    }, [indexCode, period, fetchIndexData]);
 
     const handlePeriodChange = (newPeriod: 'D' | 'W' | 'M') => {
         setPeriod(newPeriod);
@@ -80,7 +85,7 @@ export const IndexChart: React.FC<IndexChartProps> = ({ indexCode, className }) 
                 mode: 'index' as const,
                 intersect: false,
                 callbacks: {
-                    label: function (context: any) {
+                    label: function (context: TooltipItem<'line'>) {
                         const dataPoint = chartData?.data[context.dataIndex];
                         if (!dataPoint) return '';
 
