@@ -140,7 +140,11 @@ export const StockChart: React.FC<StockChartProps> = ({ ticker, className }) => 
     const getChartData = () => {
         if (!chartData?.data) return { labels: [], datasets: [] };
 
-        const labels = chartData.data.map((item) => {
+        // For intraday charts, show all available data
+        // The backend should handle what data to send based on current time
+        let filteredData = chartData.data;
+
+        const labels = filteredData.map((item) => {
             const date = item.date;
             
             // For 1d period, format as time (HHMMSS -> HH:MM)
@@ -150,9 +154,11 @@ export const StockChart: React.FC<StockChartProps> = ({ ticker, className }) => 
                 return `${hours}:${minutes}`;
             }
             
-            // For other periods, format as date (YYYYMMDD -> YYYY-MM-DD)
+            // For other periods, format as date with day count
             if (date.length === 8) {
-                return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
+                const month = date.slice(4, 6);
+                const day = date.slice(6, 8);
+                return `${month}/${day}`;
             }
             
             return date;
@@ -163,7 +169,7 @@ export const StockChart: React.FC<StockChartProps> = ({ ticker, className }) => 
             datasets: [
                 {
                     label: '주가',
-                    data: chartData.data.map((item) => item.close),
+                    data: filteredData.map((item) => item.close),
                     borderColor: 'rgb(59, 130, 246)',
                     backgroundColor: 'rgba(59, 130, 246, 0.1)',
                     borderWidth: 2,
@@ -212,11 +218,16 @@ export const StockChart: React.FC<StockChartProps> = ({ ticker, className }) => 
                     <div className="grid grid-cols-2 gap-4 text-sm mb-4">
                         <div>종목코드: {chartData.ticker}</div>
                         <div>기간: {period}</div>
-                        <div>데이터 수: {chartData.data.length}개</div>
+                        <div>
+                            {period === '1d' ? 
+                                `시간 데이터: ${getChartData().labels.length}개` : 
+                                `일봉 차트: ${chartData.data.length}일`
+                            }
+                        </div>
                         <div>
                             조회기간: {period === '1d' ? 
-                                `${chartData.startDate} (일중)` : 
-                                `${chartData.startDate} ~ ${chartData.endDate}`
+                                `${chartData.startDate.slice(0, 4)}-${chartData.startDate.slice(4, 6)}-${chartData.startDate.slice(6, 8)} (일중)` : 
+                                `${chartData.startDate.slice(0, 4)}-${chartData.startDate.slice(4, 6)}-${chartData.startDate.slice(6, 8)} ~ ${chartData.endDate.slice(0, 4)}-${chartData.endDate.slice(4, 6)}-${chartData.endDate.slice(6, 8)}`
                             }
                         </div>
                     </div>

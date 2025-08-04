@@ -119,7 +119,6 @@ export class DartService implements OnModuleInit {
         corp_code: corpCode,
         bsns_year: year.toString(),
         reprt_code: '11011', // 사업보고서
-        idx_cl_code: '', // 전체 지표
       };
 
       const { data } = await firstValueFrom(

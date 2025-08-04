@@ -91,23 +91,59 @@ export const chartApi = {
             }
         });
         
+        console.log('Index API response:', {
+            status: response.data.rt_cd,
+            message: response.data.msg1,
+            dataLength: response.data.output2?.length,
+            sampleData: response.data.output2?.slice(0, 2)
+        });
+        
         // Transform KIS API response to our interface
         const indexName = params.indexCode === '0001' ? 'KOSPI' : 'KOSDAQ';
         
+        // 데이터를 날짜 순으로 정렬하고 전일 대비 계산
+        const sortedData = response.data.output2
+            .map((item: any) => {
+                const index = parseFloat(item.indx_prpr);
+                console.log('Parsing index data:', {
+                    raw: item.indx_prpr,
+                    parsed: index,
+                    isValid: !isNaN(index) && index > 0
+                });
+                return {
+                    date: item.stck_bsop_date,
+                    index: isNaN(index) ? 0 : index,
+                    volume: parseFloat(item.acml_vol) || 0,
+                    tradingValue: parseFloat(item.acml_tr_pbmn) || 0,
+                };
+            })
+            .sort((a: any, b: any) => a.date.localeCompare(b.date));
+
+        // 전일 대비 계산
+        const dataWithChange = sortedData.map((item: any, index: number) => {
+            let change = 0;
+            let changeRate = 0;
+            
+            if (index > 0) {
+                const prevIndex = sortedData[index - 1].index;
+                change = item.index - prevIndex;
+                changeRate = prevIndex > 0 ? (change / prevIndex) * 100 : 0;
+            }
+            
+            return {
+                ...item,
+                change: change,
+                changeRate: changeRate,
+            };
+        });
+
         return {
             indexCode: params.indexCode,
             indexName,
             period: params.period,
             startDate: params.startDate,
             endDate: params.endDate,
-            data: response.data.output2.map((item: any) => ({
-                date: item.stck_bsop_date,
-                index: parseFloat(item.indx_prpr),
-                change: parseFloat(item.indx_prdy_vrss),
-                changeRate: parseFloat(item.indx_prdy_ctrt),
-                volume: parseFloat(item.acml_vol),
-                tradingValue: parseFloat(item.acml_tr_pbmn),
-            })),
+            data: dataWithChange,
         };
     },
 };
