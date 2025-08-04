@@ -55,6 +55,10 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                 chartApi.getIndexChart(kosdaqParams),
             ]);
 
+            console.log('Stock data:', stock);
+            console.log('KOSPI data:', kospi);
+            console.log('KOSDAQ data:', kosdaq);
+
             setStockData(stock);
             setKospiData(kospi);
             setKosdaqData(kosdaq);
@@ -96,7 +100,9 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
     const normalizeData = (data: number[]): number[] => {
         if (data.length === 0) return [];
         const baseValue = data[0];
-        return data.map(value => ((value - baseValue) / baseValue) * 100);
+        if (baseValue === 0) return data.map(() => 0);
+        // 첫 번째 값을 100으로 설정하고 나머지는 비율로 계산
+        return data.map(value => ((value / baseValue) * 100) - 100);
     };
 
     const chartOptions = {
@@ -136,8 +142,23 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                 },
                 ticks: {
                     callback: function (value: any) {
-                        return `${value.toFixed(1)}%`;
+                        return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
                     },
+                },
+                grid: {
+                    drawBorder: false,
+                    color: function(context) {
+                        if (context.tick.value === 0) {
+                            return '#000000'; // 0% 라인은 검은색
+                        }
+                        return 'rgba(0, 0, 0, 0.1)';
+                    },
+                    lineWidth: function(context) {
+                        if (context.tick.value === 0) {
+                            return 2; // 0% 라인은 굵게
+                        }
+                        return 1;
+                    }
                 },
             },
         },
@@ -149,58 +170,94 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
     };
 
     const getChartData = () => {
-        if (!stockData?.data || !kospiData?.data) return { labels: [], datasets: [] };
+        if (!stockData?.data || !kospiData?.data || stockData.data.length === 0 || kospiData.data.length === 0) {
+            console.log('Missing data - stock:', !!stockData?.data, 'kospi:', !!kospiData?.data);
+            return { labels: [], datasets: [] };
+        }
 
-        // Use stock data dates as reference
-        const labels = stockData.data.map((item) => {
+        // Debug logging
+        console.log('Stock data length:', stockData.data.length);
+        console.log('KOSPI data length:', kospiData.data.length);
+        console.log('Stock dates sample:', stockData.data.slice(0, 3).map(d => d.date));
+        console.log('KOSPI dates sample:', kospiData.data.slice(0, 3).map(d => d.date));
+
+        // Use the minimum length between stock and index data
+        const minLength = Math.min(stockData.data.length, kospiData.data.length);
+        
+        // Just use the data in order without date matching (assuming they're in the same date order)
+        const alignedStockData = stockData.data.slice(-minLength);
+        const alignedKospiData = kospiData.data.slice(-minLength);
+        const alignedKosdaqData = kosdaqData?.data ? kosdaqData.data.slice(-minLength) : [];
+
+        // Use aligned dates as labels
+        const labels = alignedStockData.map((item) => {
             const date = item.date;
             if (date.length === 8) {
-                return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`;
+                const month = date.slice(4, 6);
+                const day = date.slice(6, 8);
+                return `${month}/${day}`;
             }
             return date;
         });
 
-        // Normalize all datasets to show percentage change from start
-        const stockPrices = stockData.data.map(item => item.close);
-        const kospiPrices = kospiData.data.map(item => item.index);
-        const kosdaqPrices = kosdaqData?.data.map(item => item.index) || [];
+        // Get price/index data
+        const stockPrices = alignedStockData.map(item => item.close);
+        const kospiPrices = alignedKospiData.map(item => item.index);
+        const kosdaqPrices = alignedKosdaqData.map(item => item.index);
+
+        // Check if we have valid data for normalization
+        if (stockPrices.length === 0 || kospiPrices.length === 0) {
+            console.warn('Insufficient data for chart rendering');
+            return { labels: [], datasets: [] };
+        }
 
         const datasets = [
             {
                 label: `${ticker} 주가`,
                 data: normalizeData(stockPrices),
                 borderColor: 'rgb(59, 130, 246)',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                backgroundColor: 'rgba(59, 130, 246, 0.05)',
                 borderWidth: 3,
                 fill: false,
-                tension: 0.1,
+                tension: 0.2,
                 pointRadius: 0,
                 pointHoverRadius: 6,
+                pointBackgroundColor: 'rgb(59, 130, 246)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
             },
             {
                 label: 'KOSPI',
                 data: normalizeData(kospiPrices),
                 borderColor: 'rgb(34, 197, 94)',
-                backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                backgroundColor: 'rgba(34, 197, 94, 0.05)',
                 borderWidth: 2,
                 fill: false,
-                tension: 0.1,
+                tension: 0.2,
                 pointRadius: 0,
-                pointHoverRadius: 6,
+                pointHoverRadius: 5,
+                pointBackgroundColor: 'rgb(34, 197, 94)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                borderDash: [5, 5], // 점선으로 구분
             },
         ];
 
-        if (showKosdaq && kosdaqData?.data) {
+        if (showKosdaq && kosdaqPrices.length > 0) {
             datasets.push({
                 label: 'KOSDAQ',
                 data: normalizeData(kosdaqPrices),
                 borderColor: 'rgb(239, 68, 68)',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                backgroundColor: 'rgba(239, 68, 68, 0.05)',
                 borderWidth: 2,
                 fill: false,
-                tension: 0.1,
+                tension: 0.2,
                 pointRadius: 0,
-                pointHoverRadius: 6,
+                pointHoverRadius: 5,
+                pointBackgroundColor: 'rgb(239, 68, 68)',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                borderDash: [2, 2], // 더 짧은 점선
             });
         }
 

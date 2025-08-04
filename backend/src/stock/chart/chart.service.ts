@@ -266,6 +266,17 @@ export class ChartService {
     const data = [];
     let currentPrice = 75000; // Starting price
 
+    // Get current Korea time
+    const now = new Date();
+    const koreaTime = new Date(
+      now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }),
+    );
+    const currentHour = koreaTime.getHours();
+    const currentMinute = koreaTime.getMinutes();
+
+    // Determine if market is open
+    const isMarketOpen = currentHour >= 9 && currentHour < 15.5;
+
     // Generate data from 9:00 to 15:30 in 30-minute intervals
     const startHour = 9;
     const endHour = 15;
@@ -275,6 +286,17 @@ export class ChartService {
       const maxMinute = hour === endHour ? endMinute : 60;
 
       for (let minute = 0; minute < maxMinute; minute += 30) {
+        // During market hours, only show data up to current time
+        if (isMarketOpen) {
+          if (
+            hour > currentHour ||
+            (hour === currentHour && minute > currentMinute)
+          ) {
+            continue; // Skip future data points
+          }
+        }
+        // After market close, show all data up to 15:30
+
         // Generate realistic intraday price movement (smaller changes)
         const change = (Math.random() - 0.5) * 0.01; // ±0.5% per 30min
         const open = currentPrice;
@@ -297,6 +319,10 @@ export class ChartService {
         currentPrice = close;
       }
     }
+
+    this.logger.log(
+      `Generated ${data.length} intraday data points (Market ${isMarketOpen ? 'open' : 'closed'}, Current time: ${currentHour}:${currentMinute})`,
+    );
 
     return data;
   }

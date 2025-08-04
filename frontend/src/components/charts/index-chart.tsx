@@ -86,8 +86,8 @@ export const IndexChart: React.FC<IndexChartProps> = ({ indexCode, className }) 
 
                         return [
                             `지수: ${dataPoint.index.toLocaleString()}`,
-                            `전일대비: ${dataPoint.change > 0 ? '+' : ''}${dataPoint.change.toLocaleString()}`,
-                            `등락률: ${dataPoint.changeRate > 0 ? '+' : ''}${dataPoint.changeRate.toFixed(2)}%`,
+                            `전일대비: ${dataPoint.change >= 0 ? '+' : ''}${dataPoint.change.toFixed(2)}`,
+                            `등락률: ${dataPoint.changeRate >= 0 ? '+' : ''}${dataPoint.changeRate.toFixed(2)}%`,
                             `거래량: ${dataPoint.volume.toLocaleString()}`,
                         ];
                     },
@@ -134,10 +134,14 @@ export const IndexChart: React.FC<IndexChartProps> = ({ indexCode, className }) 
         // 지수 값이 모두 0인지 확인
         const hasValidData = chartData.data.some(item => item.index > 0);
         
+        console.log('Index chart data check:', {
+            dataLength: chartData.data.length,
+            hasValidData,
+            sampleData: chartData.data.slice(0, 3)
+        });
+        
         if (!hasValidData) {
             // 모든 지수가 0인 경우 거래량 데이터로 대체 표시
-            const isPositive = chartData.data.length > 1 && 
-                chartData.data[chartData.data.length - 1].volume > chartData.data[0].volume;
 
             return {
                 labels,
@@ -238,7 +242,7 @@ export const IndexChart: React.FC<IndexChartProps> = ({ indexCode, className }) 
                                                     : 'text-red-600'
                                             }`}>
                                                 {chartData.data[chartData.data.length - 1].change >= 0 ? '+' : ''}
-                                                {chartData.data[chartData.data.length - 1].change.toLocaleString()}
+                                                {chartData.data[chartData.data.length - 1].change.toFixed(2)}
                                             </div>
                                         </div>
                                         <div className="text-center">
