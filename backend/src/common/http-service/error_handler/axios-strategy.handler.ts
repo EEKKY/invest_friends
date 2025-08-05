@@ -47,7 +47,11 @@ const errorStrategies: Record<
   } satisfies Record<string, ExternalStrategy>,
 };
 
-export const resolveErrorStrategy = (
+type resolveStrategy = {
+  (props: 'INTERNAL' | 'EXTERNAL'): (url: string) => ErrorStrategy<unknown>;
+};
+
+export const resolveErrorStrategy: resolveStrategy = (
   type: 'INTERNAL' | 'EXTERNAL' = 'EXTERNAL',
 ) => {
   const strategies = errorStrategies[type];
@@ -56,7 +60,7 @@ export const resolveErrorStrategy = (
     handler,
   }));
 
-  return (url: string) => {
+  return (url: string): ErrorStrategy<unknown> => {
     return (
       preCompiled.find(({ regex }) => regex.test(url))?.handler ??
       strategies['.*'] // fallback
