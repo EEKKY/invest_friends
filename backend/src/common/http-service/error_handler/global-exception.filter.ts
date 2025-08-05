@@ -11,7 +11,7 @@ import { Response, Request } from 'express';
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly compiledStrategies = resolveErrorStrategy('INTERNAL');
 
-  catch(exception: unknown, host: ArgumentsHost) {
+  catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const req = ctx.getRequest<Request>();
     const res = ctx.getResponse<Response>();
