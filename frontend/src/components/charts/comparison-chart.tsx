@@ -55,10 +55,6 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                 chartApi.getIndexChart(kosdaqParams),
             ]);
 
-            console.log('Stock data:', stock);
-            console.log('KOSPI data:', kospi);
-            console.log('KOSDAQ data:', kosdaq);
-
             setStockData(stock);
             setKospiData(kospi);
             setKosdaqData(kosdaq);
@@ -102,7 +98,7 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
         const baseValue = data[0];
         if (baseValue === 0) return data.map(() => 0);
         // 첫 번째 값을 100으로 설정하고 나머지는 비율로 계산
-        return data.map(value => ((value / baseValue) * 100) - 100);
+        return data.map((value) => (value / baseValue) * 100 - 100);
     };
 
     const chartOptions = {
@@ -147,18 +143,18 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                 },
                 grid: {
                     drawBorder: false,
-                    color: function(context) {
+                    color: function (context) {
                         if (context.tick.value === 0) {
                             return '#000000'; // 0% 라인은 검은색
                         }
                         return 'rgba(0, 0, 0, 0.1)';
                     },
-                    lineWidth: function(context) {
+                    lineWidth: function (context) {
                         if (context.tick.value === 0) {
                             return 2; // 0% 라인은 굵게
                         }
                         return 1;
-                    }
+                    },
                 },
             },
         },
@@ -171,19 +167,12 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
 
     const getChartData = () => {
         if (!stockData?.data || !kospiData?.data || stockData.data.length === 0 || kospiData.data.length === 0) {
-            console.log('Missing data - stock:', !!stockData?.data, 'kospi:', !!kospiData?.data);
             return { labels: [], datasets: [] };
         }
 
-        // Debug logging
-        console.log('Stock data length:', stockData.data.length);
-        console.log('KOSPI data length:', kospiData.data.length);
-        console.log('Stock dates sample:', stockData.data.slice(0, 3).map(d => d.date));
-        console.log('KOSPI dates sample:', kospiData.data.slice(0, 3).map(d => d.date));
-
         // Use the minimum length between stock and index data
         const minLength = Math.min(stockData.data.length, kospiData.data.length);
-        
+
         // Just use the data in order without date matching (assuming they're in the same date order)
         const alignedStockData = stockData.data.slice(-minLength);
         const alignedKospiData = kospiData.data.slice(-minLength);
@@ -201,9 +190,9 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
         });
 
         // Get price/index data
-        const stockPrices = alignedStockData.map(item => item.close);
-        const kospiPrices = alignedKospiData.map(item => item.index);
-        const kosdaqPrices = alignedKosdaqData.map(item => item.index);
+        const stockPrices = alignedStockData.map((item) => item.close);
+        const kospiPrices = alignedKospiData.map((item) => item.index);
+        const kosdaqPrices = alignedKosdaqData.map((item) => item.index);
 
         // Check if we have valid data for normalization
         if (stockPrices.length === 0 || kospiPrices.length === 0) {
