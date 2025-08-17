@@ -1,6 +1,12 @@
-import { useRef, useState } from "react";
 import {
-  User,
+  useRef,
+  useState,
+  useEffect,
+  memo,
+  useCallback,
+  useDeferredValue,
+} from "react";
+import {
   Copy,
   ThumbsUp,
   ThumbsDown,
@@ -10,169 +16,83 @@ import {
   Sparkles,
   ChevronDown,
 } from "lucide-react";
+import { type Message } from "@/contexts/chat-context.types";
+import { useChatContext } from "@/contexts/chat-context.hooks";
+import { toast } from "sonner";
 
-type Message = {
-  id: number;
-  type: "ai" | "user";
-  content: string;
-  timestamp: Date;
-  isTyping: boolean;
-};
-
-const ChatArea = () => {
-  const [messages] = useState<Message[]>([
-    {
-      id: 1,
-      type: "ai",
-      content:
-        "안녕하세요! 무엇을 도와드릴까요? 궁금한 것이 있으면 언제든지 물어보세요.",
-      timestamp: new Date(Date.now() - 10000),
-      isTyping: false,
-    },
-    {
-      id: 2,
-      type: "user",
-      content: "React에서 상태 관리는 어떻게 하는게 좋을까요?",
-      timestamp: new Date(Date.now() - 5000),
-      isTyping: false,
-    },
-    {
-      id: 3,
-      type: "ai",
-      content: `React에서 상태 관리 방법은 여러 가지가 있어요:
-
-**1. 로컬 상태 (useState, useReducer)**
-- 컴포넌트 내부에서만 사용하는 간단한 상태
-- 폼 입력, 토글 상태 등
-
-**2. 전역 상태 관리**
-- **Context API**: React 내장, 간단한 전역 상태
-- **Redux Toolkit**: 복잡한 앱, 디버깅 도구 강력
-- **Zustand**: 가볍고 사용하기 쉬움
-- **Jotai**: 원자 단위 상태 관리
-
-**3. 서버 상태**
-- **React Query/TanStack Query**: 서버 데이터 캐싱
-- **SWR**: 간단한 데이터 페칭
-
-어떤 종류의 프로젝트를 하고 계신가요? 상황에 맞는 더 구체적인 추천을 해드릴 수 있어요!`,
-      timestamp: new Date(),
-      isTyping: false,
-    },
-  ]);
-
-  const [typingMessage] = useState(null);
-  const [isScrolledUp, setIsScrolledUp] = useState(false);
-  const messagesEndRef = useRef(null);
-  const chatContainerRef = useRef(null);
-
-  // 스크롤을 맨 아래로
-  // const scrollToBottom = () => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  // };
-
-  // 스크롤 위치 감지
-  // const handleScroll = () => {
-  //   const container = chatContainerRef.current;
-  //   if (!container) return;
-
-  //   const { scrollTop, scrollHeight, clientHeight } = container;
-  //   const isAtBottom = scrollHeight - scrollTop - clientHeight < 100; // 100px 여유
-
-  //   setIsScrolledUp(!isAtBottom);
-  // };
-
-  // useEffect(() => {
-  //   const container = chatContainerRef.current;
-  //   if (container) {
-  //     container.addEventListener("scroll", handleScroll);
-  //     return () => {
-  //       container.removeEventListener("scroll", handleScroll);
-  //     };
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [messages, typingMessage]);
-
-  // 메시지 복사
-  const copyMessage = (content: string): void => {
-    navigator.clipboard.writeText(content);
-  };
-
-  // 타이핑 애니메이션 시뮬레이션
-  // const simulateTyping = () => {
-  //   setTypingMessage({
-  //     id: Date.now(),
-  //     type: "ai",
-  //     content: "",
-  //     isTyping: true,
-  //   });
-
-  //   // 3초 후 실제 메시지로 변환
-  //   setTimeout(() => {
-  //     setTypingMessage(null);
-  //     setMessages((prev) => [
-  //       ...prev,
-  //       {
-  //         id: Date.now(),
-  //         type: "ai",
-  //         content: "새로운 메시지입니다! 타이핑 애니메이션이 완료되었어요.",
-  //         timestamp: new Date(),
-  //         isTyping: false,
-  //       },
-  //     ]);
-  //   }, 3000);
-  // };
-
-  const formatTime = (timestamp: Date) => {
-    return timestamp.toLocaleTimeString("ko-KR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const MessageBubble = ({
+// Memoized message bubble component for better performance
+const MessageBubble = memo(
+  ({
     message,
     showActions = true,
+    onRegenerate,
   }: {
     message: Message;
     showActions: boolean;
+    onRegenerate?: (id: string) => void;
   }) => {
     const isUser = message.type === "user";
     const [showFullActions, setShowFullActions] = useState(false);
+    const [liked, setLiked] = useState<boolean | null>(null);
+
+    const formatTime = useCallback((timestamp: Date) => {
+      return timestamp.toLocaleTimeString("ko-KR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }, []);
+
+    const copyMessage = useCallback((content: string) => {
+      navigator.clipboard.writeText(content).then(() => {
+        toast.success("메시지가 복사되었습니다");
+      });
+    }, []);
+
+    const handleShare = useCallback(
+      async (content: string) => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              text: content,
+              title: "AI 대화 공유",
+            });
+          } catch (err) {
+            console.log("Share failed:", err);
+          }
+        } else {
+          copyMessage(content);
+        }
+      },
+      [copyMessage]
+    );
+
+    const handleLike = useCallback((isLike: boolean) => {
+      setLiked(isLike);
+      toast.success(isLike ? "피드백 감사합니다!" : "피드백이 기록되었습니다");
+    }, []);
 
     return (
       <div
         className={`flex gap-4 mb-6 group ${
           isUser ? "flex-row-reverse" : "flex-row"
-        }`}
+        } ${message.status === "sending" ? "opacity-70" : ""}`}
       >
-        {/* 아바타 */}
-        <div
-          className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-            isUser
-              ? "bg-gradient-to-br from-blue-500 to-blue-600"
-              : "bg-gradient-to-br from-purple-500 to-purple-600"
-          }`}
-        >
-          {isUser ? (
-            <User className="w-4 h-4 text-white" />
-          ) : (
+        {/* Avatar - Only show for AI */}
+        {!isUser && (
+          <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-500 to-purple-600">
             <Sparkles className="w-4 h-4 text-white" />
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* 메시지 콘텐츠 */}
+        {/* Message Content */}
         <div
           className={`flex-1 max-w-3xl ${isUser ? "text-right" : "text-left"}`}
         >
-          {/* 메시지 버블 */}
+          {/* Message Bubble */}
           <div
             className={`inline-block p-4 rounded-2xl ${
               isUser
-                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white ml-12"
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white"
                 : "bg-white border border-gray-200 shadow-sm mr-12"
             }`}
           >
@@ -182,17 +102,17 @@ const ChatArea = () => {
                   <div
                     className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
                     style={{ animationDelay: "0ms" }}
-                  ></div>
+                  />
                   <div
                     className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
                     style={{ animationDelay: "150ms" }}
-                  ></div>
+                  />
                   <div
                     className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
                     style={{ animationDelay: "300ms" }}
-                  ></div>
+                  />
                 </div>
-                <span className="text-gray-500 text-sm">AI가 입력 중...</span>
+                <span className="text-gray-500 text-sm">분석 중입니다...</span>
               </div>
             ) : (
               <div
@@ -207,16 +127,22 @@ const ChatArea = () => {
             )}
           </div>
 
-          {/* 타임스탬프 */}
+          {/* Timestamp & Status */}
           <div
-            className={`mt-2 text-xs text-gray-400 ${
-              isUser ? "text-right" : "text-left"
+            className={`mt-2 text-xs text-gray-400 flex items-center gap-2 ${
+              isUser ? "justify-end" : "justify-start"
             }`}
           >
             {formatTime(message.timestamp)}
+            {message.status === "sending" && (
+              <span className="text-blue-500">전송 중...</span>
+            )}
+            {message.status === "error" && (
+              <span className="text-red-500">전송 실패</span>
+            )}
           </div>
 
-          {/* AI 메시지 액션 버튼들 */}
+          {/* AI Message Actions */}
           {!isUser && !message.isTyping && showActions && (
             <div
               className={`mt-3 flex items-center gap-2 transition-opacity duration-200 ${
@@ -233,24 +159,38 @@ const ChatArea = () => {
                 <Copy className="w-4 h-4" />
               </button>
               <button
-                className="p-2 text-gray-400 hover:text-green-500 hover:bg-green-50 rounded-lg transition-all duration-200"
+                onClick={() => handleLike(true)}
+                className={`p-2 rounded-lg transition-all duration-200 ${
+                  liked === true
+                    ? "text-green-500 bg-green-50"
+                    : "text-gray-400 hover:text-green-500 hover:bg-green-50"
+                }`}
                 title="좋아요"
               >
                 <ThumbsUp className="w-4 h-4" />
               </button>
               <button
-                className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all duration-200"
+                onClick={() => handleLike(false)}
+                className={`p-2 rounded-lg transition-all duration-200 ${
+                  liked === false
+                    ? "text-red-500 bg-red-50"
+                    : "text-gray-400 hover:text-red-500 hover:bg-red-50"
+                }`}
                 title="싫어요"
               >
                 <ThumbsDown className="w-4 h-4" />
               </button>
+              {onRegenerate && (
+                <button
+                  onClick={() => onRegenerate(message.id)}
+                  className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all duration-200"
+                  title="다시 생성"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </button>
+              )}
               <button
-                className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all duration-200"
-                title="다시 생성"
-              >
-                <RotateCcw className="w-4 h-4" />
-              </button>
-              <button
+                onClick={() => handleShare(message.content)}
                 className="p-2 text-gray-400 hover:text-purple-500 hover:bg-purple-50 rounded-lg transition-all duration-200"
                 title="공유"
               >
@@ -268,80 +208,128 @@ const ChatArea = () => {
         </div>
       </div>
     );
-  };
+  }
+);
+
+MessageBubble.displayName = "MessageBubble";
+
+const ChatArea = () => {
+  const {
+    optimisticMessages,
+    isTyping,
+    regenerateMessage,
+    isPending,
+  } = useChatContext();
+  const [isScrolledUp, setIsScrolledUp] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  // Use deferred value for messages to keep UI responsive
+  const deferredMessages = useDeferredValue(optimisticMessages);
+
+  // Scroll to bottom
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  // Handle scroll detection
+  const handleScroll = useCallback(() => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = container;
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
+
+    setIsScrolledUp(!isAtBottom);
+  }, []);
+
+
+  // Auto scroll on new messages or when typing status changes
+  useEffect(() => {
+    // Scroll to bottom when messages change
+    if (deferredMessages.length > 0) {
+      // Longer delay for content changes to ensure DOM is fully updated
+      const timer = setTimeout(() => {
+        scrollToBottom();
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [deferredMessages, scrollToBottom]);
+
+  // Additional scroll trigger for typing indicator changes
+  useEffect(() => {
+    if (!isTyping && deferredMessages.length > 0) {
+      // When typing stops (AI response arrives), scroll to bottom
+      const timer = setTimeout(() => {
+        scrollToBottom();
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [isTyping, scrollToBottom, deferredMessages.length]);
+
+  // Setup scroll listener
+  useEffect(() => {
+    const container = chatContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll, { passive: true });
+      return () => {
+        container.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, [handleScroll]);
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-gradient-to-br from-gray-50 to-white">
-      {/* 헤더 */}
-      {/* <div className="flex-shrink-0 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
-            </div>
-            <div>
-              <h1 className="font-semibold text-gray-900">AI 어시스턴트</h1>
-              <p className="text-sm text-gray-500">온라인</p>
-            </div>
-          </div>
-          <button
-            onClick={simulateTyping}
-            className="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 text-sm font-medium"
-          >
-            새 대화 시작
-          </button>
-        </div>
-      </div> */}
-
-      {/* 메시지 영역 */}
+    <div className="flex-1 flex flex-col bg-gradient-to-br from-gray-50 to-white overflow-hidden">
+      {/* Messages Area */}
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-4 pb-40"
-        style={{ scrollbarWidth: "thin" }}
+        className="flex-1 overflow-y-auto overflow-x-hidden p-4"
+        style={{
+          scrollbarWidth: "thin",
+          overscrollBehavior: "contain",
+        }}
       >
-        <div className="max-w-4xl mx-auto">
-          {/* 환영 메시지 */}
-          <div className="text-center mb-8 py-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-8 h-8 text-white" />
+        <div className="max-w-4xl mx-auto min-h-full flex flex-col">
+          {/* Welcome Message - Only show when no messages */}
+          {deferredMessages.length === 0 ? (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  AI 어시스턴트와 대화하기
+                </h2>
+                <p className="text-gray-500 max-w-md">
+                  궁금한 것이 있으면 무엇이든 물어보세요. 코딩, 학습, 창작 등
+                  다양한 주제로 도움을 드릴 수 있어요.
+                </p>
+              </div>
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              AI 어시스턴트와 대화하기
-            </h2>
-            <p className="text-gray-500 max-w-md mx-auto">
-              궁금한 것이 있으면 무엇이든 물어보세요. 코딩, 학습, 창작 등 다양한
-              주제로 도움을 드릴 수 있어요.
-            </p>
-          </div>
-
-          {/* 메시지 목록 */}
-          {messages.map((message) => (
-            <MessageBubble
-              key={message.id}
-              message={message}
-              showActions={true}
-            />
-          ))}
-
-          {/* 타이핑 중 메시지 */}
-          {typingMessage && (
-            <MessageBubble message={typingMessage} showActions={false} />
+          ) : (
+            <div className="flex-1">
+              {/* Message List */}
+              {deferredMessages.map((message) => (
+                <MessageBubble
+                  key={message.id}
+                  message={message}
+                  showActions={!isPending}
+                  onRegenerate={regenerateMessage}
+                />
+              ))}
+              {/* Scroll Anchor */}
+              <div ref={messagesEndRef} />
+            </div>
           )}
-
-          {/* 스크롤 앵커 */}
-          <div ref={messagesEndRef} />
         </div>
       </div>
 
-      {/* 스크롤 그라데이션 오버레이 */}
-      <div className="fixed bottom-0 left-0 right-0 h-32 to-transparent pointer-events-none z-10"></div>
-
-      {/* 아래로 스크롤 버튼 */}
+      {/* Scroll to Bottom Button */}
       {isScrolledUp && (
-        <div className="fixed bottom-36 right-8 z-20">
+        <div className="absolute bottom-8 right-8 z-30">
           <button
             onClick={() => {
-              // scrollToBottom();
+              scrollToBottom();
               setIsScrolledUp(false);
             }}
             className="w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-105 group"

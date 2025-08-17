@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -29,7 +29,7 @@ export const StockChart: React.FC<StockChartProps> = ({ ticker, className }) => 
     const [loading, setLoading] = useState(false);
     const [period, setPeriod] = useState<'1d' | '1w' | '1m' | '1y'>('1d');
 
-    const fetchChartData = async (selectedPeriod: '1d' | '1w' | '1m' | '1y') => {
+    const fetchChartData = useCallback(async (selectedPeriod: '1d' | '1w' | '1m' | '1y') => {
         if (!ticker) return;
 
         setLoading(true);
@@ -52,7 +52,7 @@ export const StockChart: React.FC<StockChartProps> = ({ ticker, className }) => 
         } finally {
             setLoading(false);
         }
-    };
+    }, [ticker]);
 
     const getStartDate = (period: string): string => {
         const now = new Date();
@@ -78,7 +78,7 @@ export const StockChart: React.FC<StockChartProps> = ({ ticker, className }) => 
 
     useEffect(() => {
         fetchChartData(period);
-    }, [ticker, period]);
+    }, [ticker, period, fetchChartData]);
 
     const handlePeriodChange = (newPeriod: '1d' | '1w' | '1m' | '1y') => {
         setPeriod(newPeriod);
@@ -98,7 +98,7 @@ export const StockChart: React.FC<StockChartProps> = ({ ticker, className }) => 
                 mode: 'index' as const,
                 intersect: false,
                 callbacks: {
-                    label: function (context: any) {
+                    label: function (context: { dataIndex: number }) {
                         const dataPoint = chartData?.data[context.dataIndex];
                         if (!dataPoint) return '';
 
@@ -142,7 +142,7 @@ export const StockChart: React.FC<StockChartProps> = ({ ticker, className }) => 
 
         // For intraday charts, show all available data
         // The backend should handle what data to send based on current time
-        let filteredData = chartData.data;
+        const filteredData = chartData.data;
 
         const labels = filteredData.map((item) => {
             const date = item.date;

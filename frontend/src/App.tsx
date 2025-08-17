@@ -13,10 +13,10 @@ import {
 import { useCommon } from "@/hooks/useCommon";
 import { CommonProvider } from "@/contexts/common";
 import { AppLeft } from "@/components/layouts/app-left";
-import { LoginPage } from "@/pages/login";
+import { UnifiedLoginPage } from "@/pages/login";
 import { AuthProvider } from "@/contexts/auth-provider";
 import { AuthCallbackPage } from "@/pages/auth/callback";
-import { LoginPage2 } from "@/pages/login2/loginpage";
+// import { LoginPage2 } from "@/pages/login2/loginpage";
 import SignupPage from "@/pages/auth/signuppage";
 import { ChartsPage } from "@/pages/charts";
 
@@ -28,8 +28,8 @@ function AppContent() {
       <Toaster position="top-center" />
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/login2" element={<LoginPage2 />} />
+          <Route path="/login" element={<UnifiedLoginPage />} />
+          {/* <Route path="/login2" element={<LoginPage2 />} /> */}
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/charts" element={<ChartsPage />} />
@@ -42,12 +42,13 @@ function AppContent() {
               >
                 <AppSidebar />
                 <SidebarInset>
-                  <main className="flex flex-col h-screen w-screen relative">
+                  <main className="flex flex-col h-screen relative">
                     <ResizablePanelGroup direction="horizontal">
-                      <ResizablePanel className="relative h-full flex flex-col">
+                      <ResizablePanel className="flex flex-col min-h-0">
                         <AppHeader />
-                        <AppLeft />
-                        <div className=""></div>
+                        <div className="flex-1 min-h-0">
+                          <AppLeft />
+                        </div>
                       </ResizablePanel>
                       {canvasMode && (
                         <>
