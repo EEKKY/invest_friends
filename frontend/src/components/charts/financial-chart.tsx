@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { chartApi } from '../../services/chart';
@@ -18,7 +18,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
     const [loading, setLoading] = useState(false);
     const [year, setYear] = useState(2023);
 
-    const fetchFinancialData = async (selectedYear: number) => {
+    const fetchFinancialData = useCallback(async (selectedYear: number) => {
         if (!corpCode) return;
 
         setLoading(true);
@@ -36,11 +36,11 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
         } finally {
             setLoading(false);
         }
-    };
+    }, [corpCode]);
 
     useEffect(() => {
         fetchFinancialData(year);
-    }, [corpCode, year]);
+    }, [corpCode, year, fetchFinancialData]);
 
     const handleYearChange = (newYear: number) => {
         setYear(newYear);
@@ -105,7 +105,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
             },
             tooltip: {
                 callbacks: {
-                    label: function (context: any) {
+                    label: function (context: { label?: string; raw?: number }) {
                         const label = context.label;
                         const value = context.raw;
 
@@ -124,7 +124,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
             y: {
                 beginAtZero: true,
                 ticks: {
-                    callback: function (value: any) {
+                    callback: function (value: string | number) {
                         return value.toLocaleString();
                     },
                 },
@@ -236,11 +236,11 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
                                         y: {
                                             beginAtZero: true,
                                             ticks: {
-                                                callback: function (value: any, index: number) {
+                                                callback: function (value: string | number, index: number) {
                                                     // EPS는 원 단위로 표시
                                                     const label = getLabels()[index];
                                                     if (label && label.includes('EPS')) {
-                                                        return `${value.toLocaleString()}원`;
+                                                        return `${typeof value === 'number' ? value.toLocaleString() : value}원`;
                                                     }
                                                     return `${value}%`;
                                                 },

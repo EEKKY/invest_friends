@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Line } from 'react-chartjs-2';
 import { chartApi } from '../../services/chart';
 import type { ChartResponse, IndexChartResponse, GetChartParams, GetIndexChartParams } from '../../services/chart';
@@ -18,7 +18,7 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
     const [period, setPeriod] = useState<'1w' | '1m' | '1y'>('1m');
     const [showKosdaq, setShowKosdaq] = useState(true);
 
-    const fetchComparisonData = async (selectedPeriod: '1w' | '1m' | '1y') => {
+    const fetchComparisonData = useCallback(async (selectedPeriod: '1w' | '1m' | '1y') => {
         if (!ticker) return;
 
         setLoading(true);
@@ -68,7 +68,7 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
         } finally {
             setLoading(false);
         }
-    };
+    }, [ticker]);
 
     const getStartDate = (period: string): string => {
         const now = new Date();
@@ -91,7 +91,7 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
 
     useEffect(() => {
         fetchComparisonData(period);
-    }, [ticker, period]);
+    }, [ticker, period, fetchComparisonData]);
 
     const handlePeriodChange = (newPeriod: '1w' | '1m' | '1y') => {
         setPeriod(newPeriod);
@@ -119,7 +119,7 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                 mode: 'index' as const,
                 intersect: false,
                 callbacks: {
-                    label: function (context: any) {
+                    label: function (context: { dataset?: { label?: string }; raw?: number }) {
                         const value = context.raw;
                         return `${context.dataset.label}: ${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
                     },
@@ -141,7 +141,7 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                     text: '수익률 (%)',
                 },
                 ticks: {
-                    callback: function (value: any) {
+                    callback: function (value: string | number) {
                         return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
                     },
                 },
