@@ -1,4 +1,4 @@
-import { IsString, Length, Matches } from 'class-validator';
+import { IsOptional, IsString, Length, Matches } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class GetPriceRequestDto {
@@ -42,81 +42,6 @@ export class PriceResponseDto {
   pbr: string;
 }
 
-export class KisChartRequestDto {
-  @ApiProperty({
-    description: '시장 코드 (J: KRX, NX: K-OTC, UN: 통합)',
-    example: 'J',
-    enum: ['J', 'NX', 'UN'],
-  })
-  @IsString()
-  @Matches(/^(J|NX|UN)$/)
-  FID_COND_MRKT_DIV_CODE: string;
-
-  @ApiProperty({
-    description: '종목코드 (6~12자리, 예: 005930)',
-    example: '005930',
-    minLength: 6,
-    maxLength: 12,
-  })
-  @IsString()
-  @Length(6, 12)
-  FID_INPUT_ISCD: string;
-
-  @ApiProperty({
-    description: '조회 시작일자 (YYYYMMDD)',
-    example: '20240101',
-    minLength: 8,
-    maxLength: 8,
-  })
-  @IsString()
-  @Length(8, 8)
-  FID_INPUT_DATE_1: string;
-
-  @ApiProperty({
-    description: '조회 종료일자 (YYYYMMDD, 최대 100개)',
-    example: '20240727',
-    minLength: 8,
-    maxLength: 8,
-  })
-  @IsString()
-  @Length(8, 8)
-  FID_INPUT_DATE_2: string;
-
-  @ApiProperty({
-    description: '기간분류코드 (D:일봉, W:주봉, M:월봉, Y:년봉)',
-    example: 'D',
-    enum: ['D', 'W', 'M', 'Y'],
-  })
-  @IsString()
-  @Matches(/^(D|W|M|Y)$/)
-  FID_PERIOD_DIV_CODE: string;
-
-  @ApiProperty({
-    description: '수정주가/원주가 구분 (0:수정주가, 1:원주가)',
-    example: '0',
-    enum: ['0', '1'],
-  })
-  @IsString()
-  @Matches(/^(0|1)$/)
-  FID_ORG_ADJ_PRC: string;
-}
-
-export class ChartItemDto {
-  stck_bsop_date: string;
-  stck_oprc: string;
-  stck_hgpr: string;
-  stck_lwpr: string;
-  stck_clpr: string;
-  acml_vol: string;
-}
-
-export class KisChartResponseDto {
-  rt_cd: string;
-  msg_cd: string;
-  msg1: string;
-  output2: ChartItemDto[];
-}
-
 export class KisTimeDailyChartRequestDto {
   @ApiProperty({
     description: '시장 코드 (J: KRX, NX: K-OTC, UN: 통합)',
@@ -138,14 +63,14 @@ export class KisTimeDailyChartRequestDto {
   FID_INPUT_ISCD: string;
 
   @ApiProperty({
-    description: '조회 일자 (YYYYMMDD)',
-    example: '20240727',
-    minLength: 8,
-    maxLength: 8,
+    description: '기간 분류 코드(D, W, M)',
+    example: 'D',
+    minLength: 1,
+    maxLength: 1,
   })
   @IsString()
-  @Length(8, 8)
-  FID_INPUT_DATE_1: string;
+  @Length(1, 1)
+  FID_PERIOD_DIV_CODE: string;
 
   @ApiProperty({
     description: '수정주가/원주가 구분 (0:수정주가, 1:원주가)',
@@ -178,32 +103,12 @@ export class KisTimeItemChartRequestDto {
   FID_INPUT_ISCD: string;
 
   @ApiProperty({
-    description: '조회 시작시간 (HHMMSS)',
-    example: '090000',
-    minLength: 6,
-    maxLength: 6,
+    description: '세금(원천징수) / 수수료 / 비과세 여부(Y, N)',
+    example: 'N',
+    enum: ['Y', 'N'],
   })
   @IsString()
-  @Length(6, 6)
-  FID_INPUT_HOUR_1: string;
-
-  @ApiProperty({
-    description: '수정주가/원주가 구분 (0:수정주가, 1:원주가)',
-    example: '0',
-    enum: ['0', '1'],
-  })
-  @IsString()
-  @Matches(/^(0|1)$/)
-  FID_ORG_ADJ_PRC: string;
-
-  @ApiProperty({
-    description:
-      '분봉주기 (1:1분, 3:3분, 5:5분, 10:10분, 15:15분, 30:30분, 60:60분)',
-    example: '1',
-    enum: ['1', '3', '5', '10', '15', '30', '60'],
-  })
-  @IsString()
-  @Matches(/^(1|3|5|10|15|30|60)$/)
+  @Matches(/^(Y|N)$/)
   FID_PW_DATA_INCU_YN: string;
 }
 
@@ -221,7 +126,7 @@ export class KisTimeDailyChartResponseDto {
   rt_cd: string;
   msg_cd: string;
   msg1: string;
-  output2: TimeChartItemDto[];
+  output: TimeChartItemDto[];
 }
 
 export class KisTimeItemChartResponseDto {
@@ -229,61 +134,4 @@ export class KisTimeItemChartResponseDto {
   msg_cd: string;
   msg1: string;
   output2: TimeChartItemDto[];
-}
-
-export class KisIndexChartRequestDto {
-  @ApiProperty({
-    description: '지수 코드 (0001: 코스피, 1001: 코스닥)',
-    example: '0001',
-    enum: ['0001', '1001'],
-  })
-  @IsString()
-  @Matches(/^(0001|1001)$/)
-  FID_INPUT_ISCD: string;
-
-  @ApiProperty({
-    description: '조회 시작일자 (YYYYMMDD)',
-    example: '20240101',
-    minLength: 8,
-    maxLength: 8,
-  })
-  @IsString()
-  @Length(8, 8)
-  FID_INPUT_DATE_1: string;
-
-  @ApiProperty({
-    description: '조회 종료일자 (YYYYMMDD)',
-    example: '20240727',
-    minLength: 8,
-    maxLength: 8,
-  })
-  @IsString()
-  @Length(8, 8)
-  FID_INPUT_DATE_2: string;
-
-  @ApiProperty({
-    description: '기간분류코드 (D:일봉, W:주봉, M:월봉)',
-    example: 'D',
-    enum: ['D', 'W', 'M'],
-  })
-  @IsString()
-  @Matches(/^(D|W|M)$/)
-  FID_PERIOD_DIV_CODE: string;
-}
-
-export class IndexChartItemDto {
-  stck_bsop_date: string; // 날짜
-  bsop_hour: string; // 시간
-  indx_prpr: string; // 지수
-  indx_prdy_vrss: string; // 전일대비
-  indx_prdy_ctrt: string; // 전일대비율
-  acml_vol: string; // 누적거래량
-  acml_tr_pbmn: string; // 누적거래대금
-}
-
-export class KisIndexChartResponseDto {
-  rt_cd: string;
-  msg_cd: string;
-  msg1: string;
-  output2: IndexChartItemDto[];
 }

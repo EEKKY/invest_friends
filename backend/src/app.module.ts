@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ChartModule } from './stock/chart/chart.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database.module';
 import { ConfigModule } from '@nestjs/config';
 import { LoginModule } from './login/login.module';
 import { JwtAuthModule } from './authguard/authguard.module';
 import { SocialModule } from './social/social.module';
+import { KisModule } from './stock/chart/kis/kis.module';
 
 @Module({
   imports: [
@@ -13,7 +13,7 @@ import { SocialModule } from './social/social.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    ChartModule,
+    KisModule,
     AuthModule,
     DatabaseModule,
     LoginModule,
