@@ -413,7 +413,7 @@ export class KisService implements OnModuleInit {
   // 분봉
   async getItemChart(
     dto: KisTimeItemChartRequestDto,
-  ): Promise<KisTimeDailyChartResponseDto> {
+  ): Promise<KisTimeItemChartResponseDto> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
     // KOSPI KOSDAQ
     if (FID_INPUT_ISCD === '0001' || FID_INPUT_ISCD === '1001')

@@ -119,9 +119,10 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                 mode: 'index' as const,
                 intersect: false,
                 callbacks: {
-                    label: function (context: { dataset?: { label?: string }; raw?: number }) {
-                        const value = context.raw;
-                        return `${context.dataset.label}: ${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
+                    label: function (context: any) {
+                        const value = context.raw as number;
+                        const label = context.dataset?.label || '';
+                        return `${label}: ${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
                     },
                 },
             },
@@ -142,18 +143,19 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ ticker, classN
                 },
                 ticks: {
                     callback: function (value: string | number) {
-                        return `${value > 0 ? '+' : ''}${value.toFixed(1)}%`;
+                        const numValue = typeof value === 'string' ? parseFloat(value) : value;
+                        return `${numValue > 0 ? '+' : ''}${numValue.toFixed(1)}%`;
                     },
                 },
                 grid: {
                     drawBorder: false,
-                    color: function(context) {
+                    color: function(context: any) {
                         if (context.tick.value === 0) {
                             return '#000000'; // 0% 라인은 검은색
                         }
                         return 'rgba(0, 0, 0, 0.1)';
                     },
-                    lineWidth: function(context) {
+                    lineWidth: function(context: any) {
                         if (context.tick.value === 0) {
                             return 2; // 0% 라인은 굵게
                         }

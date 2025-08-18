@@ -105,9 +105,9 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
             },
             tooltip: {
                 callbacks: {
-                    label: function (context: { label?: string; raw?: number }) {
-                        const label = context.label;
-                        const value = context.raw;
+                    label: function (context: any) {
+                        const label = context.label || '';
+                        const value = context.raw as number;
 
                         if (label.includes('EPS')) {
                             return `${label}: ${value.toLocaleString()}원`;
@@ -125,7 +125,8 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
                 beginAtZero: true,
                 ticks: {
                     callback: function (value: string | number) {
-                        return value.toLocaleString();
+                        const numValue = typeof value === 'string' ? parseFloat(value) : value;
+                        return numValue.toLocaleString();
                     },
                 },
             },
