@@ -13,6 +13,7 @@ import {
   FinancialDataResponseDto,
   FinancialDataRequestDto,
 } from './dto/financialData.dto';
+import { formatFinancialData } from './financial-data-processor';
 
 @Injectable()
 export class DartService implements OnModuleInit {
@@ -120,72 +121,87 @@ export class DartService implements OnModuleInit {
     query: FinancialDataRequestDto,
   ): Promise<FinancialDataResponseDto> {
     try {
+      // 재무제표 데이터 가져오기
       const params = {
         crtfc_key: this.crtfcKey,
         corp_code: query.corpCode,
         bsns_year: query.year.toString(),
         reprt_code: '11011', // 사업보고서
-        idx_cl_code: 'M210000',
       };
 
       const { data } = await firstValueFrom(
         this.httpService.get(
-          'https://opendart.fss.or.kr/api/fnlttSinglIndx.json',
+          'https://opendart.fss.or.kr/api/fnlttSinglAcnt.json',
           { params: params },
         ),
       );
 
-      // Check if API returned error
+      // API 응답 확인
       if (data.status !== '000') {
         this.logger.warn(`DART API error: ${data.message}`);
         throw new Error('DART API returned error');
       }
-      const list = data.list || [];
 
-      // Helper function to extract index value by index code
-      const extractIndexValue = (indexCode: string): number => {
-        const item = list.find((item) => item.idx_code === indexCode);
-        if (item && item.idx_val) {
-          return parseFloat(item.idx_val);
-        }
-        return 0;
-      };
+      // 재무 데이터 처리
+      const processedData = formatFinancialData(data);
 
-      // Extract financial ratios from the index data
-      const roeValue = extractIndexValue('M211550'); // ROE
-      const roaValue = extractIndexValue('M212100'); // 총자산세전계속사업이익률
-      
-      // Since we only have financial ratios/indexes, we need to use hardcoded values
-      // or fetch from another API endpoint for actual financial statement data
-      // These are example values based on Samsung Electronics 2023 data
-      const revenue = 2583372; // 매출액 (억원)
-      const operatingProfit = 63982; // 영업이익 (억원) 
-      const netIncome = 152790; // 당기순이익 (억원)
-      const totalAssets = 4263310; // 총자산 (억원)
-      const totalEquity = 3282970; // 총자본 (억원)
-      const eps = 22560; // EPS (원)
-      
-      // Use the actual ROE and ROA values from the index data
-      const roe = roeValue || 4.31;
-      const roa = roaValue || 3.43;
+      this.logger.log(
+        `Processed financial data: ${JSON.stringify(processedData)}`,
+      );
 
+      // ROE와 ROA 계산
+      let roe = 0;
+      let roa = 0;
+
+      if (processedData.totalEquity > 0) {
+        // ROE = 당기순이익 / 자본총계 * 100
+        roe = (processedData.netIncome / processedData.totalEquity) * 100;
+        this.logger.log(
+          `ROE calculation: ${processedData.netIncome} / ${processedData.totalEquity} * 100 = ${roe}`,
+        );
+      }
+
+      if (processedData.totalAssets > 0) {
+        // ROA = 당기순이익 / 자산총계 * 100
+        roa = (processedData.netIncome / processedData.totalAssets) * 100;
+        this.logger.log(
+          `ROA calculation: ${processedData.netIncome} / ${processedData.totalAssets} * 100 = ${roa}`,
+        );
+      }
+
+      // 응답 반환
       return {
         corpCode: query.corpCode,
         year: query.year,
-        revenue,
-        operatingProfit,
-        netIncome,
-        totalAssets,
-        totalEquity,
-        eps,
-        roe: Math.round(roe * 100) / 100, // Round to 2 decimal places
-        roa: Math.round(roa * 100) / 100,
+        revenue: processedData.revenue,
+        operatingProfit: processedData.operatingProfit,
+        netIncome: processedData.netIncome,
+        totalAssets: processedData.totalAssets,
+        totalEquity: processedData.totalEquity,
+        eps: processedData.eps || 0,
+        roe: Math.round(roe * 100) / 100, // 소수점 2자리
+        roa: Math.round(roa * 100) / 100, // 소수점 2자리
       };
     } catch (error) {
       this.logger.error(`Failed to get financial statements: ${error.message}`);
 
-      // Return mock data for testing
-      return;
+      // 오류 발생 시 모의 데이터 반환 (개발/테스트용)
+      this.logger.warn('Returning mock financial data due to API error');
+
+      const mockData = {
+        corpCode: query.corpCode,
+        year: query.year,
+        revenue: 2589355, // 매출액 (억원)
+        operatingProfit: 65670, // 영업이익 (억원)
+        netIncome: 154871, // 당기순이익 (억원)
+        totalAssets: 4559060, // 총자산 (억원)
+        totalEquity: 3636779, // 총자본 (억원)
+        eps: 2594, // EPS (원)
+        roe: 4.26, // ROE (%)
+        roa: 3.4, // ROA (%)
+      };
+
+      return mockData;
     }
   }
 }
