@@ -364,7 +364,7 @@ export class KisService implements OnModuleInit {
   ): Promise<KisTimeDailyChartResponseDto[]> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
     // KOSPI KOSDAQ
-    if (FID_INPUT_ISCD == '0001' || FID_INPUT_ISCD === '1001')
+    if (FID_INPUT_ISCD === '0001' || FID_INPUT_ISCD === '1001')
       return [await this.getTimeDailyChart(dto)];
 
     const price = await this.getPrice({
@@ -398,7 +398,7 @@ export class KisService implements OnModuleInit {
   ): Promise<KisTimeItemChartResponseDto[]> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
     // KOSPI KOSDAQ
-    if (FID_INPUT_ISCD == '0001' || FID_INPUT_ISCD === '1001')
+    if (FID_INPUT_ISCD === '0001' || FID_INPUT_ISCD === '1001')
       return [await this.getTimeItemChart(dto)];
     const price = await this.getPrice({
       FID_COND_MRKT_DIV_CODE,
