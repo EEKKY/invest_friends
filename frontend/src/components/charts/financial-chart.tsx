@@ -97,7 +97,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
         };
     };
 
-    const chartOptions = {
+    const chartOptions: any = {
         responsive: true,
         plugins: {
             legend: {
@@ -105,9 +105,9 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
             },
             tooltip: {
                 callbacks: {
-                    label: function (context: { label?: string; raw?: number }) {
-                        const label = context.label;
-                        const value = context.raw;
+                    label: function (context: any) {
+                        const label = context.label || '';
+                        const value = context.raw as number;
 
                         if (label.includes('EPS')) {
                             return `${label}: ${value.toLocaleString()}원`;
@@ -124,7 +124,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
             y: {
                 beginAtZero: true,
                 ticks: {
-                    callback: function (value: string | number) {
+                    callback: function (value: any) {
                         return value.toLocaleString();
                     },
                 },
@@ -236,7 +236,7 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, classN
                                         y: {
                                             beginAtZero: true,
                                             ticks: {
-                                                callback: function (value: string | number, index: number) {
+                                                callback: function (value: any, index: any) {
                                                     // EPS는 원 단위로 표시
                                                     const label = getLabels()[index];
                                                     if (label && label.includes('EPS')) {

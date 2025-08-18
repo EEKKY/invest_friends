@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { StockChart } from '../../components/charts/stock-chart';
 import { FinancialChart } from '../../components/charts/financial-chart';
-import { IndexChart } from '../../components/charts/index-chart';
 import { ComparisonChart } from '../../components/charts/comparison-chart';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -18,7 +17,6 @@ export const ChartsPage: React.FC = () => {
     const [stockTicker, setStockTicker] = useState('005930'); // 삼성전자 기본값
     const [corpCode, setCorpCode] = useState('00126380'); // 삼성전자 기업코드
     const [companyName, setCompanyName] = useState('삼성전자');
-    const [selectedIndexCode, setSelectedIndexCode] = useState<'0001' | '1001'>('0001'); // KOSPI 기본값
 
     const handleCompanySelect = (mapping: typeof STOCK_MAPPINGS[0]) => {
         setStockTicker(mapping.stockCode);
@@ -84,26 +82,6 @@ export const ChartsPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Index Selection */}
-                <div className="border-t pt-4 mt-4">
-                    <h3 className="text-sm font-medium mb-3 text-gray-700">지수 차트 선택</h3>
-                    <div className="flex gap-3">
-                        <Button
-                            variant={selectedIndexCode === '0001' ? 'default' : 'outline'}
-                            size="sm"
-                            onClick={() => setSelectedIndexCode('0001')}
-                        >
-                            KOSPI
-                        </Button>
-                        <Button
-                            variant={selectedIndexCode === '1001' ? 'default' : 'outline'}
-                            size="sm"
-                            onClick={() => setSelectedIndexCode('1001')}
-                        >
-                            KOSDAQ
-                        </Button>
-                    </div>
-                </div>
             </div>
 
             {/* Primary Dashboard - Stock Chart and Financial Data */}
@@ -129,27 +107,14 @@ export const ChartsPage: React.FC = () => {
                 </div>
             </div>
 
-            {/* Market Analysis Dashboard - Index and Comparison */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
-                {/* Index Chart Section */}
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                    <h2 className="text-xl font-semibold mb-4">📊 {selectedIndexCode === '0001' ? 'KOSPI' : 'KOSDAQ'} 지수</h2>
-                    <IndexChart
-                        indexCode={selectedIndexCode}
-                        key={`index-${selectedIndexCode}`}
-                        className="w-full"
-                    />
-                </div>
-
-                {/* Comparison Chart Section */}
-                <div className="bg-white rounded-lg shadow-sm border p-6">
-                    <h2 className="text-xl font-semibold mb-4">⚖️ 시장 대비 성과</h2>
-                    <ComparisonChart
-                        ticker={stockTicker}
-                        key={`comparison-${stockTicker}`}
-                        className="w-full"
-                    />
-                </div>
+            {/* Market Analysis Dashboard - Comparison Chart */}
+            <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+                <h2 className="text-xl font-semibold mb-4">⚖️ 시장 대비 성과</h2>
+                <ComparisonChart
+                    ticker={stockTicker}
+                    key={`comparison-${stockTicker}`}
+                    className="w-full"
+                />
             </div>
 
 
@@ -181,16 +146,16 @@ export const ChartsPage: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Index Analysis Guide */}
+                {/* Market Index Guide */}
                 <div className="bg-blue-50 rounded-lg p-6">
                     <h3 className="text-lg font-semibold mb-2 flex items-center">
-                        📊 지수 분석
+                        📊 시장 지수
                     </h3>
                     <div className="text-sm text-gray-700 space-y-2">
+                        <p>• <strong>자동 매칭:</strong> 종목별 적절한 지수</p>
                         <p>• <strong>KOSPI:</strong> 대형주 중심 종합지수</p>
                         <p>• <strong>KOSDAQ:</strong> 중소형주 중심 지수</p>
-                        <p>• <strong>일/주/월봉:</strong> 다양한 기간 분석</p>
-                        <p>• <strong>시장 현황:</strong> 전일대비 등락률</p>
+                        <p>• <strong>비교 차트:</strong> 종목과 지수 동시 표시</p>
                     </div>
                 </div>
 
@@ -216,16 +181,13 @@ export const ChartsPage: React.FC = () => {
                         <strong>1. 기업 선택:</strong> 인기 종목 버튼을 클릭하거나 직접 종목코드를 입력하세요.
                     </p>
                     <p>
-                        <strong>2. 지수 선택:</strong> KOSPI 또는 KOSDAQ 지수를 선택하여 시장 전체 흐름을 확인하세요.
+                        <strong>2. 종합 분석:</strong> 개별 주가, 재무 데이터, 시장 대비 성과를 종합적으로 분석하세요.
                     </p>
                     <p>
-                        <strong>3. 종합 분석:</strong> 개별 주가, 재무 데이터, 시장 지수, 상대 성과를 종합적으로 분석하세요.
+                        <strong>3. 시장 비교:</strong> 비교 차트에서 종목과 관련 지수(KOSPI/KOSDAQ)를 함께 확인하세요.
                     </p>
                     <p>
-                        <strong>4. 상대 비교:</strong> 시장 대비 성과 차트에서 개별 종목의 상대적 강도를 확인하세요.
-                    </p>
-                    <p>
-                        <strong>5. 상세 정보:</strong> 모든 차트에 마우스를 올리면 상세한 수치 정보를 확인할 수 있습니다.
+                        <strong>4. 상세 정보:</strong> 모든 차트에 마우스를 올리면 상세한 수치 정보를 확인할 수 있습니다.
                     </p>
                 </div>
             </div>

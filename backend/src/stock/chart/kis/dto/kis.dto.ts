@@ -140,7 +140,7 @@ export class KisTimeItemChartResponseData {
   rt_cd: string;
   msg_cd: string;
   msg1: string;
-  output2: TimeChartItemDto[];
+  output: TimeChartItemDto[];
 }
 export class KisTimeItemChartResponseDto {
   stock: KisTimeItemChartResponseData;
