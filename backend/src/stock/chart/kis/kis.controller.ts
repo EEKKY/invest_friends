@@ -2,14 +2,12 @@ import { Controller, Get, Query } from '@nestjs/common';
 import { KisService } from './kis.service';
 import { ApiResponse } from '@nestjs/swagger';
 import {
-  GetPriceRequestDto,
-  PriceResponseDto,
   KisTimeDailyChartRequestDto,
   KisTimeItemChartRequestDto,
   KisTimeDailyChartResponseDto,
   KisTimeItemChartResponseDto,
-  KisIndexChartRequestDto,
-  KisIndexChartResponseDto,
+  GetPriceRequestDto,
+  PriceResponseDto,
 } from './dto/kis.dto';
 
 @Controller('kis')
@@ -27,7 +25,7 @@ export class KisController {
   getTimeDailyChart(
     @Query() query: KisTimeDailyChartRequestDto,
   ): Promise<KisTimeDailyChartResponseDto> {
-    return this.kisService.getTimeDailyChart(query);
+    return this.kisService.getDailyChart(query);
   }
 
   @Get('time-item-chart')
@@ -35,14 +33,6 @@ export class KisController {
   getTimeItemChart(
     @Query() query: KisTimeItemChartRequestDto,
   ): Promise<KisTimeItemChartResponseDto> {
-    return this.kisService.getTimeItemChart(query);
-  }
-
-  @Get('index-chart')
-  @ApiResponse({ status: 200, type: KisIndexChartResponseDto })
-  getIndexChart(
-    @Query() query: KisIndexChartRequestDto,
-  ): Promise<KisIndexChartResponseDto> {
-    return this.kisService.getIndexChart(query);
+    return this.kisService.getItemChart(query);
   }
 }
