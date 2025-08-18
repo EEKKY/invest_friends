@@ -180,7 +180,6 @@ const SignupPage: React.FC = () => {
               </p>
             )}
             <p className="mt-1 text-xs text-gray-500">
-              React Hook Form으로 이메일 형식을 검증합니다
             </p>
           </div>
 

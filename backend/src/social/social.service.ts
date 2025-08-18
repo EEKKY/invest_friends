@@ -106,6 +106,6 @@ export class SocialService {
   ): Promise<void> {
     const frontendUrl = this.configService.get('FRONTEND_URL');
     const status = success ? 'success' : 'fail';
-    res.redirect(`${frontendUrl}/social-callback?login=${status}`);
+    res.redirect(`${frontendUrl}/auth/callback?login=${status}`);
   }
 }
