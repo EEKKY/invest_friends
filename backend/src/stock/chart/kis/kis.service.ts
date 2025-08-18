@@ -22,7 +22,7 @@ export class KisService implements OnModuleInit {
   private readonly TOKEN_ENDPOINT = '/oauth2/tokenP';
   private readonly INQUIRE_PRICE =
     '/uapi/domestic-stock/v1/quotations/inquire-price';
-  private readonly INQUIRE_TIME_DAILY_CHART =
+  private readonly INQUIRE_DAILY_PRICE =
     '/uapi/domestic-stock/v1/quotations/inquire-daily-price';
   private readonly INQUIRE_INDEX_DAILY_PRICE =
     '/uapi/domestic-stock/v1/quotations/inquire-index-daily-price';
@@ -187,7 +187,7 @@ export class KisService implements OnModuleInit {
       const tr_id = 'FHKST01010400';
       const { data } = await firstValueFrom(
         this.httpService.get(
-          `${this.KIS_API_BASE_URL}${this.INQUIRE_TIME_DAILY_CHART}`,
+          `${this.KIS_API_BASE_URL}${this.INQUIRE_DAILY_PRICE}`,
           {
             headers: {
               authorization: `Bearer ${token}`,
