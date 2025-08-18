@@ -121,17 +121,30 @@ export class TimeChartItemDto {
   cntg_vol: string; // 거래량
   acml_vol: string; // 누적거래량
 }
-
-export class KisTimeDailyChartResponseDto {
+export class KisTimeDailyChartResponseData {
   rt_cd: string;
   msg_cd: string;
   msg1: string;
   output: TimeChartItemDto[];
 }
 
-export class KisTimeItemChartResponseDto {
+export class KisTimeDailyChartResponseDto {}
+{
+  stock: KisTimeDailyChartResponseData;
+  index: KisTimeDailyChartResponseData;
+  status: Number;
+  msg: String;
+}
+
+export class KisTimeItemChartResponseData {
   rt_cd: string;
   msg_cd: string;
   msg1: string;
   output2: TimeChartItemDto[];
+}
+export class KisTimeItemChartResponseDto {
+  stock: KisTimeItemChartResponseData;
+  index: KisTimeItemChartResponseData;
+  status: Number;
+  msg: String;
 }

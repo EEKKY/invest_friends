@@ -8,6 +8,7 @@ import {
   KisTimeItemChartResponseDto,
   PriceResponseDto,
   GetPriceRequestDto,
+  KisTimeItemChartResponseData,
 } from './dto/kis.dto';
 
 @Injectable()
@@ -239,7 +240,7 @@ export class KisService implements OnModuleInit {
 
   async getTimeItemChart(
     dto: KisTimeItemChartRequestDto,
-  ): Promise<KisTimeItemChartResponseDto> {
+  ): Promise<KisTimeItemChartResponseData> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD, FID_PW_DATA_INCU_YN } = dto;
 
     try {
@@ -359,13 +360,19 @@ export class KisService implements OnModuleInit {
     }
   }
 
+  //일봉
   async getDailyChart(
     dto: KisTimeDailyChartRequestDto,
-  ): Promise<KisTimeDailyChartResponseDto[]> {
+  ): Promise<KisTimeDailyChartResponseDto> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
     // KOSPI KOSDAQ
     if (FID_INPUT_ISCD === '0001' || FID_INPUT_ISCD === '1001')
-      return [await this.getTimeDailyChart(dto)];
+      return {
+        status: 200,
+        msg: 'success',
+        stock: null,
+        index: await this.getTimeDailyChart(dto),
+      };
 
     const price = await this.getPrice({
       FID_COND_MRKT_DIV_CODE,
@@ -380,7 +387,12 @@ export class KisService implements OnModuleInit {
         FID_COND_MRKT_DIV_CODE: 'U',
       };
       const indexChart = await this.getDailyIndexChart(indexDto);
-      return [dailyChart, indexChart];
+      return {
+        status: 200,
+        msg: 'success',
+        stock: dailyChart,
+        index: indexChart,
+      };
     } else {
       const dailyChart = await this.getTimeDailyChart(dto);
       const indexDto = {
@@ -389,38 +401,59 @@ export class KisService implements OnModuleInit {
         FID_COND_MRKT_DIV_CODE: 'U',
       };
       const indexChart = await this.getDailyIndexChart(indexDto);
-      return [dailyChart, indexChart];
+      return {
+        status: 200,
+        msg: 'success',
+        stock: dailyChart,
+        index: indexChart,
+      };
     }
   }
 
+  // 분봉
   async getItemChart(
     dto: KisTimeItemChartRequestDto,
-  ): Promise<KisTimeItemChartResponseDto[]> {
+  ): Promise<KisTimeDailyChartResponseDto> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
     // KOSPI KOSDAQ
     if (FID_INPUT_ISCD === '0001' || FID_INPUT_ISCD === '1001')
-      return [await this.getTimeItemChart(dto)];
+      return {
+        status: 200,
+        msg: 'success',
+        stock: null,
+        index: await this.getTimeItemChart(dto),
+      };
     const price = await this.getPrice({
       FID_COND_MRKT_DIV_CODE,
       FID_INPUT_ISCD,
     });
 
     if (price.rprs_mrkt_kor_name.slice(0, 5) === 'KOSPI') {
-      const dailyChart = await this.getTimeItemChart(dto);
+      const itemchart = await this.getTimeItemChart(dto);
       const indexDto = {
         ...dto,
         FID_INPUT_ISCD: '0001',
       };
       const indexChart = await this.getTimeItemChart(indexDto);
-      return [dailyChart, indexChart];
+      return {
+        status: 200,
+        msg: 'success',
+        stock: itemchart,
+        index: indexChart,
+      };
     } else {
-      const dailyChart = await this.getTimeItemChart(dto);
+      const itemchart = await this.getTimeItemChart(dto);
       const indexDto = {
         ...dto,
         FID_INPUT_ISCD: '1001',
       };
-      const indexChart = await this.getTimeItemChart(dto);
-      return [dailyChart, indexChart];
+      const indexChart = await this.getTimeItemChart(indexDto);
+      return {
+        status: 200,
+        msg: 'success',
+        stock: itemchart,
+        index: indexChart,
+      };
     }
   }
 

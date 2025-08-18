@@ -24,7 +24,7 @@ export class KisController {
   @ApiResponse({ status: 200, type: KisTimeDailyChartResponseDto })
   getTimeDailyChart(
     @Query() query: KisTimeDailyChartRequestDto,
-  ): Promise<KisTimeDailyChartResponseDto[]> {
+  ): Promise<KisTimeDailyChartResponseDto> {
     return this.kisService.getDailyChart(query);
   }
 
@@ -32,7 +32,7 @@ export class KisController {
   @ApiResponse({ status: 200, type: KisTimeItemChartResponseDto })
   getTimeItemChart(
     @Query() query: KisTimeItemChartRequestDto,
-  ): Promise<KisTimeItemChartResponseDto[]> {
+  ): Promise<KisTimeItemChartResponseDto> {
     return this.kisService.getItemChart(query);
   }
 }
