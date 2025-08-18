@@ -96,7 +96,6 @@ export class KisService implements OnModuleInit {
           ),
       );
 
-      // Validate token response
       if (!data || !data.access_token) {
         const errorMsg =
           data?.error_description || 'Failed to get access token';
@@ -143,14 +142,12 @@ export class KisService implements OnModuleInit {
         }),
       );
 
-      // Validate KIS API response
       if (!data || data.rt_cd !== '0') {
         const errorMsg = data?.msg1 || 'Unknown KIS API error';
         this.logger.error(`KIS Price API Error: ${data?.rt_cd} - ${errorMsg}`);
         throw new Error(`KIS API Error: ${errorMsg}`);
       }
 
-      // Validate output data exists
       if (!data.output) {
         this.logger.error('KIS Price API returned no output data');
         throw new Error('No price data available');
@@ -158,7 +155,6 @@ export class KisService implements OnModuleInit {
 
       const output = data.output;
 
-      // Extract and validate required fields
       return {
         rprs_mrkt_kor_name: output.rprs_mrkt_kor_name || '',
         stck_shrn_iscd: output.stck_shrn_iscd || FID_INPUT_ISCD,
@@ -210,8 +206,7 @@ export class KisService implements OnModuleInit {
           },
         ),
       );
-      console.log(data);
-      // Validate KIS API response
+
       if (!data || data.rt_cd !== '0') {
         const errorMsg = data?.msg1 || 'Unknown KIS API error';
         this.logger.error(
@@ -219,8 +214,7 @@ export class KisService implements OnModuleInit {
         );
         throw new Error(`KIS API Error: ${errorMsg}`);
       }
-      // Validate KIS API response
-      // Return only necessary data
+
       return {
         rt_cd: data.rt_cd,
         msg_cd: data.msg_cd || '',
@@ -275,7 +269,6 @@ export class KisService implements OnModuleInit {
         ),
       );
 
-      // Validate KIS API response
       if (!data || data.rt_cd !== '0') {
         const errorMsg = data?.msg1 || 'Unknown KIS API error';
         this.logger.error(`KIS Chart API Error: ${data?.rt_cd} - ${errorMsg}`);
@@ -311,7 +304,7 @@ export class KisService implements OnModuleInit {
       now.getFullYear() +
       String(now.getMonth() + 1).padStart(2, '0') +
       String(now.getDate()).padStart(2, '0');
-    console.log(FID_INPUT_DATE_1);
+
     try {
       const token = await this.getValidAccessToken();
       const tr_id = 'FHPUP02120000';
@@ -336,8 +329,6 @@ export class KisService implements OnModuleInit {
           },
         ),
       );
-      console.log(data);
-      // Validate KIS API response
 
       if (!data || data.rt_cd !== '0') {
         const errorMsg = data?.msg1 || 'Unknown KIS API error';
@@ -413,7 +404,6 @@ export class KisService implements OnModuleInit {
       FID_COND_MRKT_DIV_CODE,
       FID_INPUT_ISCD,
     });
-    console.log(price.rprs_mrkt_kor_name.slice(0, 5) === 'KOSPI');
 
     if (price.rprs_mrkt_kor_name.slice(0, 5) === 'KOSPI') {
       const dailyChart = await this.getTimeItemChart(dto);
