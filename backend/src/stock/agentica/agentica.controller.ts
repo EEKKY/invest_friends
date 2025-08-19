@@ -1,17 +1,73 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Get,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
+import { Body, Controller, Post, Get, UseGuards, Request } from '@nestjs/common';
+import { 
+  ApiTags, 
+  ApiOperation, 
+  ApiResponse, 
   ApiBody,
+  ApiBearerAuth,
+  ApiProperty
 } from '@nestjs/swagger';
 import { AgenticaService } from './agentica.service';
 import { Public } from '../../authguard/jwt.decorator';
+
+/**
+ * Agentica 메시지 요청 DTO
+ */
+export class AgenticaMessageDto {
+  @ApiProperty({
+    description: '자연어로 작성된 요청 메시지',
+    example: '삼성전자 주가 알려줘',
+    examples: [
+      '삼성전자 주가 알려줘',
+      '005930 최근 한달 차트 보여줘',
+      'SK하이닉스 재무제표 조회해줘',
+      'KOSPI 지수 현재 얼마야?',
+      '삼성전자와 SK하이닉스 주가 비교해줘'
+    ]
+  })
+  message: string;
+}
+
+/**
+ * Agentica 응답 DTO
+ */
+export class AgenticaResponseDto {
+  @ApiProperty({
+    description: '처리 성공 여부',
+    example: true
+  })
+  success: boolean;
+
+  @ApiProperty({
+    description: '처리된 데이터',
+    example: {
+      stck_prpr: '78900',
+      prdy_vrss: '1100',
+      prdy_ctrt: '1.41'
+    },
+    required: false
+  })
+  data?: any;
+
+  @ApiProperty({
+    description: '응답 메시지',
+    example: '삼성전자 주가 정보'
+  })
+  message: string;
+
+  @ApiProperty({
+    description: '에러 메시지',
+    required: false
+  })
+  error?: string;
+
+  @ApiProperty({
+    description: '사용 가능한 명령 예시',
+    required: false,
+    example: ['삼성전자 주가 알려줘', '005930 차트 보여줘']
+  })
+  examples?: string[];
+}
 
 @ApiTags('agentica')
 @Controller('agentica')
@@ -20,178 +76,99 @@ export class AgenticaController {
 
   @Public()
   @Post('chat')
-  @ApiOperation({
-    summary: 'GPT 채팅',
+  @ApiOperation({ 
+    summary: '자연어로 API 호출',
     description: `
-GPT-4와 자유롭게 대화할 수 있는 채팅 기능입니다.
-주식 관련 질문뿐만 아니라 다양한 주제로 대화가 가능합니다.
-대화 컨텍스트를 유지하여 연속적인 대화가 가능합니다.
-    `,
-  })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        message: {
-          type: 'string',
-          description: '사용자 메시지',
-          example: '오늘 주식시장 어때?',
-        },
-        context: {
-          type: 'array',
-          description: '이전 대화 컨텍스트',
-          items: {
-            type: 'object',
-            properties: {
-              role: { type: 'string', enum: ['user', 'assistant'] },
-              content: { type: 'string' },
-            },
-          },
-        },
-      },
-      required: ['message'],
-    },
-  })
-  @ApiResponse({
-    status: 200,
-    description: '채팅 응답 성공',
-    schema: {
-      type: 'object',
-      properties: {
-        success: { type: 'boolean', example: true },
-        message: { type: 'string', example: '오늘 한국 주식시장은...' },
-        usage: {
-          type: 'object',
-          properties: {
-            promptTokens: { type: 'number' },
-            completionTokens: { type: 'number' },
-            totalTokens: { type: 'number' },
-          },
-        },
-      },
-    },
-  })
-  async chat(
-    @Body() dto: {
-      message: string;
-      context?: Array<{ role: 'user' | 'assistant'; content: string }>;
-    },
-  ): Promise<{
-    success: boolean;
-    message: string;
-    usage?: {
-      promptTokens: number;
-      completionTokens: number;
-      totalTokens: number;
-    };
-  }> {
-    return this.agenticaService.chat(dto.message, dto.context);
-  }
+    Agentica를 사용하여 자연어 메시지를 백엔드 API 호출로 자동 변환합니다.
 
-  @Public()
-  @Post('chat/stock')
-  @ApiOperation({
-    summary: '주식 전문 채팅',
-    description: `
-주식 및 투자 관련 전문적인 질문에 대해 AI가 답변합니다.
-현재 조회 중인 종목 정보를 컨텍스트로 제공하면 더 정확한 분석을 받을 수 있습니다.
-    `,
+    **지원되는 명령 예시:**
+    - 주가 조회: "삼성전자 주가 알려줘", "005930 현재가는?"
+    - 차트 데이터: "삼성전자 일봉 차트", "최근 한달 차트 보여줘"
+    - 재무제표: "SK하이닉스 재무제표", "삼성전자 실적 조회"
+    - 지수 조회: "KOSPI 지수 현재 얼마야?", "KOSDAQ 지수 보여줘"
+    - 비교 분석: "삼성전자와 SK하이닉스 비교", "반도체 관련주 분석"
+
+    **작동 원리:**
+    1. 자연어 메시지를 받아서 의도를 파악
+    2. Swagger 문서를 기반으로 적절한 API 찾기
+    3. 필요한 파라미터를 자동으로 추출하여 API 호출
+    4. 결과를 구조화된 형태로 반환
+    `
   })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        message: {
-          type: 'string',
-          description: '주식 관련 질문',
-          example: '삼성전자 매수해도 될까?',
-        },
-        stockContext: {
-          type: 'object',
-          description: '현재 조회 중인 종목 정보',
-          properties: {
-            code: { type: 'string', example: '005930' },
-            name: { type: 'string', example: '삼성전자' },
-            sector: { type: 'string', example: '반도체' },
-            currentPrice: { type: 'number', example: 71000 },
-            changeRate: { type: 'number', example: -1.2 },
-          },
-        },
-        chatHistory: {
-          type: 'array',
-          description: '이전 대화 내역',
-          items: {
-            type: 'object',
-            properties: {
-              role: { type: 'string', enum: ['user', 'assistant'] },
-              content: { type: 'string' },
-            },
-          },
-        },
-      },
-      required: ['message'],
-    },
+  @ApiBody({ 
+    type: AgenticaMessageDto,
+    description: '자연어 요청 메시지'
   })
-  @ApiResponse({
-    status: 200,
-    description: '주식 채팅 응답 성공',
-    schema: {
-      type: 'object',
-      properties: {
-        success: { type: 'boolean', example: true },
-        message: {
-          type: 'string',
-          example: '삼성전자는 현재 반도체 업황 회복기에 있습니다...',
-        },
-      },
-    },
+  @ApiResponse({ 
+    status: 200, 
+    type: AgenticaResponseDto,
+    description: 'API 호출 성공'
   })
-  async stockChat(
-    @Body() dto: {
-      message: string;
-      stockContext?: {
-        code?: string;
-        name?: string;
-        sector?: string;
-        currentPrice?: number;
-        changeRate?: number;
-      };
-      chatHistory?: Array<{ role: 'user' | 'assistant'; content: string }>;
-    },
-  ): Promise<{
-    success: boolean;
-    message: string;
-  }> {
-    return this.agenticaService.stockChat(
-      dto.message,
-      dto.stockContext,
-      dto.chatHistory,
-    );
+  @ApiResponse({ 
+    status: 400, 
+    description: '잘못된 요청 - 메시지를 이해할 수 없음'
+  })
+  @ApiResponse({ 
+    status: 500, 
+    description: '서버 오류 - Agentica 처리 실패'
+  })
+  async processMessage(
+    @Body() dto: AgenticaMessageDto
+  ): Promise<AgenticaResponseDto> {
+    return this.agenticaService.processMessage(dto.message);
   }
 
   @Get('status')
-  @ApiOperation({
+  @ApiOperation({ 
     summary: 'Agentica 서비스 상태 확인',
-    description: 'Agentica 에이전트가 초기화되었는지 확인합니다.',
+    description: 'Agentica 에이전트가 초기화되었는지 확인합니다.'
   })
-  @ApiResponse({
-    status: 200,
+  @ApiResponse({ 
+    status: 200, 
     description: '서비스 상태',
     schema: {
       type: 'object',
       properties: {
         initialized: { type: 'boolean', example: true },
-        message: { type: 'string', example: 'Agentica service is ready' },
-      },
-    },
+        message: { type: 'string', example: 'Agentica service is ready' }
+      }
+    }
   })
   getStatus(): { initialized: boolean; message: string } {
     const initialized = this.agenticaService.isInitialized();
     return {
       initialized,
-      message: initialized
-        ? 'Agentica service is ready'
-        : 'Agentica service is not initialized. Check OPENAI_API_KEY in environment variables.',
+      message: initialized 
+        ? 'Agentica service is ready' 
+        : 'Agentica service is not initialized. Check OPENAI_API_KEY in environment variables.'
     };
+  }
+
+  @Post('chat/auth')
+  @UseGuards()
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ 
+    summary: '인증된 자연어 API 호출',
+    description: '인증된 사용자의 자연어 요청을 처리합니다. JWT 토큰이 필요합니다.'
+  })
+  @ApiBody({ 
+    type: AgenticaMessageDto,
+    description: '자연어 요청 메시지'
+  })
+  @ApiResponse({ 
+    status: 200, 
+    type: AgenticaResponseDto,
+    description: 'API 호출 성공'
+  })
+  @ApiResponse({ 
+    status: 401, 
+    description: '인증 실패 - 유효한 JWT 토큰이 필요합니다'
+  })
+  async processAuthenticatedMessage(
+    @Body() dto: AgenticaMessageDto,
+    @Request() req: any
+  ): Promise<AgenticaResponseDto> {
+    const userId = req.user?.id;
+    return this.agenticaService.processMessage(dto.message, userId);
   }
 }
