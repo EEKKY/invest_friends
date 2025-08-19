@@ -2,8 +2,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Agentica, assertHttpController } from '@agentica/core';
 import OpenAI from 'openai';
-import { KisService } from '../stock/chart/kis/kis.service';
-import { DartService } from '../stock/chart/dart/dart.service';
 
 @Injectable()
 export class AgenticaService {

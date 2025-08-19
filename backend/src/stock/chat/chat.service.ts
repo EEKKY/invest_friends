@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 
 @Injectable()
-export class AgenticaService implements OnModuleInit {
-  private readonly logger = new Logger(AgenticaService.name);
+export class ChatService implements OnModuleInit {
+  private readonly logger = new Logger(ChatService.name);
   private openai: OpenAI | null = null;
   constructor(private readonly configService: ConfigService) {
     const apiKey = this.configService.get<string>('OPENAI_API_KEY');
@@ -15,10 +15,10 @@ export class AgenticaService implements OnModuleInit {
 
   async onModuleInit() {
     if (this.openai) {
-      this.logger.log('Agentica agent initialized successfully');
+      this.logger.log('Chat agent initialized successfully');
     } else {
       this.logger.warn(
-        'OpenAI API key not found. Agentica features will be disabled.',
+        'OpenAI API key not found. Chat features will be disabled.',
       );
     }
   }
