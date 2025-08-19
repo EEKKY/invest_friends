@@ -8,7 +8,6 @@ import { SocialModule } from './social/social.module';
 import { KisModule } from './stock/kis/kis.module';
 import { DartModule } from './stock/dart/dart.module';
 import { AgenticaModule } from './stock/agentica/agentica.module';
-import { RecommendationModule } from './stock/recommendation/recommendation.module';
 
 @Module({
   imports: [
@@ -24,7 +23,6 @@ import { RecommendationModule } from './stock/recommendation/recommendation.modu
     SocialModule,
     DartModule,
     AgenticaModule,
-    RecommendationModule,
   ],
   controllers: [],
   providers: [],
