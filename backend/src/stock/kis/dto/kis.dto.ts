@@ -128,12 +128,11 @@ export class KisTimeDailyChartResponseData {
   output: TimeChartItemDto[];
 }
 
-export class KisTimeDailyChartResponseDto {}
-{
+export class KisTimeDailyChartResponseDto {
   stock: KisTimeDailyChartResponseData;
   index: KisTimeDailyChartResponseData;
-  status: Number;
-  msg: String;
+  status: number;
+  msg: string;
 }
 
 export class KisTimeItemChartResponseData {

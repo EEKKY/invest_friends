@@ -188,7 +188,8 @@ export class ChatService implements OnModuleInit {
         messages: [
           {
             role: 'system',
-            content: '한국 주식시장 섹터 분석 전문가입니다. 간결하고 통찰력 있는 분석을 제공합니다.',
+            content:
+              '한국 주식시장 섹터 분석 전문가입니다. 간결하고 통찰력 있는 분석을 제공합니다.',
           },
           {
             role: 'user',
@@ -198,7 +199,10 @@ export class ChatService implements OnModuleInit {
         max_tokens: 200,
       });
 
-      return response.choices[0].message.content || `${sector} 섹터 분석을 생성할 수 없습니다.`;
+      return (
+        response.choices[0].message.content ||
+        `${sector} 섹터 분석을 생성할 수 없습니다.`
+      );
     } catch (error) {
       this.logger.error('Failed to generate sector analysis:', error);
       return `${sector} 섹터는 시장 상황에 따라 변동성이 있습니다.`;
@@ -219,7 +223,8 @@ export class ChatService implements OnModuleInit {
         messages: [
           {
             role: 'system',
-            content: '한국 주식시장 기술적 분석 전문가입니다. 시장 트렌드를 간결하게 설명합니다.',
+            content:
+              '한국 주식시장 기술적 분석 전문가입니다. 시장 트렌드를 간결하게 설명합니다.',
           },
           {
             role: 'user',
@@ -229,7 +234,10 @@ export class ChatService implements OnModuleInit {
         max_tokens: 150,
       });
 
-      return response.choices[0].message.content || `${sector} 섹터 트렌드 분석을 생성할 수 없습니다.`;
+      return (
+        response.choices[0].message.content ||
+        `${sector} 섹터 트렌드 분석을 생성할 수 없습니다.`
+      );
     } catch (error) {
       this.logger.error('Failed to generate market trend:', error);
       return `${sector} 섹터는 현재 박스권 흐름을 보이고 있습니다.`;

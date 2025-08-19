@@ -1,15 +1,5 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Get,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiBody,
-} from '@nestjs/swagger';
+import { Body, Controller, Post, Get } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { ChatService } from './chat.service';
 import { Public } from '../../authguard/jwt.decorator';
 
@@ -72,7 +62,8 @@ GPT-4와 자유롭게 대화할 수 있는 채팅 기능입니다.
     },
   })
   async chat(
-    @Body() dto: {
+    @Body()
+    dto: {
       message: string;
       context?: Array<{ role: 'user' | 'assistant'; content: string }>;
     },
@@ -147,7 +138,8 @@ GPT-4와 자유롭게 대화할 수 있는 채팅 기능입니다.
     },
   })
   async stockChat(
-    @Body() dto: {
+    @Body()
+    dto: {
       message: string;
       stockContext?: {
         code?: string;

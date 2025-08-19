@@ -9,9 +9,7 @@ export class AgenticaService {
   private agent: Agentica<'chatgpt'> | null = null;
   private initialized = false;
 
-  constructor(
-    private configService: ConfigService,
-  ) {
+  constructor(private configService: ConfigService) {
     // 서버가 완전히 시작된 후 초기화
   }
 
@@ -21,17 +19,24 @@ export class AgenticaService {
   private async initializeAgent(): Promise<void> {
     try {
       const openAiKey = this.configService.get<string>('OPENAI_API_KEY');
-      
+
       if (!openAiKey) {
-        this.logger.warn('OpenAI API key not found. Agentica service will not be available.');
+        this.logger.warn(
+          'OpenAI API key not found. Agentica service will not be available.',
+        );
         return;
       }
 
       const openai = new OpenAI({ apiKey: openAiKey });
 
       // 현재 서버의 Swagger 문서 가져오기
-      const host = this.configService.get<string>('APP_HOST', 'http://localhost:3000');
-      const swaggerDoc = await fetch(`${host}/api/v1-json`).then(r => r.json());
+      const host = this.configService.get<string>(
+        'APP_HOST',
+        'http://localhost:3000',
+      );
+      const swaggerDoc = await fetch(`${host}/api/v1-json`).then((r) =>
+        r.json(),
+      );
 
       this.agent = new Agentica({
         model: 'chatgpt' as const,
@@ -70,7 +75,7 @@ export class AgenticaService {
   async processMessage(message: string, userId?: string): Promise<any> {
     if (!this.initialized || !this.agent) {
       // Agentica가 초기화되지 않은 경우 직접 처리
-        await this.initializeAgent();
+      await this.initializeAgent();
     }
 
     try {
@@ -82,10 +87,9 @@ export class AgenticaService {
       }
 
       // Agentica를 통해 자연어를 API 호출로 변환
-    
 
       const response = await this.agent.conversate(message);
-      
+
       return {
         success: true,
         data: response,
@@ -93,11 +97,11 @@ export class AgenticaService {
       };
     } catch (error) {
       this.logger.error('Error processing message with Agentica', error);
-      
+
       return {
         success: false,
         message: '처리 중 오류가 발생했습니다.',
-        error: error.message
+        error: error.message,
       };
     }
   }
