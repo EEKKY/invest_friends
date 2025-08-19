@@ -214,12 +214,8 @@ const MessageBubble = memo(
 MessageBubble.displayName = "MessageBubble";
 
 const ChatArea = () => {
-  const {
-    optimisticMessages,
-    isTyping,
-    regenerateMessage,
-    isPending,
-  } = useChatContext();
+  const { optimisticMessages, isTyping, regenerateMessage, isPending } =
+    useChatContext();
   const [isScrolledUp, setIsScrolledUp] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -242,7 +238,6 @@ const ChatArea = () => {
 
     setIsScrolledUp(!isAtBottom);
   }, []);
-
 
   // Auto scroll on new messages or when typing status changes
   useEffect(() => {
@@ -298,11 +293,10 @@ const ChatArea = () => {
                   <Sparkles className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  AI 어시스턴트와 대화하기
+                  아젠티카와함께하는 투자친구 AI
                 </h2>
                 <p className="text-gray-500 max-w-md">
-                  궁금한 것이 있으면 무엇이든 물어보세요. 코딩, 학습, 창작 등
-                  다양한 주제로 도움을 드릴 수 있어요.
+                  궁금한 것이 있으면 무엇이든 물어보세요. 주식정보를 물어보세요!
                 </p>
               </div>
             </div>

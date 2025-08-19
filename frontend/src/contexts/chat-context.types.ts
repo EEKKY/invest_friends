@@ -1,4 +1,5 @@
 import { ReactNode, createContext } from "react";
+import type { ChatMessage } from "@/types/chat";
 
 export type Message = {
   id: string;
@@ -14,6 +15,7 @@ export type ChatContextType = {
   optimisticMessages: Message[];
   isTyping: boolean;
   isPending: boolean;
+  chatHistory: ChatMessage[]; // API context history
   sendMessage: (content: string) => Promise<void>;
   regenerateMessage: (messageId: string) => Promise<void>;
   deleteMessage: (messageId: string) => void;
