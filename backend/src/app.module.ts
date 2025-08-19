@@ -5,8 +5,10 @@ import { ConfigModule } from '@nestjs/config';
 import { LoginModule } from './login/login.module';
 import { JwtAuthModule } from './authguard/authguard.module';
 import { SocialModule } from './social/social.module';
-import { KisModule } from './stock/chart/kis/kis.module';
-import { DartModule } from './stock/chart/dart/dart.module';
+import { KisModule } from './stock/kis/kis.module';
+import { DartModule } from './stock/dart/dart.module';
+import { AgenticaModule } from './stock/agentica/agentica.module';
+import { RecommendationModule } from './stock/recommendation/recommendation.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { DartModule } from './stock/chart/dart/dart.module';
     JwtAuthModule,
     SocialModule,
     DartModule,
+    AgenticaModule,
+    RecommendationModule,
   ],
   controllers: [],
   providers: [],
