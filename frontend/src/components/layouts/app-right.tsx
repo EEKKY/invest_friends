@@ -1,3 +1,8 @@
+import { ChartsPage } from "@/pages/charts";
 export function AppRight() {
-  return <div>캔버스</div>;
+  return (
+    <div>
+      <ChartsPage />
+    </div>
+  );
 }

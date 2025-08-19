@@ -5,58 +5,14 @@ import {
   useMemo,
 } from "react";
 import { ChatContext, type Message, type ChatProviderProps } from "./chat-context.types";
+import type { ChatMessage } from "@/types/chat";
+import { chatApi } from "@/services/chat";
 
 const ChatProvider = ({ children }: ChatProviderProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
-
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isPending, startTransition] = useTransition();
-
-  // Simulate AI response
-  const simulateAIResponse = useCallback(async (userMessage: string): Promise<Message> => {
-    // Simulate network delay and processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Generate mock AI response based on user input
-    const responses: Record<string, string> = {
-      default: `네, "${userMessage}"에 대해 답변드리겠습니다. 
-
-**주요 포인트:**
-1. 먼저 문제를 정확히 파악하는 것이 중요합니다
-2. 단계별로 접근하여 해결책을 찾아보세요
-3. 필요하다면 추가 정보를 요청하셔도 좋습니다
-
-더 구체적인 도움이 필요하시면 말씀해 주세요!`,
-      react: `React에서 상태 관리 방법은 여러 가지가 있어요:
-
-**1. 로컬 상태 (useState, useReducer)**
-- 컴포넌트 내부에서만 사용하는 간단한 상태
-- 폼 입력, 토글 상태 등
-
-**2. 전역 상태 관리**
-- **Context API**: React 내장, 간단한 전역 상태
-- **Redux Toolkit**: 복잡한 앱, 디버깅 도구 강력
-- **Zustand**: 가볍고 사용하기 쉬움
-- **Jotai**: 원자 단위 상태 관리
-
-**3. 서버 상태**
-- **React Query/TanStack Query**: 서버 데이터 캐싱
-- **SWR**: 간단한 데이터 페칭
-
-어떤 종류의 프로젝트를 하고 계신가요?`,
-    };
-
-    const responseContent = userMessage.toLowerCase().includes("react")
-      ? responses.react
-      : responses.default;
-
-    return {
-      id: crypto.randomUUID(),
-      type: "ai",
-      content: responseContent,
-      timestamp: new Date(),
-    };
-  }, []);
 
   const sendMessage = useCallback(
     async (content: string) => {
@@ -68,7 +24,7 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
         type: "user",
         content,
         timestamp: new Date(),
-        status: "sent",
+        status: "sending",
       };
 
       // Add user message immediately
@@ -80,6 +36,15 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
         }
         return [...prev, userMessage];
       });
+
+      // Update chat history for API context
+      const newUserMessage: ChatMessage = {
+        role: "user",
+        content,
+        timestamp: new Date(),
+      };
+      
+      setChatHistory((prev) => [...prev, newUserMessage]);
 
       // Small delay to show user message first
       await new Promise(resolve => setTimeout(resolve, 300));
@@ -96,25 +61,72 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
       setMessages((prev) => [...prev, typingMessage]);
       setIsTyping(true);
 
-      // Simulate AI processing
+      // Update user message status to sent
+      setMessages((prev) => 
+        prev.map(msg => 
+          msg.id === userMessageId ? { ...msg, status: "sent" } : msg
+        )
+      );
+
+      // Call API for AI response
       try {
-        const aiResponse = await simulateAIResponse(content);
+        const response = await chatApi.sendMessage(content, chatHistory);
         
-        // Replace typing message with actual response
-        setMessages((prev) => {
-          const filtered = prev.filter(msg => msg.id !== "ai-typing");
-          // Create new array to trigger re-render
-          return [...filtered, { ...aiResponse }];
-        });
+        if (response.success) {
+          const aiMessage: Message = {
+            id: crypto.randomUUID(),
+            type: "ai",
+            content: response.message,
+            timestamp: new Date(),
+            status: "sent",
+          };
+          
+          // Update chat history with AI response
+          const newAiMessage: ChatMessage = {
+            role: "assistant",
+            content: response.message,
+            timestamp: new Date(),
+          };
+          
+          setChatHistory((prev) => [...prev, newAiMessage]);
+          
+          // Replace typing message with actual response
+          setMessages((prev) => {
+            const filtered = prev.filter(msg => msg.id !== "ai-typing");
+            return [...filtered, aiMessage];
+          });
+        } else {
+          throw new Error(response.message);
+        }
+        
         setIsTyping(false);
       } catch (error) {
         console.error("Failed to get AI response:", error);
-        // Remove typing message on error
-        setMessages((prev) => prev.filter(msg => msg.id !== "ai-typing"));
+        
+        // Update user message status to error
+        setMessages((prev) => 
+          prev.map(msg => 
+            msg.id === userMessageId ? { ...msg, status: "error" } : msg
+          )
+        );
+        
+        // Remove typing message and add error message
+        setMessages((prev) => {
+          const filtered = prev.filter(msg => msg.id !== "ai-typing");
+          const errorMessage: Message = {
+            id: crypto.randomUUID(),
+            type: "ai",
+            content: "죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해 주세요.",
+            timestamp: new Date(),
+            status: "error",
+          };
+          return [...filtered, errorMessage];
+        });
+        
         setIsTyping(false);
       }
     },
-    [simulateAIResponse]
+    [chatHistory]
   );
 
   const regenerateMessage = useCallback(
@@ -147,23 +159,55 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
       });
       setIsTyping(true);
 
-      // Generate new response
-      setTimeout(async () => {
-        try {
-          const newAIResponse = await simulateAIResponse(userMessage);
+      // Regenerate using API with current context
+      try {
+        const response = await chatApi.sendMessage(userMessage, chatHistory);
+        
+        if (response.success) {
+          const newAIMessage: Message = {
+            id: crypto.randomUUID(),
+            type: "ai",
+            content: response.message,
+            timestamp: new Date(),
+            status: "sent",
+          };
+          
+          // Update chat history with new AI response
+          const newAiChatMessage: ChatMessage = {
+            role: "assistant",
+            content: response.message,
+            timestamp: new Date(),
+          };
+          
+          // Replace the old AI message in history
+          setChatHistory((prev) => {
+            const newHistory = [...prev];
+            // Find and replace the last assistant message
+            for (let i = newHistory.length - 1; i >= 0; i--) {
+              if (newHistory[i].role === "assistant") {
+                newHistory[i] = newAiChatMessage;
+                break;
+              }
+            }
+            return newHistory;
+          });
+          
           setMessages((prev) => {
             const filtered = prev.filter(msg => msg.id !== "ai-typing-regen");
-            return [...filtered, newAIResponse];
+            return [...filtered, newAIMessage];
           });
-          setIsTyping(false);
-        } catch (error) {
-          console.error("Failed to regenerate message:", error);
-          setMessages((prev) => prev.filter(msg => msg.id !== "ai-typing-regen"));
-          setIsTyping(false);
+        } else {
+          throw new Error(response.message);
         }
-      }, 100);
+        
+        setIsTyping(false);
+      } catch (error) {
+        console.error("Failed to regenerate message:", error);
+        setMessages((prev) => prev.filter(msg => msg.id !== "ai-typing-regen"));
+        setIsTyping(false);
+      }
     },
-    [messages, simulateAIResponse]
+    [messages, chatHistory]
   );
 
   const deleteMessage = useCallback((messageId: string) => {
@@ -175,6 +219,7 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
   const clearChat = useCallback(() => {
     startTransition(() => {
       setMessages([]);
+      setChatHistory([]);
     });
   }, []);
 
@@ -184,6 +229,7 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
       optimisticMessages: messages,
       isTyping,
       isPending,
+      chatHistory,
       sendMessage,
       regenerateMessage,
       deleteMessage,
@@ -193,6 +239,7 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
       messages,
       isTyping,
       isPending,
+      chatHistory,
       sendMessage,
       regenerateMessage,
       deleteMessage,
