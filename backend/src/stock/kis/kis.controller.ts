@@ -20,7 +20,7 @@ export class KisController {
     return this.kisService.getPrice(query);
   }
 
-  @Get('time-daily-chart')
+  @Get('daily-chart')
   @ApiResponse({ status: 200, type: KisTimeDailyChartResponseDto })
   getTimeDailyChart(
     @Query() query: KisTimeDailyChartRequestDto,
@@ -28,7 +28,7 @@ export class KisController {
     return this.kisService.getDailyChart(query);
   }
 
-  @Get('time-item-chart')
+  @Get('item-chart')
   @ApiResponse({ status: 200, type: KisTimeItemChartResponseDto })
   getTimeItemChart(
     @Query() query: KisTimeItemChartRequestDto,

@@ -5,7 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 import { LoginModule } from './login/login.module';
 import { JwtAuthModule } from './authguard/authguard.module';
 import { SocialModule } from './social/social.module';
-import { KisModule } from './stock/chart/kis/kis.module';
+import { KisModule } from './stock/kis/kis.module';
+import { DartModule } from './stock/dart/dart.module';
+import { AgenticaModule } from './stock/agentica/agentica.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { KisModule } from './stock/chart/kis/kis.module';
     LoginModule,
     JwtAuthModule,
     SocialModule,
+    DartModule,
+    AgenticaModule,
   ],
   controllers: [],
   providers: [],

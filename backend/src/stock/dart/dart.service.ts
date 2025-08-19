@@ -9,6 +9,11 @@ import * as AdmZip from 'adm-zip';
 import { XMLParser } from 'fast-xml-parser';
 import { firstValueFrom } from 'rxjs';
 import { CorpCodeDto } from './dto/corp-code.dto';
+import {
+  FinancialDataResponseDto,
+  FinancialDataRequestDto,
+} from './dto/financialData.dto';
+import { formatFinancialData } from './financial-data-processor';
 
 @Injectable()
 export class DartService implements OnModuleInit {
@@ -112,107 +117,91 @@ export class DartService implements OnModuleInit {
     return this.corpCodeRepo.findOne({ where: { corp_code } });
   }
 
-  async getFinancialStatements(corpCode: string, year: number) {
+  async getFinancialStatements(
+    query: FinancialDataRequestDto,
+  ): Promise<FinancialDataResponseDto> {
     try {
+      // 재무제표 데이터 가져오기
       const params = {
         crtfc_key: this.crtfcKey,
-        corp_code: corpCode,
-        bsns_year: year.toString(),
+        corp_code: query.corpCode,
+        bsns_year: query.year.toString(),
         reprt_code: '11011', // 사업보고서
       };
 
       const { data } = await firstValueFrom(
         this.httpService.get(
-          'https://opendart.fss.or.kr/api/fnlttSinglIndx.json',
+          'https://opendart.fss.or.kr/api/fnlttSinglAcnt.json',
           { params: params },
         ),
       );
 
-      // Check if API returned error
+      // API 응답 확인
       if (data.status !== '000') {
         this.logger.warn(`DART API error: ${data.message}`);
         throw new Error('DART API returned error');
       }
 
-      const list = data.list || [];
+      // 재무 데이터 처리
+      const processedData = formatFinancialData(data);
 
-      // Helper function to extract value with multiple possible account names
-      const extractValue = (...accountNames: string[]) => {
-        for (const name of accountNames) {
-          const item = list.find(
-            (item) =>
-              item.account_nm === name || item.account_nm.includes(name),
-          );
-          if (item && item.thstrm_amount) {
-            const value = parseFloat(item.thstrm_amount.replace(/,/g, ''));
-            // Convert to 억원 (100 million won)
-            return Math.round(value / 100000000);
-          }
-        }
-        return 0;
-      };
-
-      // Extract financial data with multiple possible account names
-      const revenue = extractValue('매출액', '수익(매출액)', '영업수익');
-      const operatingProfit = extractValue('영업이익', '영업손익');
-      const netIncome = extractValue(
-        '당기순이익',
-        '당기순손익',
-        '연결당기순이익',
+      this.logger.log(
+        `Processed financial data: ${JSON.stringify(processedData)}`,
       );
-      const totalAssets = extractValue('자산총계', '자산 총계');
-      const totalEquity = extractValue('자본총계', '자본 총계');
 
-      // Calculate financial ratios
-      const eps = Math.round((netIncome * 100000000) / 50000000); // Assuming 50M shares
-      const roe = totalEquity > 0 ? (netIncome / totalEquity) * 100 : 0;
-      const roa = totalAssets > 0 ? (netIncome / totalAssets) * 100 : 0;
+      // ROE와 ROA 계산
+      let roe = 0;
+      let roa = 0;
 
+      if (processedData.totalEquity > 0) {
+        // ROE = 당기순이익 / 자본총계 * 100
+        roe = (processedData.netIncome / processedData.totalEquity) * 100;
+        this.logger.log(
+          `ROE calculation: ${processedData.netIncome} / ${processedData.totalEquity} * 100 = ${roe}`,
+        );
+      }
+
+      if (processedData.totalAssets > 0) {
+        // ROA = 당기순이익 / 자산총계 * 100
+        roa = (processedData.netIncome / processedData.totalAssets) * 100;
+        this.logger.log(
+          `ROA calculation: ${processedData.netIncome} / ${processedData.totalAssets} * 100 = ${roa}`,
+        );
+      }
+
+      // 응답 반환
       return {
-        revenue,
-        operatingProfit,
-        netIncome,
-        totalAssets,
-        totalEquity,
-        eps,
-        roe: Math.round(roe * 100) / 100, // Round to 2 decimal places
-        roa: Math.round(roa * 100) / 100,
+        corpCode: query.corpCode,
+        year: query.year,
+        revenue: processedData.revenue,
+        operatingProfit: processedData.operatingProfit,
+        netIncome: processedData.netIncome,
+        totalAssets: processedData.totalAssets,
+        totalEquity: processedData.totalEquity,
+        eps: processedData.eps || 0,
+        roe: Math.round(roe * 100) / 100, // 소수점 2자리
+        roa: Math.round(roa * 100) / 100, // 소수점 2자리
       };
     } catch (error) {
       this.logger.error(`Failed to get financial statements: ${error.message}`);
 
-      // Return mock data for testing
-      return this.generateMockFinancialData(corpCode, year);
+      // 오류 발생 시 모의 데이터 반환 (개발/테스트용)
+      this.logger.warn('Returning mock financial data due to API error');
+
+      const mockData = {
+        corpCode: query.corpCode,
+        year: query.year,
+        revenue: 2589355, // 매출액 (억원)
+        operatingProfit: 65670, // 영업이익 (억원)
+        netIncome: 154871, // 당기순이익 (억원)
+        totalAssets: 4559060, // 총자산 (억원)
+        totalEquity: 3636779, // 총자본 (억원)
+        eps: 2594, // EPS (원)
+        roe: 4.26, // ROE (%)
+        roa: 3.4, // ROA (%)
+      };
+
+      return mockData;
     }
-  }
-
-  private generateMockFinancialData(corpCode: string, year: number) {
-    // Generate realistic mock financial data
-    const baseRevenue = 500000; // 50조원
-    const yearFactor = 1 + (year - 2020) * 0.05; // 5% annual growth
-    const randomFactor = 0.9 + Math.random() * 0.2; // ±10% variation
-
-    const revenue = Math.round(baseRevenue * yearFactor * randomFactor);
-    const operatingProfit = Math.round(revenue * 0.15); // 15% operating margin
-    const netIncome = Math.round(revenue * 0.08); // 8% net margin
-    const totalAssets = Math.round(revenue * 1.5); // Asset turnover of 0.67
-    const totalEquity = Math.round(totalAssets * 0.6); // 60% equity ratio
-
-    const eps = Math.round((netIncome * 100000000) / 50000000); // Assuming 50M shares
-    const roe = (netIncome / totalEquity) * 100;
-    const roa = (netIncome / totalAssets) * 100;
-
-    this.logger.log(`Using mock financial data for ${corpCode} (${year})`);
-
-    return {
-      revenue,
-      operatingProfit,
-      netIncome,
-      totalAssets,
-      totalEquity,
-      eps,
-      roe: Math.round(roe * 100) / 100,
-      roa: Math.round(roa * 100) / 100,
-    };
   }
 }

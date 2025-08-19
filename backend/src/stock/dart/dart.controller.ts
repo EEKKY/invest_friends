@@ -2,6 +2,10 @@ import { Controller, Get, Query, Param } from '@nestjs/common';
 import { DartService } from './dart.service';
 import { SinglIndxRequest, SinglIndxResponse } from './dto/singl-indx.dto';
 import { CorpCodeDto } from './dto/corp-code.dto';
+import {
+  FinancialDataRequestDto,
+  FinancialDataResponseDto,
+} from './dto/financialData.dto';
 
 @Controller('dart')
 export class DartController {
@@ -28,5 +32,12 @@ export class DartController {
   async refreshCorpCodes() {
     await this.dartService.fetchAndStoreCorpCode();
     return { message: 'Corp codes refreshed successfully' };
+  }
+
+  @Get('financial')
+  async getFinancialData(
+    @Query() query: FinancialDataRequestDto,
+  ): Promise<FinancialDataResponseDto> {
+    return this.dartService.getFinancialStatements(query);
   }
 }

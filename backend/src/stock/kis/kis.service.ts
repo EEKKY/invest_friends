@@ -10,6 +10,7 @@ import {
   GetPriceRequestDto,
   KisTimeItemChartResponseData,
 } from './dto/kis.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class KisService implements OnModuleInit {
@@ -37,6 +38,7 @@ export class KisService implements OnModuleInit {
     // 서버 시작 시 토큰을 미리 발급받음
     try {
       await this.fetchAccessToken();
+
       this.logger.log('KIS access token initialized on startup');
     } catch (error) {
       this.logger.warn(
@@ -221,12 +223,12 @@ export class KisService implements OnModuleInit {
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
         output: data.output.map((item: any) => ({
-          stck_cntg_hour: item.stck_cntg_hour || '',
+          stck_cntg_hour: item.stck_bsop_date || '', // 일봉은 날짜 필드 사용
           stck_oprc: item.stck_oprc || '0',
           stck_hgpr: item.stck_hgpr || '0',
           stck_lwpr: item.stck_lwpr || '0',
-          stck_prpr: item.stck_prpr || '0',
-          cntg_vol: item.cntg_vol || '0',
+          stck_prpr: item.stck_clpr || item.stck_prpr || '0', // 일봉은 stck_clpr 필드 사용
+          cntg_vol: item.acml_vol || '0', // 일봉은 누적 거래량 사용
           acml_vol: item.acml_vol || '0',
         })),
       };
@@ -280,7 +282,7 @@ export class KisService implements OnModuleInit {
         rt_cd: data.rt_cd,
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
-        output2: data.output2.map((item: any) => ({
+        output: data.output2.map((item: any) => ({
           stck_cntg_hour: item.stck_cntg_hour || '',
           stck_oprc: item.stck_oprc || '0',
           stck_hgpr: item.stck_hgpr || '0',
@@ -343,12 +345,12 @@ export class KisService implements OnModuleInit {
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
         output: data.output2.map((item: any) => ({
-          stck_cntg_hour: item.stck_cntg_hour || '',
+          stck_cntg_hour: item.stck_bsop_date || '', // 인덱스도 날짜 필드 사용
           stck_oprc: item.bstp_nmix_oprc || '0',
           stck_hgpr: item.bstp_nmix_hgpr || '0',
           stck_lwpr: item.bstp_nmix_lwpr || '0',
           stck_prpr: item.bstp_nmix_prpr || '0',
-          cntg_vol: item.cntg_vol || '0',
+          cntg_vol: item.acml_vol || '0', // 누적 거래량 사용
           acml_vol: item.acml_vol || '0',
         })),
       };
@@ -365,6 +367,7 @@ export class KisService implements OnModuleInit {
     dto: KisTimeDailyChartRequestDto,
   ): Promise<KisTimeDailyChartResponseDto> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
+
     // KOSPI KOSDAQ
     if (FID_INPUT_ISCD === '0001' || FID_INPUT_ISCD === '1001')
       return {
@@ -386,6 +389,7 @@ export class KisService implements OnModuleInit {
         FID_INPUT_ISCD: '0001',
         FID_COND_MRKT_DIV_CODE: 'U',
       };
+
       const indexChart = await this.getDailyIndexChart(indexDto);
       return {
         status: 200,
@@ -413,7 +417,7 @@ export class KisService implements OnModuleInit {
   // 분봉
   async getItemChart(
     dto: KisTimeItemChartRequestDto,
-  ): Promise<KisTimeDailyChartResponseDto> {
+  ): Promise<KisTimeItemChartResponseDto> {
     const { FID_COND_MRKT_DIV_CODE, FID_INPUT_ISCD } = dto;
     // KOSPI KOSDAQ
     if (FID_INPUT_ISCD === '0001' || FID_INPUT_ISCD === '1001')
@@ -423,6 +427,7 @@ export class KisService implements OnModuleInit {
         stock: null,
         index: await this.getTimeItemChart(dto),
       };
+
     const price = await this.getPrice({
       FID_COND_MRKT_DIV_CODE,
       FID_INPUT_ISCD,
@@ -482,7 +487,6 @@ export class KisService implements OnModuleInit {
       // 새로운 토큰 요청
       this.tokenRequestInProgress = true;
       this.tokenRequestPromise = this.fetchAccessToken();
-
       try {
         await this.tokenRequestPromise;
         return this.accessToken!;
