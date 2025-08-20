@@ -167,6 +167,10 @@ export class KisService implements OnModuleInit {
         prdy_ctrt: output.prdy_ctrt || '0.00',
         per: output.per || '0.00',
         pbr: output.pbr || '0.00',
+        lstn_stcn: output.lstn_stcn || '0',
+        hts_avls: output.hts_avls || '0',
+        acml_vol: output.acml_vol || '0',
+        acml_tr_pbmn: output.acml_tr_pbmn || '0',
       };
     } catch (error) {
       this.logger.error(
@@ -301,7 +305,9 @@ export class KisService implements OnModuleInit {
     }
   }
 
-  async getDailyIndexChart(data): Promise<KisTimeDailyChartResponseData> {
+  async getDailyIndexChart(
+    data: KisTimeDailyChartRequestDto,
+  ): Promise<KisTimeDailyChartResponseData> {
     const { FID_INPUT_ISCD, FID_PERIOD_DIV_CODE } = data;
     const now = new Date();
     const FID_INPUT_DATE_1 =

@@ -68,12 +68,9 @@ export class ChatService implements OnModuleInit {
       messages.push({ role: 'user', content: message });
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-5-mini',
         messages,
-        max_tokens: 1000,
-        temperature: 0.7,
       });
-
       const reply = response.choices[0].message;
 
       return {
@@ -152,10 +149,9 @@ export class ChatService implements OnModuleInit {
       messages.push({ role: 'user', content: message });
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-5-mini',
         messages,
-        max_tokens: 1000,
-        temperature: 0.7,
+        response_format: { type: 'json_object' }, // Ensure JSON response
       });
 
       const reply = response.choices[0].message;
@@ -184,7 +180,7 @@ export class ChatService implements OnModuleInit {
 
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-5-mini',
         messages: [
           {
             role: 'system',
@@ -196,7 +192,7 @@ export class ChatService implements OnModuleInit {
             content: `${sector} 섹터의 현재 시장 상황과 전망을 2-3문장으로 분석해주세요.`,
           },
         ],
-        max_tokens: 200,
+        max_completion_tokens: 200,
       });
 
       return (
@@ -219,7 +215,7 @@ export class ChatService implements OnModuleInit {
 
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-5-mini',
         messages: [
           {
             role: 'system',
@@ -231,7 +227,7 @@ export class ChatService implements OnModuleInit {
             content: `${sector} 섹터의 현재 기술적 트렌드와 단기 전망을 1-2문장으로 설명해주세요.`,
           },
         ],
-        max_tokens: 150,
+        max_completion_tokens: 150,
       });
 
       return (

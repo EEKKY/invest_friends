@@ -107,6 +107,59 @@ export class AgenticaService {
   }
 
   /**
+   * Get structured data response from AI
+   * This method is optimized for getting JSON responses without API calls
+   * @param prompt The prompt asking for specific data
+   * @returns Structured response from AI
+   */
+  async getStructuredData(prompt: string): Promise<any> {
+    try {
+      // If Agentica is not initialized, try OpenAI directly
+      const openAiKey = this.configService.get<string>('OPENAI_API_KEY');
+      
+      if (!openAiKey) {
+        this.logger.warn('OpenAI API key not found. Returning mock data.');
+        return null;
+      }
+
+      const openai = new OpenAI({ apiKey: openAiKey });
+      
+      // Create a system message to ensure JSON response
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a helpful assistant that provides accurate information about Korean stocks and companies. Always respond in valid JSON format.',
+          },
+          {
+            role: 'user',
+            content: prompt,
+          },
+        ],
+        response_format: { type: 'json_object' },
+        temperature: 0.3, // Lower temperature for more consistent responses
+      });
+
+      const responseContent = completion.choices[0]?.message?.content;
+      
+      if (responseContent) {
+        try {
+          return JSON.parse(responseContent);
+        } catch (parseError) {
+          this.logger.warn('Failed to parse OpenAI response as JSON');
+          return { raw: responseContent };
+        }
+      }
+      
+      return null;
+    } catch (error) {
+      this.logger.error('Error getting structured data from OpenAI', error);
+      return null;
+    }
+  }
+
+  /**
    * Agentica 상태 확인
    * @returns 초기화 상태
    */

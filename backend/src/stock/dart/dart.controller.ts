@@ -17,7 +17,7 @@ export class DartController {
   }
 
   @Get('corp-code/:corpCode')
-  async getByCorpCode(@Param('corpCode') corpCode: number) {
+  async getByCorpCode(@Param('corpCode') corpCode: string) {
     return this.dartService.getByCorpCode(corpCode);
   }
 
@@ -30,8 +30,7 @@ export class DartController {
 
   @Get('refresh-corp-codes')
   async refreshCorpCodes() {
-    await this.dartService.fetchAndStoreCorpCode();
-    return { message: 'Corp codes refreshed successfully' };
+    return this.dartService.refreshCorpCodes();
   }
 
   @Get('financial')

@@ -4,6 +4,7 @@ import { InvestmentAnalysisController } from './investment-analysis.controller';
 import { KisModule } from '../stock/kis/kis.module';
 import { DartModule } from '../stock/dart/dart.module';
 import { AgenticaModule } from '../stock/agentica/agentica.module';
+import { ChatModule } from '../stock/chat/chat.module';
 import { HttpModule } from '@nestjs/axios';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CorpCode } from '../stock/dart/entities/corp-code.entity';
@@ -14,6 +15,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     KisModule,
     DartModule,
     AgenticaModule,
+    ChatModule,
     HttpModule,
     TypeOrmModule.forFeature([CorpCode]),
     CacheModule.register({

@@ -40,6 +40,18 @@ export class PriceResponseDto {
 
   @ApiProperty({ description: 'PBR', example: '1.25' })
   pbr: string;
+
+  @ApiProperty({ description: '상장 주수', example: '5969782550' })
+  lstn_stcn?: string;
+
+  @ApiProperty({ description: 'HTS 시가총액', example: '471000000000000' })
+  hts_avls?: string;
+
+  @ApiProperty({ description: '누적 거래량', example: '12345678' })
+  acml_vol?: string;
+
+  @ApiProperty({ description: '누적 거래 대금', example: '987654321000' })
+  acml_tr_pbmn?: string;
 }
 
 export class KisTimeDailyChartRequestDto {
