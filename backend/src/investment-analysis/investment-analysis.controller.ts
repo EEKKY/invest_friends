@@ -13,7 +13,7 @@ import {
 import { JwtAuthGuard } from '../authguard/jwt.auth';
 
 @ApiTags('Investment Analysis')
-@Controller('api/v1/investment-analysis')
+@Controller('investment-analysis')
 // @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class InvestmentAnalysisController {

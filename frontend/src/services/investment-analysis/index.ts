@@ -215,38 +215,52 @@ export const investmentAnalysisService = {
     return response.data;
   },
 
-  // Individual endpoint methods with shorter timeouts
+  // Individual endpoint methods with proper section mapping
   async getChart(stockCode: string): Promise<Partial<InvestmentAnalysisResponse>> {
-    const response = await api.get(`/investment-analysis/chart?stockCode=${stockCode}`, {
-      timeout: 10000, // 10 second timeout
+    const response = await api.get(`/investment-analysis?stockCode=${stockCode}&sections=chart`, {
+      timeout: 30000, // 30 second timeout
+    });
+    return response.data;
+  },
+
+  async getCompany(stockCode: string): Promise<Partial<InvestmentAnalysisResponse>> {
+    const response = await api.get(`/investment-analysis?stockCode=${stockCode}&sections=company`, {
+      timeout: 30000, // 30 seconds for company info
     });
     return response.data;
   },
 
   async getMetrics(stockCode: string): Promise<Partial<InvestmentAnalysisResponse>> {
-    const response = await api.get(`/investment-analysis/metrics?stockCode=${stockCode}`, {
-      timeout: 15000, // 15 seconds for metrics (includes GPT calls)
+    const response = await api.get(`/investment-analysis?stockCode=${stockCode}&sections=metrics,peer`, {
+      timeout: 45000, // 45 seconds for metrics and peer comparison
     });
     return response.data;
   },
 
   async getFinancial(stockCode: string): Promise<Partial<InvestmentAnalysisResponse>> {
-    const response = await api.get(`/investment-analysis/financial?stockCode=${stockCode}`, {
-      timeout: 15000, // 15 seconds for financial data (includes GPT calls)
+    const response = await api.get(`/investment-analysis?stockCode=${stockCode}&sections=financial`, {
+      timeout: 45000, // 45 seconds for financial data
+    });
+    return response.data;
+  },
+
+  async getDividend(stockCode: string): Promise<Partial<InvestmentAnalysisResponse>> {
+    const response = await api.get(`/investment-analysis?stockCode=${stockCode}&sections=dividend`, {
+      timeout: 30000, // 30 seconds for dividend
     });
     return response.data;
   },
 
   async getNews(stockCode: string): Promise<Partial<InvestmentAnalysisResponse>> {
-    const response = await api.get(`/investment-analysis/news?stockCode=${stockCode}`, {
-      timeout: 15000, // 15 seconds for news (includes GPT analysis)
+    const response = await api.get(`/investment-analysis?stockCode=${stockCode}&sections=news`, {
+      timeout: 45000, // 45 seconds for news (includes GPT analysis)
     });
     return response.data;
   },
 
   async getRisk(stockCode: string): Promise<Partial<InvestmentAnalysisResponse>> {
-    const response = await api.get(`/investment-analysis/risk?stockCode=${stockCode}`, {
-      timeout: 20000, // 20 second timeout for risk analysis (includes AI analysis)
+    const response = await api.get(`/investment-analysis?stockCode=${stockCode}&sections=risk`, {
+      timeout: 60000, // 60 second timeout for risk analysis (includes OpenAI analysis)
     });
     return response.data;
   },
@@ -254,9 +268,13 @@ export const investmentAnalysisService = {
   // Fetch all data from individual endpoints
   async getAnalysisByParts(stockCode: string): Promise<InvestmentAnalysisResponse> {
     // Fetch all parts in parallel with individual error handling
-    const [chartData, metricsData, financialData, newsData, riskData] = await Promise.all([
+    const [chartData, companyData, metricsData, financialData, dividendData, newsData, riskData] = await Promise.all([
       this.getChart(stockCode).catch(err => {
         console.error('Failed to fetch chart data:', err);
+        return {} as Partial<InvestmentAnalysisResponse>;
+      }),
+      this.getCompany(stockCode).catch(err => {
+        console.error('Failed to fetch company data:', err);
         return {} as Partial<InvestmentAnalysisResponse>;
       }),
       this.getMetrics(stockCode).catch(err => {
@@ -265,6 +283,10 @@ export const investmentAnalysisService = {
       }),
       this.getFinancial(stockCode).catch(err => {
         console.error('Failed to fetch financial data:', err);
+        return {} as Partial<InvestmentAnalysisResponse>;
+      }),
+      this.getDividend(stockCode).catch(err => {
+        console.error('Failed to fetch dividend data:', err);
         return {} as Partial<InvestmentAnalysisResponse>;
       }),
       this.getNews(stockCode).catch(err => {
@@ -282,10 +304,10 @@ export const investmentAnalysisService = {
       stockCode,
       analysisDate: new Date().toISOString(),
       chartData: chartData?.chartData || {} as ChartData,
-      companyInfo: metricsData?.companyInfo || {} as CompanyInfo,
+      companyInfo: companyData?.companyInfo || {} as CompanyInfo,
       investmentMetrics: metricsData?.investmentMetrics || {} as InvestmentMetrics,
       performanceConsensus: metricsData?.performanceConsensus || {} as PerformanceConsensus,
-      dividendInfo: metricsData?.dividendInfo || {} as DividendInfo,
+      dividendInfo: dividendData?.dividendInfo || {} as DividendInfo,
       peerComparison: metricsData?.peerComparison || {} as PeerComparison,
       analystNews: newsData?.analystNews || {} as AnalystNews,
       financialStatements: financialData?.financialStatements || {} as FinancialStatements,

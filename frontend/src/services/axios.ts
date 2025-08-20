@@ -4,7 +4,7 @@ import { toast } from "sonner";
 // 기본 axios 인스턴스 생성
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
-  timeout: 10000,
+  timeout: 60000, // 60 seconds default timeout
   headers: {
     "Content-Type": "application/json",
   },

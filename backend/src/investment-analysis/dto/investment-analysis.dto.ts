@@ -1,17 +1,32 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber, IsOptional, IsArray, IsObject } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsOptional,
+  IsArray,
+  IsObject,
+} from 'class-validator';
 
-import { KisTimeDailyChartResponseData, KisTimeItemChartResponseData } from '../../stock/kis/dto/kis.dto';
+import {
+  KisTimeDailyChartResponseData,
+  KisTimeItemChartResponseData,
+} from '../../stock/kis/dto/kis.dto';
 
 export class ChartDataDto {
   @ApiProperty({ description: '일별 차트 데이터 (KIS 형식)' })
   dailyChart: KisTimeDailyChartResponseData;
 
-  @ApiProperty({ description: '시간별 차트 데이터 (KIS 형식)', required: false })
+  @ApiProperty({
+    description: '시간별 차트 데이터 (KIS 형식)',
+    required: false,
+  })
   @IsOptional()
   itemChart?: KisTimeItemChartResponseData;
 
-  @ApiProperty({ description: '인덱스 차트 데이터 (KOSPI/KOSDAQ)', required: false })
+  @ApiProperty({
+    description: '인덱스 차트 데이터 (KOSPI/KOSDAQ)',
+    required: false,
+  })
   @IsOptional()
   indexChart?: KisTimeDailyChartResponseData;
 
@@ -311,19 +326,19 @@ export class GetInvestmentAnalysisDto {
   @IsString()
   stockCode: string;
 
-  @ApiProperty({ 
-    description: '차트 기간 (1d, 1w, 1m, 3m, 6m, 1y)', 
+  @ApiProperty({
+    description: '차트 기간 (1d, 1w, 1m, 3m, 6m, 1y)',
     default: '3m',
-    required: false 
+    required: false,
   })
   @IsOptional()
   @IsString()
   period?: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: '포함할 섹션 (쉼표로 구분)',
-    example: 'chart,company,metrics',
-    required: false
+    example: 'chart,company,chart,company,metrics,financial,dividend,risk,peer',
+    required: false,
   })
   @IsOptional()
   @IsString()

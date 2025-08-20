@@ -1,76 +1,98 @@
-import { api } from "../axios";
+import { api } from '../axios';
 
-export interface TimeChartItemDto {
-  stck_cntg_hour: string; // date or time
-  stck_oprc: string; // open price
-  stck_hgpr: string; // high price
-  stck_lwpr: string; // low price
-  stck_prpr: string; // close price
-  cntg_vol: string; // volume traded
-  acml_vol: string; // accumulated volume
+export interface StockChartData {
+  output1?: any;
+  output2?: Array<{
+    stck_bsop_date: string;
+    stck_clpr: string;
+    stck_oprc: string;
+    stck_hgpr: string;
+    stck_lwpr: string;
+    acml_vol: string;
+    acml_tr_pbmn: string;
+    flng_cls_code: string;
+    prtt_rate: string;
+    mod_yn: string;
+    prdy_vrss_sign: string;
+    prdy_vrss: string;
+    revl_issu_reas: string;
+  }>;
+  rt_cd?: string;
+  msg_cd?: string;
+  msg1?: string;
 }
 
-export interface ChartData {
-  rt_cd: string;
-  msg_cd: string;
-  msg1: string;
-  output: TimeChartItemDto[];
+export interface IndexChartData {
+  output1?: any;
+  output2?: Array<{
+    bsop_date: string;
+    bstp_nmix_prpr: string;
+    bstp_nmix_prdy_vrss: string;
+    prdy_vrss_sign: string;
+    bstp_nmix_prdy_ctrt: string;
+    acml_vol: string;
+    acml_tr_pbmn: string;
+    mod_yn: string;
+  }>;
+  rt_cd?: string;
+  msg_cd?: string;
+  msg1?: string;
 }
 
-export interface ChartResponse {
-  stock: ChartData | null;
-  index: ChartData | null;
-  status: number;
-  msg: string;
-}
-
-export interface FinancialData {
-  corpCode: string;
-  year: number;
-  revenue: number;
-  operatingProfit: number;
-  netIncome: number;
-  totalAssets: number;
-  totalEquity: number;
-  eps: number;
-  roe: number;
-  roa: number;
-}
-
-export interface GetChartParams {
-  FID_COND_MRKT_DIV_CODE: "J";
-  FID_INPUT_ISCD: string;
-  FID_PERIOD_DIV_CODE: "D" | "W" | "M" | "Y";
-  FID_ORG_ADJ_PRC?: "0" | "1";
-  FID_PW_DATA_INCU_YN?: "Y" | "N";
-  interval?: "1m" | "5m" | "30m" | "60m";
-  type: "item" | "daily";
-}
-
-export interface GetFinancialParams {
-  corpCode: string;
-  year: number;
-}
-
-export const chartApi = {
-  // 주식 차트 데이터 조회
-  getStockChart: async (params: GetChartParams): Promise<ChartResponse> => {
-    if (params.type === "daily") {
-      const { type, FID_PW_DATA_INCU_YN, ...rest } = params;
-      const response = await api.get("/kis/daily-chart", { params: rest });
+export const chartService = {
+  async getStockChart(stockCode: string, period: 'daily' | 'weekly' | 'monthly' = 'daily'): Promise<StockChartData> {
+    try {
+      const response = await api.get(`/stock/kis/chart/${stockCode}`, {
+        params: { period }
+      });
       return response.data;
-    } else {
-      const { type, FID_ORG_ADJ_PRC, FID_PERIOD_DIV_CODE, ...rest } = params;
-      const response = await api.get("/kis/item-chart", { params: rest });
-      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch stock chart:', error);
+      throw error;
     }
   },
 
-  // 재무 데이터 조회
-  getFinancialData: async (
-    params: GetFinancialParams
-  ): Promise<FinancialData> => {
-    const response = await api.get("/dart/financial", { params });
-    return response.data;
+  async getIndexChart(indexCode: string, period: 'daily' | 'weekly' | 'monthly' = 'daily'): Promise<IndexChartData> {
+    try {
+      const response = await api.get(`/stock/kis/index/${indexCode}`, {
+        params: { period }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch index chart:', error);
+      throw error;
+    }
   },
+
+  async getFinancialStatements(corpCode: string, year: string) {
+    try {
+      const response = await api.get(`/stock/dart/financial-statements`, {
+        params: { corpCode, year }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch financial statements:', error);
+      throw error;
+    }
+  },
+
+  async getItemChart(stockCode: string) {
+    try {
+      const response = await api.get(`/stock/kis/item/${stockCode}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch item chart:', error);
+      throw error;
+    }
+  },
+
+  async getTimeChart(stockCode: string) {
+    try {
+      const response = await api.get(`/stock/kis/time/${stockCode}`);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch time chart:', error);
+      throw error;
+    }
+  }
 };

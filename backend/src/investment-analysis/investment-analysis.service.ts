@@ -249,8 +249,11 @@ export class InvestmentAnalysisService {
       });
 
       const currentPrice = parseFloat(priceData.stck_prpr);
-      const eps = this.calculateEPS(financialData);
-      const bps = this.calculateBPS(financialData);
+      const sharesOutstanding =
+        parseFloat(priceData.lstn_stcn || '0') || 1000000; // 발행주식수
+
+      const eps = this.calculateEPS(financialData, sharesOutstanding);
+      const bps = this.calculateBPS(financialData, sharesOutstanding);
 
       return {
         per: eps > 0 ? currentPrice / eps : 0,
@@ -982,71 +985,56 @@ export class InvestmentAnalysisService {
     return maxDrawdown;
   }
 
-  private calculateAltmanZScore(financialData: any): number {
-    // Simplified Altman Z-Score calculation
-    return 3.0; // Placeholder
+  private calculateEPS(
+    financialData: any,
+    sharesOutstanding: number = 1000000,
+  ): number {
+    const netIncome = this.getValue(financialData, '당기순이익');
+    return sharesOutstanding > 0
+      ? Math.round(netIncome / sharesOutstanding)
+      : 0;
   }
 
-  private assessRiskLevel(financialData: any): 'low' | 'medium' | 'high' {
-    const debtRatio = financialData.debt_ratio || 0;
-    if (debtRatio < 0.3) return 'low';
-    if (debtRatio < 0.6) return 'medium';
-    return 'high';
-  }
-
-  private calculateEPS(financialData: any): number {
-    // Calculate EPS from financial data
-    return 5000; // Placeholder
-  }
-
-  private calculateBPS(financialData: any): number {
-    // Calculate BPS from financial data
-    return 65000; // Placeholder
+  private calculateBPS(
+    financialData: any,
+    sharesOutstanding: number = 1000000,
+  ): number {
+    const equity = this.getValue(financialData, '자본총계');
+    return sharesOutstanding > 0 ? Math.round(equity / sharesOutstanding) : 0;
   }
 
   private calculateDebtRatio(financialData: any): number {
-    // Calculate debt ratio from financial data
-    return 45.2; // Placeholder
+    const totalLiabilities = this.getValue(financialData, '부채총계');
+    const equity = this.getValue(financialData, '자본총계');
+    return equity > 0
+      ? Math.round((totalLiabilities / equity) * 100 * 10) / 10
+      : 0;
   }
 
   private calculateCurrentRatio(financialData: any): number {
-    // Calculate current ratio from financial data
-    return 1.5; // Placeholder
+    const currentAssets = this.getValue(financialData, '유동자산');
+    const currentLiabilities = this.getValue(financialData, '유동부채');
+    return currentLiabilities > 0
+      ? Math.round((currentAssets / currentLiabilities) * 10) / 10
+      : 0;
   }
 
   private calculateOperatingMargin(financialData: any): number {
-    // Calculate operating margin from financial data
-    return 15.3; // Placeholder
+    const operatingIncome = this.getValue(financialData, '영업이익');
+    const revenue = this.getValue(financialData, '매출액');
+    return revenue > 0
+      ? Math.round((operatingIncome / revenue) * 100 * 10) / 10
+      : 0;
   }
 
-  private calculateDebtToEquity(financialData: any): number {
-    // Calculate debt to equity from financial data
-    return 0.5; // Placeholder
-  }
+  private getValue(financialData: any[], accountName: string): number {
+    if (!financialData || !Array.isArray(financialData)) return 0;
 
-  private calculateInterestCoverage(financialData: any): number {
-    // Calculate interest coverage from financial data
-    return 5.0; // Placeholder
-  }
+    const item = financialData.find((d) => d.account_nm === accountName);
+    if (!item) return 0;
 
-  private calculateQuickRatio(financialData: any): number {
-    // Calculate quick ratio from financial data
-    return 1.2; // Placeholder
-  }
-
-  private formatIncomeStatement(statements: any): any[] {
-    // Format income statement data
-    return [];
-  }
-
-  private formatBalanceSheet(statements: any): any[] {
-    // Format balance sheet data
-    return [];
-  }
-
-  private formatCashFlow(statements: any): any[] {
-    // Format cash flow data
-    return [];
+    const amount = item.thstrm_amount || item.frmtrm_amount || '0';
+    return Number(amount.toString().replace(/,/g, '')) || 0;
   }
 
   // Get company info from DART API directly

@@ -19,6 +19,7 @@ import { AuthCallbackPage } from "@/pages/auth/callback";
 // import { LoginPage2 } from "@/pages/login2/loginpage";
 import SignupPage from "@/pages/auth/signuppage";
 import { ChartsPage } from "@/pages/charts";
+import { InvestmentCanvas } from "@/pages/canvas/InvestmentCanvas";
 
 function AppContent() {
   const { sideBarOpen, handleSideBarOpen, canvasMode } = useCommon();
@@ -33,6 +34,8 @@ function AppContent() {
           <Route path="/auth/callback" element={<AuthCallbackPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/charts" element={<ChartsPage />} />
+          <Route path="/canvas" element={<InvestmentCanvas />} />
+          <Route path="/canvas/:stockCode" element={<InvestmentCanvas />} />
           <Route
             path="/"
             element={
