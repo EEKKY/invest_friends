@@ -74,13 +74,16 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
   useEffect(() => {
     const fetchChartData = async () => {
       if (!stockCode) return;
-      
+
       setLoading(true);
       try {
-        const data = await investmentAnalysisService.getChartData(stockCode, period);
+        const data = await investmentAnalysisService.getChartData(
+          stockCode,
+          period
+        );
         setChartData(data);
       } catch (error) {
-        console.error('Failed to fetch chart data:', error);
+        console.error("Failed to fetch chart data:", error);
       } finally {
         setLoading(false);
       }
@@ -120,19 +123,19 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
     // For year data, return all data (should be yearly data from API)
     // For other periods, limit the display
     const periodDays = {
-      D: 30,  // Show last 30 days for daily
-      W: 90,  // Show last 90 days for weekly  
+      D: 30, // Show last 30 days for daily
+      W: 90, // Show last 90 days for weekly
       M: 180, // Show last 180 days for monthly
       Y: 365, // Show all data for yearly
     };
 
     const daysToShow = periodDays[period];
-    
+
     // If period is Y and we have more than 365 days, return all
-    if (period === 'Y') {
+    if (period === "Y") {
       return sortedData; // Return all data for yearly view
     }
-    
+
     return sortedData.slice(-daysToShow);
   };
 
@@ -536,7 +539,9 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
                   size="sm"
                   onClick={() => setPeriod(p)}
                   className={`h-7 px-3 text-xs ${
-                    period === p ? "bg-white shadow-sm" : "hover:bg-gray-50"
+                    period === p
+                      ? "bg-white shadow-sm text-black"
+                      : "hover:bg-gray-50"
                   }`}
                 >
                   {p === "D"
