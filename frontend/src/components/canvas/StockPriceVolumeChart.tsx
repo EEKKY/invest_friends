@@ -542,7 +542,7 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
                     period === p
                       ? "bg-white shadow-sm text-black"
                       : "hover:bg-gray-50"
-                  }`}
+                  } ${period === p ? "pointer-events-none" : ""}`}
                 >
                   {p === "D"
                     ? "1일"

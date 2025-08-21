@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import type { FinancialStatements } from '@/services/investment-analysis';
-import { Bar, Line } from 'react-chartjs-2';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import type { FinancialStatements } from "@/services/investment-analysis";
+import { Bar, Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -18,18 +18,18 @@ import {
   Filler,
   type ChartOptions,
   type TooltipItem,
-} from 'chart.js';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  FileText, 
-  BarChart3, 
+} from "chart.js";
+import {
+  TrendingUp,
+  TrendingDown,
+  DollarSign,
+  FileText,
+  BarChart3,
   Activity,
   ArrowUpRight,
   ArrowDownRight,
-  PieChart
-} from 'lucide-react';
+  PieChart,
+} from "lucide-react";
 
 ChartJS.register(
   CategoryScale,
@@ -47,29 +47,35 @@ interface FinancialStatementsChartProps {
   financialStatements: FinancialStatements;
 }
 
-export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> = ({
-  financialStatements,
-}) => {
-  const [viewMode, setViewMode] = useState<'chart' | 'table'>('chart');
-  const [chartType, setChartType] = useState<'bar' | 'line'>('bar');
-  const [period, setPeriod] = useState<'quarterly' | 'annual'>('quarterly');
+export const FinancialStatementsChart: React.FC<
+  FinancialStatementsChartProps
+> = ({ financialStatements }) => {
+  const [viewMode, setViewMode] = useState<"chart" | "table">("chart");
+  const [chartType, setChartType] = useState<"bar" | "line">("bar");
+  const [period, setPeriod] = useState<"quarterly" | "annual">("quarterly");
 
   // Sort data chronologically
-  const sortedIncome = [...(financialStatements.incomeStatement || [])].sort((a, b) => {
-    return a.period.localeCompare(b.period);
-  });
+  const sortedIncome = [...(financialStatements.incomeStatement || [])].sort(
+    (a, b) => {
+      return a.period.localeCompare(b.period);
+    }
+  );
 
-  const sortedBalance = [...(financialStatements.balanceSheet || [])].sort((a, b) => {
-    return a.period.localeCompare(b.period);
-  });
+  const sortedBalance = [...(financialStatements.balanceSheet || [])].sort(
+    (a, b) => {
+      return a.period.localeCompare(b.period);
+    }
+  );
 
-  const sortedCashFlow = [...(financialStatements.cashFlow || [])].sort((a, b) => {
-    return a.period.localeCompare(b.period);
-  });
+  const sortedCashFlow = [...(financialStatements.cashFlow || [])].sort(
+    (a, b) => {
+      return a.period.localeCompare(b.period);
+    }
+  );
 
   // Filter data based on period
   const filterByPeriod = (data: any[]) => {
-    if (period === 'quarterly') {
+    if (period === "quarterly") {
       return data.slice(-4); // Last 4 quarters
     }
     return data.slice(-3); // Last 3 years
@@ -90,7 +96,7 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
     // Backend sends data in 억원 (hundred million won) units
     // So we need to convert: value * 100,000,000 to get actual won amount
     const actualValue = value * 100000000; // Convert 억원 to 원
-    
+
     if (Math.abs(actualValue) >= 1000000000000) {
       return `${(actualValue / 1000000000000).toFixed(1)}조`;
     } else if (Math.abs(actualValue) >= 100000000) {
@@ -103,29 +109,29 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
 
   // Income Statement Chart Data
   const incomeChartData = {
-    labels: incomeData.map(d => d.period),
+    labels: incomeData.map((d) => d.period),
     datasets: [
       {
-        label: '매출액',
-        data: incomeData.map(d => d.revenue),
-        backgroundColor: 'rgba(59, 130, 246, 0.8)',
-        borderColor: 'rgb(59, 130, 246)',
+        label: "매출액",
+        data: incomeData.map((d) => d.revenue),
+        backgroundColor: "rgba(59, 130, 246, 0.8)",
+        borderColor: "rgb(59, 130, 246)",
         borderWidth: 2,
         borderRadius: 4,
       },
       {
-        label: '영업이익',
-        data: incomeData.map(d => d.operatingIncome),
-        backgroundColor: 'rgba(34, 197, 94, 0.8)',
-        borderColor: 'rgb(34, 197, 94)',
+        label: "영업이익",
+        data: incomeData.map((d) => d.operatingIncome),
+        backgroundColor: "rgba(34, 197, 94, 0.8)",
+        borderColor: "rgb(34, 197, 94)",
         borderWidth: 2,
         borderRadius: 4,
       },
       {
-        label: '순이익',
-        data: incomeData.map(d => d.netIncome),
-        backgroundColor: 'rgba(251, 191, 36, 0.8)',
-        borderColor: 'rgb(251, 191, 36)',
+        label: "순이익",
+        data: incomeData.map((d) => d.netIncome),
+        backgroundColor: "rgba(251, 191, 36, 0.8)",
+        borderColor: "rgb(251, 191, 36)",
         borderWidth: 2,
         borderRadius: 4,
       },
@@ -134,29 +140,29 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
 
   // Balance Sheet Chart Data
   const balanceChartData = {
-    labels: balanceData.map(d => d.period),
+    labels: balanceData.map((d) => d.period),
     datasets: [
       {
-        label: '총자산',
-        data: balanceData.map(d => d.totalAssets),
-        backgroundColor: 'rgba(59, 130, 246, 0.8)',
-        borderColor: 'rgb(59, 130, 246)',
+        label: "총자산",
+        data: balanceData.map((d) => d.totalAssets),
+        backgroundColor: "rgba(59, 130, 246, 0.8)",
+        borderColor: "rgb(59, 130, 246)",
         borderWidth: 2,
         borderRadius: 4,
       },
       {
-        label: '총부채',
-        data: balanceData.map(d => d.totalLiabilities),
-        backgroundColor: 'rgba(239, 68, 68, 0.8)',
-        borderColor: 'rgb(239, 68, 68)',
+        label: "총부채",
+        data: balanceData.map((d) => d.totalLiabilities),
+        backgroundColor: "rgba(239, 68, 68, 0.8)",
+        borderColor: "rgb(239, 68, 68)",
         borderWidth: 2,
         borderRadius: 4,
       },
       {
-        label: '자본총계',
-        data: balanceData.map(d => d.totalEquity),
-        backgroundColor: 'rgba(34, 197, 94, 0.8)',
-        borderColor: 'rgb(34, 197, 94)',
+        label: "자본총계",
+        data: balanceData.map((d) => d.totalEquity),
+        backgroundColor: "rgba(34, 197, 94, 0.8)",
+        borderColor: "rgb(34, 197, 94)",
         borderWidth: 2,
         borderRadius: 4,
       },
@@ -165,86 +171,86 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
 
   // Cash Flow Chart Data
   const cashFlowChartData = {
-    labels: cashFlowData.map(d => d.period),
+    labels: cashFlowData.map((d) => d.period),
     datasets: [
       {
-        label: '영업활동 현금흐름',
-        data: cashFlowData.map(d => d.operatingCashFlow),
-        backgroundColor: 'rgba(34, 197, 94, 0.8)',
-        borderColor: 'rgb(34, 197, 94)',
+        label: "영업활동 현금흐름",
+        data: cashFlowData.map((d) => d.operatingCashFlow),
+        backgroundColor: "rgba(34, 197, 94, 0.8)",
+        borderColor: "rgb(34, 197, 94)",
         borderWidth: 2,
         borderRadius: 4,
       },
       {
-        label: '투자활동 현금흐름',
-        data: cashFlowData.map(d => d.investingCashFlow),
-        backgroundColor: 'rgba(239, 68, 68, 0.8)',
-        borderColor: 'rgb(239, 68, 68)',
+        label: "투자활동 현금흐름",
+        data: cashFlowData.map((d) => d.investingCashFlow),
+        backgroundColor: "rgba(239, 68, 68, 0.8)",
+        borderColor: "rgb(239, 68, 68)",
         borderWidth: 2,
         borderRadius: 4,
       },
       {
-        label: '재무활동 현금흐름',
-        data: cashFlowData.map(d => d.financingCashFlow),
-        backgroundColor: 'rgba(251, 191, 36, 0.8)',
-        borderColor: 'rgb(251, 191, 36)',
+        label: "재무활동 현금흐름",
+        data: cashFlowData.map((d) => d.financingCashFlow),
+        backgroundColor: "rgba(251, 191, 36, 0.8)",
+        borderColor: "rgb(251, 191, 36)",
         borderWidth: 2,
         borderRadius: 4,
       },
       {
-        label: '잉여현금흐름',
-        data: cashFlowData.map(d => d.freeCashFlow),
-        type: 'line' as const,
-        backgroundColor: 'transparent',
-        borderColor: 'rgb(168, 85, 247)',
+        label: "잉여현금흐름",
+        data: cashFlowData.map((d) => d.freeCashFlow),
+        type: "line" as const,
+        backgroundColor: "transparent",
+        borderColor: "rgb(168, 85, 247)",
         borderWidth: 3,
         tension: 0.3,
         pointRadius: 4,
-        pointBackgroundColor: 'rgb(168, 85, 247)',
-        pointBorderColor: '#fff',
+        pointBackgroundColor: "rgb(168, 85, 247)",
+        pointBorderColor: "#fff",
         pointBorderWidth: 2,
       },
     ],
   };
 
-  const chartOptions: ChartOptions<'bar'> = {
+  const chartOptions: ChartOptions<"bar"> = {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
-      mode: 'index',
+      mode: "index",
       intersect: false,
     },
     plugins: {
       legend: {
-        position: 'top',
-        align: 'end',
+        position: "top",
+        align: "end",
         labels: {
           boxWidth: 10,
           boxHeight: 10,
           padding: 12,
           font: {
             size: 11,
-            family: 'Inter, system-ui, sans-serif',
+            family: "Inter, system-ui, sans-serif",
           },
           usePointStyle: true,
         },
       },
       tooltip: {
-        backgroundColor: 'rgba(17, 24, 39, 0.95)',
-        titleColor: '#fff',
-        bodyColor: '#fff',
+        backgroundColor: "rgba(17, 24, 39, 0.95)",
+        titleColor: "#fff",
+        bodyColor: "#fff",
         padding: 12,
         cornerRadius: 8,
         titleFont: {
           size: 12,
-          weight: '600',
+          weight: "600",
         },
         bodyFont: {
           size: 12,
         },
         callbacks: {
-          label: (context: TooltipItem<'bar'>) => {
-            const label = context.dataset.label || '';
+          label: (context: TooltipItem<"bar">) => {
+            const label = context.dataset.label || "";
             const value = context.parsed.y;
             return `${label}: ${formatValue(value)}원`;
           },
@@ -262,14 +268,14 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
         ticks: {
           font: {
             size: 11,
-            family: 'Inter, system-ui, sans-serif',
+            family: "Inter, system-ui, sans-serif",
           },
-          color: 'rgb(107, 114, 128)',
+          color: "rgb(107, 114, 128)",
         },
       },
       y: {
         grid: {
-          color: 'rgba(229, 231, 235, 0.5)',
+          color: "rgba(229, 231, 235, 0.5)",
           drawBorder: false,
         },
         border: {
@@ -278,10 +284,10 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
         ticks: {
           font: {
             size: 10,
-            family: 'Inter, system-ui, sans-serif',
+            family: "Inter, system-ui, sans-serif",
           },
-          color: 'rgb(107, 114, 128)',
-          callback: function(value: any) {
+          color: "rgb(107, 114, 128)",
+          callback: function (value: any) {
             return formatValue(value);
           },
         },
@@ -291,7 +297,7 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
 
   // Calculate key metrics
   const latestIncome = incomeData[incomeData.length - 1];
-  const profitMargin = latestIncome 
+  const profitMargin = latestIncome
     ? (latestIncome.netIncome / latestIncome.revenue) * 100
     : 0;
 
@@ -308,25 +314,25 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
           <div className="flex items-center gap-2">
             <div className="flex bg-gray-100 rounded-lg p-1">
               <Button
-                variant={period === 'quarterly' ? 'default' : 'ghost'}
+                variant={period === "quarterly" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setPeriod('quarterly')}
+                onClick={() => setPeriod("quarterly")}
                 className={`h-7 px-3 text-xs ${
-                  period === 'quarterly' 
-                    ? 'bg-white shadow-sm' 
-                    : 'hover:bg-gray-50'
+                  period === "quarterly"
+                    ? "bg-white shadow-sm text-black"
+                    : "hover:bg-gray-50"
                 }`}
               >
                 분기
               </Button>
               <Button
-                variant={period === 'annual' ? 'default' : 'ghost'}
+                variant={period === "annual" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setPeriod('annual')}
+                onClick={() => setPeriod("annual")}
                 className={`h-7 px-3 text-xs ${
-                  period === 'annual' 
-                    ? 'bg-white shadow-sm' 
-                    : 'hover:bg-gray-50'
+                  period === "annual"
+                    ? "bg-white shadow-sm"
+                    : "hover:bg-gray-50"
                 }`}
               >
                 연간
@@ -334,25 +340,25 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
             </div>
             <div className="flex bg-gray-100 rounded-lg p-1">
               <Button
-                variant={viewMode === 'chart' ? 'default' : 'ghost'}
+                variant={viewMode === "chart" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode('chart')}
+                onClick={() => setViewMode("chart")}
                 className={`h-7 px-3 text-xs ${
-                  viewMode === 'chart' 
-                    ? 'bg-white shadow-sm' 
-                    : 'hover:bg-gray-50'
+                  viewMode === "chart"
+                    ? "bg-white shadow-sm text-black"
+                    : "hover:bg-gray-50"
                 }`}
               >
                 차트
               </Button>
               <Button
-                variant={viewMode === 'table' ? 'default' : 'ghost'}
+                variant={viewMode === "table" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode('table')}
+                onClick={() => setViewMode("table")}
                 className={`h-7 px-3 text-xs ${
-                  viewMode === 'table' 
-                    ? 'bg-white shadow-sm' 
-                    : 'hover:bg-gray-50'
+                  viewMode === "table"
+                    ? "bg-white shadow-sm"
+                    : "hover:bg-gray-50"
                 }`}
               >
                 테이블
@@ -401,16 +407,20 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
                 <span>영업이익률</span>
               </div>
               <p className="text-sm font-bold text-purple-900">
-                {((latestIncome.operatingIncome / latestIncome.revenue) * 100).toFixed(1)}%
+                {(
+                  (latestIncome.operatingIncome / latestIncome.revenue) *
+                  100
+                ).toFixed(1)}
+                %
               </p>
               <p className="text-xs text-gray-600 mt-1">
-                {period === 'quarterly' ? '분기' : '연간'} 기준
+                {period === "quarterly" ? "분기" : "연간"} 기준
               </p>
             </div>
           </div>
         )}
 
-        {viewMode === 'chart' ? (
+        {viewMode === "chart" ? (
           <Tabs defaultValue="income" className="w-full">
             <TabsList className="grid w-full grid-cols-3 mb-4">
               <TabsTrigger value="income">손익계산서</TabsTrigger>
@@ -460,11 +470,21 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
                     {incomeData.map((item, index) => (
                       <tr key={index} className="border-b hover:bg-gray-50">
                         <td className="p-2">{item.period}</td>
-                        <td className="text-right p-2">{formatValue(item.revenue)}</td>
-                        <td className="text-right p-2">{formatValue(item.costOfGoodsSold)}</td>
-                        <td className="text-right p-2">{formatValue(item.grossProfit)}</td>
-                        <td className="text-right p-2 font-medium">{formatValue(item.operatingIncome)}</td>
-                        <td className="text-right p-2 font-bold">{formatValue(item.netIncome)}</td>
+                        <td className="text-right p-2">
+                          {formatValue(item.revenue)}
+                        </td>
+                        <td className="text-right p-2">
+                          {formatValue(item.costOfGoodsSold)}
+                        </td>
+                        <td className="text-right p-2">
+                          {formatValue(item.grossProfit)}
+                        </td>
+                        <td className="text-right p-2 font-medium">
+                          {formatValue(item.operatingIncome)}
+                        </td>
+                        <td className="text-right p-2 font-bold">
+                          {formatValue(item.netIncome)}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -494,11 +514,21 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
                     {balanceData.map((item, index) => (
                       <tr key={index} className="border-b hover:bg-gray-50">
                         <td className="p-2">{item.period}</td>
-                        <td className="text-right p-2 font-medium">{formatValue(item.totalAssets)}</td>
-                        <td className="text-right p-2">{formatValue(item.currentAssets)}</td>
-                        <td className="text-right p-2 text-red-600">{formatValue(item.totalLiabilities)}</td>
-                        <td className="text-right p-2">{formatValue(item.currentLiabilities)}</td>
-                        <td className="text-right p-2 font-bold text-green-600">{formatValue(item.totalEquity)}</td>
+                        <td className="text-right p-2 font-medium">
+                          {formatValue(item.totalAssets)}
+                        </td>
+                        <td className="text-right p-2">
+                          {formatValue(item.currentAssets)}
+                        </td>
+                        <td className="text-right p-2 text-red-600">
+                          {formatValue(item.totalLiabilities)}
+                        </td>
+                        <td className="text-right p-2">
+                          {formatValue(item.currentLiabilities)}
+                        </td>
+                        <td className="text-right p-2 font-bold text-green-600">
+                          {formatValue(item.totalEquity)}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
