@@ -8,9 +8,14 @@ import {
   RefreshResponse,
   TokenPairResponse,
 } from 'src/authguard/interface/jwt.token.interface';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiExcludeController,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 @Controller('login')
+@ApiExcludeController()
 export class LoginController {
   constructor(
     private readonly loginService: LoginService,

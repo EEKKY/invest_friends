@@ -1,11 +1,18 @@
-import { Body, Controller, Post, Get, UseGuards, Request } from '@nestjs/common';
-import { 
-  ApiTags, 
-  ApiOperation, 
-  ApiResponse, 
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
   ApiBody,
   ApiBearerAuth,
-  ApiProperty
+  ApiProperty,
 } from '@nestjs/swagger';
 import { AgenticaService } from './agentica.service';
 import { Public } from '../../authguard/jwt.decorator';
@@ -22,8 +29,8 @@ export class AgenticaMessageDto {
       '005930 최근 한달 차트 보여줘',
       'SK하이닉스 재무제표 조회해줘',
       'KOSPI 지수 현재 얼마야?',
-      '삼성전자와 SK하이닉스 주가 비교해줘'
-    ]
+      '삼성전자와 SK하이닉스 주가 비교해줘',
+    ],
   })
   message: string;
 }
@@ -34,7 +41,7 @@ export class AgenticaMessageDto {
 export class AgenticaResponseDto {
   @ApiProperty({
     description: '처리 성공 여부',
-    example: true
+    example: true,
   })
   success: boolean;
 
@@ -43,30 +50,45 @@ export class AgenticaResponseDto {
     example: {
       stck_prpr: '78900',
       prdy_vrss: '1100',
-      prdy_ctrt: '1.41'
+      prdy_ctrt: '1.41',
     },
-    required: false
+    required: false,
   })
   data?: any;
 
   @ApiProperty({
     description: '응답 메시지',
-    example: '삼성전자 주가 정보'
+    example: '삼성전자 주가 정보',
   })
   message: string;
 
   @ApiProperty({
     description: '에러 메시지',
-    required: false
+    required: false,
   })
   error?: string;
 
   @ApiProperty({
     description: '사용 가능한 명령 예시',
     required: false,
-    example: ['삼성전자 주가 알려줘', '005930 차트 보여줘']
+    example: ['삼성전자 주가 알려줘', '005930 차트 보여줘'],
   })
   examples?: string[];
+
+  @ApiProperty({
+    description: '감지된 주식 정보',
+    required: false,
+    example: {
+      code: '005930',
+      name: '삼성전자',
+      detectedFrom: 'name'
+    },
+  })
+  stockInfo?: {
+    code: string;
+    name: string | null;
+    detectedFrom: string;
+  };
 }
 
 @ApiTags('agentica')
@@ -76,7 +98,7 @@ export class AgenticaController {
 
   @Public()
   @Post('chat')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: '자연어로 API 호출',
     description: `
     Agentica를 사용하여 자연어 메시지를 백엔드 API 호출로 자동 변환합니다.
@@ -93,80 +115,81 @@ export class AgenticaController {
     2. Swagger 문서를 기반으로 적절한 API 찾기
     3. 필요한 파라미터를 자동으로 추출하여 API 호출
     4. 결과를 구조화된 형태로 반환
-    `
+    `,
   })
-  @ApiBody({ 
+  @ApiBody({
     type: AgenticaMessageDto,
-    description: '자연어 요청 메시지'
+    description: '자연어 요청 메시지',
   })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     type: AgenticaResponseDto,
-    description: 'API 호출 성공'
+    description: 'API 호출 성공',
   })
-  @ApiResponse({ 
-    status: 400, 
-    description: '잘못된 요청 - 메시지를 이해할 수 없음'
+  @ApiResponse({
+    status: 400,
+    description: '잘못된 요청 - 메시지를 이해할 수 없음',
   })
-  @ApiResponse({ 
-    status: 500, 
-    description: '서버 오류 - Agentica 처리 실패'
+  @ApiResponse({
+    status: 500,
+    description: '서버 오류 - Agentica 처리 실패',
   })
   async processMessage(
-    @Body() dto: AgenticaMessageDto
+    @Body() dto: AgenticaMessageDto,
   ): Promise<AgenticaResponseDto> {
     return this.agenticaService.processMessage(dto.message);
   }
 
   @Get('status')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Agentica 서비스 상태 확인',
-    description: 'Agentica 에이전트가 초기화되었는지 확인합니다.'
+    description: 'Agentica 에이전트가 초기화되었는지 확인합니다.',
   })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: '서비스 상태',
     schema: {
       type: 'object',
       properties: {
         initialized: { type: 'boolean', example: true },
-        message: { type: 'string', example: 'Agentica service is ready' }
-      }
-    }
+        message: { type: 'string', example: 'Agentica service is ready' },
+      },
+    },
   })
   getStatus(): { initialized: boolean; message: string } {
     const initialized = this.agenticaService.isInitialized();
     return {
       initialized,
-      message: initialized 
-        ? 'Agentica service is ready' 
-        : 'Agentica service is not initialized. Check OPENAI_API_KEY in environment variables.'
+      message: initialized
+        ? 'Agentica service is ready'
+        : 'Agentica service is not initialized. Check OPENAI_API_KEY in environment variables.',
     };
   }
 
   @Post('chat/auth')
   @UseGuards()
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: '인증된 자연어 API 호출',
-    description: '인증된 사용자의 자연어 요청을 처리합니다. JWT 토큰이 필요합니다.'
+    description:
+      '인증된 사용자의 자연어 요청을 처리합니다. JWT 토큰이 필요합니다.',
   })
-  @ApiBody({ 
+  @ApiBody({
     type: AgenticaMessageDto,
-    description: '자연어 요청 메시지'
+    description: '자연어 요청 메시지',
   })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     type: AgenticaResponseDto,
-    description: 'API 호출 성공'
+    description: 'API 호출 성공',
   })
-  @ApiResponse({ 
-    status: 401, 
-    description: '인증 실패 - 유효한 JWT 토큰이 필요합니다'
+  @ApiResponse({
+    status: 401,
+    description: '인증 실패 - 유효한 JWT 토큰이 필요합니다',
   })
   async processAuthenticatedMessage(
     @Body() dto: AgenticaMessageDto,
-    @Request() req: any
+    @Request() req: any,
   ): Promise<AgenticaResponseDto> {
     const userId = req.user?.id;
     return this.agenticaService.processMessage(dto.message, userId);

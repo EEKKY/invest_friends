@@ -68,12 +68,9 @@ export class ChatService implements OnModuleInit {
       messages.push({ role: 'user', content: message });
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-5-mini',
         messages,
-        max_tokens: 1000,
-        temperature: 0.7,
       });
-
       const reply = response.choices[0].message;
 
       return {
@@ -152,10 +149,8 @@ export class ChatService implements OnModuleInit {
       messages.push({ role: 'user', content: message });
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-5-mini',
         messages,
-        max_tokens: 1000,
-        temperature: 0.7,
       });
 
       const reply = response.choices[0].message;
@@ -177,62 +172,71 @@ export class ChatService implements OnModuleInit {
   /**
    * 섹터 분석 생성 (간단한 버전)
    */
-  async generateSectorAnalysis(sector: string): Promise<string> {
+  async generateSectorAnalysis(sector: string): Promise<{
+    success: boolean;
+    message: string;
+  }> {
     if (!this.openai) {
-      return `${sector} 섹터는 시장 상황에 따라 변동성이 있습니다.`;
+      return {
+        success: false,
+        message: `${sector} 섹터는 시장 상황에 따라 변동성이 있습니다.`,
+      };
     }
 
     try {
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
-            content: '한국 주식시장 섹터 분석 전문가입니다. 간결하고 통찰력 있는 분석을 제공합니다.',
+            content: `당신은 한국 주식시장의 섹터 분석 및 종목 추천 전문가입니다. 
+          다음 형식으로 분석을 제공해주세요:
+          
+          1. 섹터 현황 (2-3문장)
+          2. 투자 포인트 (핵심 이유 2-3개)
+          3. 추천 종목 (3-5개, 종목명과 간단한 이유)
+          4. 리스크 요인 (1-2개)
+          
+          객관적이고 균형잡힌 시각으로 분석하되, 투자 결정은 개인의 판단임을 명시하세요.`,
           },
           {
             role: 'user',
-            content: `${sector} 섹터의 현재 시장 상황과 전망을 2-3문장으로 분석해주세요.`,
+            content: `${sector} 섹터에 대해 다음과 같이 분석해주세요:
+
+          **섹터 현황:**
+          - 현재 시장 상황과 최근 동향
+          - 성장 전망과 시장 위치
+
+          **투자 포인트:**
+          - 이 섹터가 주목받는 핵심 이유들
+          - 성장 동력과 경쟁력 요소
+
+          **추천 종목 (3-5개):**
+          - 종목명: 추천 이유 (재무상태, 성장성, 경쟁력 등)
+          - 대형주, 중형주 포함하여 다양한 옵션 제시
+
+          **리스크 요인:**
+          - 섹터별 주요 위험 요소
+          - 시장 변동성 및 규제 리스크
+
+          ※ 본 정보는 투자 참고용이며, 투자 결정은 개인의 판단에 따라 신중히 하시기 바랍니다.`,
           },
         ],
-        max_tokens: 200,
+        max_completion_tokens: 800,
       });
 
-      return response.choices[0].message.content || `${sector} 섹터 분석을 생성할 수 없습니다.`;
+      return {
+        success: true,
+        message:
+          response.choices[0].message.content ||
+          `${sector} 섹터 분석을 완료했습니다.`,
+      };
     } catch (error) {
       this.logger.error('Failed to generate sector analysis:', error);
-      return `${sector} 섹터는 시장 상황에 따라 변동성이 있습니다.`;
-    }
-  }
-
-  /**
-   * 시장 트렌드 생성 (간단한 버전)
-   */
-  async generateMarketTrend(sector: string): Promise<string> {
-    if (!this.openai) {
-      return `${sector} 섹터는 현재 박스권 흐름을 보이고 있습니다.`;
-    }
-
-    try {
-      const response = await this.openai.chat.completions.create({
-        model: 'gpt-4',
-        messages: [
-          {
-            role: 'system',
-            content: '한국 주식시장 기술적 분석 전문가입니다. 시장 트렌드를 간결하게 설명합니다.',
-          },
-          {
-            role: 'user',
-            content: `${sector} 섹터의 현재 기술적 트렌드와 단기 전망을 1-2문장으로 설명해주세요.`,
-          },
-        ],
-        max_tokens: 150,
-      });
-
-      return response.choices[0].message.content || `${sector} 섹터 트렌드 분석을 생성할 수 없습니다.`;
-    } catch (error) {
-      this.logger.error('Failed to generate market trend:', error);
-      return `${sector} 섹터는 현재 박스권 흐름을 보이고 있습니다.`;
+      return {
+        success: true,
+        message: `${sector} 섹터는 현재 시장 상황에 따라 변동성이 있으며, 투자 시 신중한 검토가 필요합니다.`,
+      };
     }
   }
 }

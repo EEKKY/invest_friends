@@ -9,6 +9,7 @@ import {
   PriceResponseDto,
   GetPriceRequestDto,
   KisTimeItemChartResponseData,
+  KisTimeDailyChartResponseData,
 } from './dto/kis.dto';
 import { ConfigService } from '@nestjs/config';
 
@@ -166,6 +167,10 @@ export class KisService implements OnModuleInit {
         prdy_ctrt: output.prdy_ctrt || '0.00',
         per: output.per || '0.00',
         pbr: output.pbr || '0.00',
+        lstn_stcn: output.lstn_stcn || '0',
+        hts_avls: output.hts_avls || '0',
+        acml_vol: output.acml_vol || '0',
+        acml_tr_pbmn: output.acml_tr_pbmn || '0',
       };
     } catch (error) {
       this.logger.error(
@@ -177,7 +182,7 @@ export class KisService implements OnModuleInit {
 
   async getTimeDailyChart(
     dto: KisTimeDailyChartRequestDto,
-  ): Promise<KisTimeDailyChartResponseDto> {
+  ): Promise<KisTimeDailyChartResponseData> {
     const {
       FID_COND_MRKT_DIV_CODE,
       FID_INPUT_ISCD,
@@ -219,7 +224,7 @@ export class KisService implements OnModuleInit {
       }
 
       return {
-        rt_cd: data.rt_cd,
+        rt_cd: data.rt_cd || '',
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
         output: data.output.map((item: any) => ({
@@ -279,7 +284,7 @@ export class KisService implements OnModuleInit {
       }
 
       return {
-        rt_cd: data.rt_cd,
+        rt_cd: data.rt_cd || '',
         msg_cd: data.msg_cd || '',
         msg1: data.msg1 || '',
         output: data.output2.map((item: any) => ({
@@ -300,7 +305,9 @@ export class KisService implements OnModuleInit {
     }
   }
 
-  async getDailyIndexChart(data): Promise<KisTimeDailyChartResponseDto> {
+  async getDailyIndexChart(
+    data: KisTimeDailyChartRequestDto,
+  ): Promise<KisTimeDailyChartResponseData> {
     const { FID_INPUT_ISCD, FID_PERIOD_DIV_CODE } = data;
     const now = new Date();
     const FID_INPUT_DATE_1 =
@@ -374,7 +381,7 @@ export class KisService implements OnModuleInit {
         status: 200,
         msg: 'success',
         stock: null,
-        index: await this.getTimeDailyChart(dto),
+        index: (await this.getTimeDailyChart(dto)) as any,
       };
 
     const price = await this.getPrice({
@@ -394,8 +401,8 @@ export class KisService implements OnModuleInit {
       return {
         status: 200,
         msg: 'success',
-        stock: dailyChart,
-        index: indexChart,
+        stock: dailyChart as KisTimeItemChartResponseData,
+        index: indexChart as KisTimeItemChartResponseData,
       };
     } else {
       const dailyChart = await this.getTimeDailyChart(dto);
@@ -408,8 +415,8 @@ export class KisService implements OnModuleInit {
       return {
         status: 200,
         msg: 'success',
-        stock: dailyChart,
-        index: indexChart,
+        stock: dailyChart as KisTimeDailyChartResponseData,
+        index: indexChart as KisTimeDailyChartResponseData,
       };
     }
   }

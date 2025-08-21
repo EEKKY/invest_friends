@@ -1,0 +1,3718 @@
+{
+  "success": true,
+  "data": {
+    "stockCode": "035420",
+    "analysisDate": "2025-08-21T10:55:20.836Z",
+    "chartData": {
+      "dailyChart": {
+        "rt_cd": "0",
+        "msg_cd": "MCA00000",
+        "msg1": "정상처리 되었습니다.",
+        "output": [
+          {
+            "stck_cntg_hour": "20250821",
+            "stck_oprc": "222000",
+            "stck_hgpr": "226500",
+            "stck_lwpr": "222000",
+            "stck_prpr": "223000",
+            "cntg_vol": "463923",
+            "acml_vol": "463923"
+          },
+          {
+            "stck_cntg_hour": "20250820",
+            "stck_oprc": "221500",
+            "stck_hgpr": "224000",
+            "stck_lwpr": "219500",
+            "stck_prpr": "221500",
+            "cntg_vol": "507825",
+            "acml_vol": "507825"
+          },
+          {
+            "stck_cntg_hour": "20250819",
+            "stck_oprc": "228000",
+            "stck_hgpr": "228500",
+            "stck_lwpr": "223000",
+            "stck_prpr": "225500",
+            "cntg_vol": "419214",
+            "acml_vol": "419214"
+          },
+          {
+            "stck_cntg_hour": "20250818",
+            "stck_oprc": "224500",
+            "stck_hgpr": "228500",
+            "stck_lwpr": "223500",
+            "stck_prpr": "226000",
+            "cntg_vol": "479724",
+            "acml_vol": "479724"
+          },
+          {
+            "stck_cntg_hour": "20250814",
+            "stck_oprc": "228500",
+            "stck_hgpr": "233500",
+            "stck_lwpr": "224000",
+            "stck_prpr": "224500",
+            "cntg_vol": "1165222",
+            "acml_vol": "1165222"
+          },
+          {
+            "stck_cntg_hour": "20250813",
+            "stck_oprc": "225500",
+            "stck_hgpr": "226000",
+            "stck_lwpr": "221500",
+            "stck_prpr": "225000",
+            "cntg_vol": "1017399",
+            "acml_vol": "1017399"
+          },
+          {
+            "stck_cntg_hour": "20250812",
+            "stck_oprc": "223500",
+            "stck_hgpr": "228000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "743541",
+            "acml_vol": "743541"
+          },
+          {
+            "stck_cntg_hour": "20250811",
+            "stck_oprc": "229500",
+            "stck_hgpr": "230000",
+            "stck_lwpr": "222500",
+            "stck_prpr": "223000",
+            "cntg_vol": "1264837",
+            "acml_vol": "1264837"
+          },
+          {
+            "stck_cntg_hour": "20250808",
+            "stck_oprc": "241000",
+            "stck_hgpr": "241500",
+            "stck_lwpr": "228500",
+            "stck_prpr": "229500",
+            "cntg_vol": "1638049",
+            "acml_vol": "1638049"
+          },
+          {
+            "stck_cntg_hour": "20250807",
+            "stck_oprc": "230000",
+            "stck_hgpr": "235500",
+            "stck_lwpr": "228000",
+            "stck_prpr": "235500",
+            "cntg_vol": "1019496",
+            "acml_vol": "1019496"
+          },
+          {
+            "stck_cntg_hour": "20250806",
+            "stck_oprc": "236500",
+            "stck_hgpr": "236500",
+            "stck_lwpr": "226000",
+            "stck_prpr": "228500",
+            "cntg_vol": "1076418",
+            "acml_vol": "1076418"
+          },
+          {
+            "stck_cntg_hour": "20250805",
+            "stck_oprc": "236000",
+            "stck_hgpr": "236500",
+            "stck_lwpr": "229000",
+            "stck_prpr": "232000",
+            "cntg_vol": "683813",
+            "acml_vol": "683813"
+          },
+          {
+            "stck_cntg_hour": "20250804",
+            "stck_oprc": "225500",
+            "stck_hgpr": "239500",
+            "stck_lwpr": "225000",
+            "stck_prpr": "232500",
+            "cntg_vol": "1276649",
+            "acml_vol": "1276649"
+          },
+          {
+            "stck_cntg_hour": "20250801",
+            "stck_oprc": "232500",
+            "stck_hgpr": "233000",
+            "stck_lwpr": "224000",
+            "stck_prpr": "225000",
+            "cntg_vol": "827729",
+            "acml_vol": "827729"
+          },
+          {
+            "stck_cntg_hour": "20250731",
+            "stck_oprc": "235000",
+            "stck_hgpr": "236500",
+            "stck_lwpr": "232500",
+            "stck_prpr": "235000",
+            "cntg_vol": "521064",
+            "acml_vol": "521064"
+          },
+          {
+            "stck_cntg_hour": "20250730",
+            "stck_oprc": "233500",
+            "stck_hgpr": "240000",
+            "stck_lwpr": "233500",
+            "stck_prpr": "234000",
+            "cntg_vol": "768748",
+            "acml_vol": "768748"
+          },
+          {
+            "stck_cntg_hour": "20250729",
+            "stck_oprc": "235500",
+            "stck_hgpr": "240000",
+            "stck_lwpr": "232000",
+            "stck_prpr": "233000",
+            "cntg_vol": "928345",
+            "acml_vol": "928345"
+          },
+          {
+            "stck_cntg_hour": "20250728",
+            "stck_oprc": "236000",
+            "stck_hgpr": "237000",
+            "stck_lwpr": "232000",
+            "stck_prpr": "235500",
+            "cntg_vol": "600063",
+            "acml_vol": "600063"
+          },
+          {
+            "stck_cntg_hour": "20250725",
+            "stck_oprc": "226500",
+            "stck_hgpr": "236000",
+            "stck_lwpr": "225000",
+            "stck_prpr": "234500",
+            "cntg_vol": "1202489",
+            "acml_vol": "1202489"
+          },
+          {
+            "stck_cntg_hour": "20250724",
+            "stck_oprc": "233000",
+            "stck_hgpr": "234500",
+            "stck_lwpr": "225000",
+            "stck_prpr": "227000",
+            "cntg_vol": "1177878",
+            "acml_vol": "1177878"
+          },
+          {
+            "stck_cntg_hour": "20250723",
+            "stck_oprc": "236000",
+            "stck_hgpr": "237500",
+            "stck_lwpr": "229500",
+            "stck_prpr": "231500",
+            "cntg_vol": "719824",
+            "acml_vol": "719824"
+          },
+          {
+            "stck_cntg_hour": "20250722",
+            "stck_oprc": "241500",
+            "stck_hgpr": "242000",
+            "stck_lwpr": "234500",
+            "stck_prpr": "235000",
+            "cntg_vol": "930384",
+            "acml_vol": "930384"
+          },
+          {
+            "stck_cntg_hour": "20250721",
+            "stck_oprc": "241500",
+            "stck_hgpr": "245500",
+            "stck_lwpr": "240000",
+            "stck_prpr": "240000",
+            "cntg_vol": "674282",
+            "acml_vol": "674282"
+          },
+          {
+            "stck_cntg_hour": "20250718",
+            "stck_oprc": "243500",
+            "stck_hgpr": "245000",
+            "stck_lwpr": "240000",
+            "stck_prpr": "242000",
+            "cntg_vol": "703602",
+            "acml_vol": "703602"
+          },
+          {
+            "stck_cntg_hour": "20250717",
+            "stck_oprc": "254000",
+            "stck_hgpr": "255000",
+            "stck_lwpr": "242500",
+            "stck_prpr": "243500",
+            "cntg_vol": "1262077",
+            "acml_vol": "1262077"
+          },
+          {
+            "stck_cntg_hour": "20250716",
+            "stck_oprc": "251000",
+            "stck_hgpr": "255500",
+            "stck_lwpr": "249000",
+            "stck_prpr": "250000",
+            "cntg_vol": "785410",
+            "acml_vol": "785410"
+          },
+          {
+            "stck_cntg_hour": "20250715",
+            "stck_oprc": "247500",
+            "stck_hgpr": "253000",
+            "stck_lwpr": "247000",
+            "stck_prpr": "249500",
+            "cntg_vol": "791762",
+            "acml_vol": "791762"
+          },
+          {
+            "stck_cntg_hour": "20250714",
+            "stck_oprc": "252000",
+            "stck_hgpr": "252500",
+            "stck_lwpr": "244000",
+            "stck_prpr": "249000",
+            "cntg_vol": "1205192",
+            "acml_vol": "1205192"
+          },
+          {
+            "stck_cntg_hour": "20250711",
+            "stck_oprc": "261000",
+            "stck_hgpr": "261500",
+            "stck_lwpr": "253000",
+            "stck_prpr": "253000",
+            "cntg_vol": "1249355",
+            "acml_vol": "1249355"
+          },
+          {
+            "stck_cntg_hour": "20250710",
+            "stck_oprc": "255500",
+            "stck_hgpr": "265000",
+            "stck_lwpr": "251000",
+            "stck_prpr": "259500",
+            "cntg_vol": "1754234",
+            "acml_vol": "1754234"
+          }
+        ]
+      },
+      "itemChart": {
+        "rt_cd": "0",
+        "msg_cd": "MCA00000",
+        "msg1": "정상처리 되었습니다.",
+        "output": [
+          {
+            "stck_cntg_hour": "195400",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "31351",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "195300",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "195200",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "195100",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "195000",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194900",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194800",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194700",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194600",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194500",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194400",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194300",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194200",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194100",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194000",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193900",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193800",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193700",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193600",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193500",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193400",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193300",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193200",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193100",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193000",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192900",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192800",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192700",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192600",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192500",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          }
+        ]
+      },
+      "indexChart": {
+        "rt_cd": "0",
+        "msg_cd": "MCA00000",
+        "msg1": "정상처리 되었습니다.",
+        "output": [
+          {
+            "stck_cntg_hour": "20250821",
+            "stck_oprc": "3140.71",
+            "stck_hgpr": "3166.54",
+            "stck_lwpr": "3134.86",
+            "stck_prpr": "3141.74",
+            "cntg_vol": "276915",
+            "acml_vol": "276915"
+          },
+          {
+            "stck_cntg_hour": "20250820",
+            "stck_oprc": "3121.52",
+            "stck_hgpr": "3132.83",
+            "stck_lwpr": "3079.27",
+            "stck_prpr": "3130.09",
+            "cntg_vol": "335285",
+            "acml_vol": "335285"
+          },
+          {
+            "stck_cntg_hour": "20250819",
+            "stck_oprc": "3185.04",
+            "stck_hgpr": "3185.48",
+            "stck_lwpr": "3142.48",
+            "stck_prpr": "3151.56",
+            "cntg_vol": "285291",
+            "acml_vol": "285291"
+          },
+          {
+            "stck_cntg_hour": "20250818",
+            "stck_oprc": "3202.63",
+            "stck_hgpr": "3206.77",
+            "stck_lwpr": "3177.28",
+            "stck_prpr": "3177.28",
+            "cntg_vol": "326133",
+            "acml_vol": "326133"
+          },
+          {
+            "stck_cntg_hour": "20250814",
+            "stck_oprc": "3226.52",
+            "stck_hgpr": "3239.55",
+            "stck_lwpr": "3210.83",
+            "stck_prpr": "3225.66",
+            "cntg_vol": "441468",
+            "acml_vol": "441468"
+          },
+          {
+            "stck_cntg_hour": "20250813",
+            "stck_oprc": "3225.40",
+            "stck_hgpr": "3226.37",
+            "stck_lwpr": "3192.17",
+            "stck_prpr": "3224.37",
+            "cntg_vol": "320070",
+            "acml_vol": "320070"
+          },
+          {
+            "stck_cntg_hour": "20250812",
+            "stck_oprc": "3209.75",
+            "stck_hgpr": "3242.17",
+            "stck_lwpr": "3189.58",
+            "stck_prpr": "3189.91",
+            "cntg_vol": "373217",
+            "acml_vol": "373217"
+          },
+          {
+            "stck_cntg_hour": "20250811",
+            "stck_oprc": "3220.72",
+            "stck_hgpr": "3223.23",
+            "stck_lwpr": "3199.90",
+            "stck_prpr": "3206.77",
+            "cntg_vol": "304968",
+            "acml_vol": "304968"
+          },
+          {
+            "stck_cntg_hour": "20250808",
+            "stck_oprc": "3220.58",
+            "stck_hgpr": "3227.28",
+            "stck_lwpr": "3198.31",
+            "stck_prpr": "3210.01",
+            "cntg_vol": "341443",
+            "acml_vol": "341443"
+          },
+          {
+            "stck_cntg_hour": "20250807",
+            "stck_oprc": "3214.81",
+            "stck_hgpr": "3227.68",
+            "stck_lwpr": "3200.28",
+            "stck_prpr": "3227.68",
+            "cntg_vol": "327048",
+            "acml_vol": "327048"
+          },
+          {
+            "stck_cntg_hour": "20250806",
+            "stck_oprc": "3182.06",
+            "stck_hgpr": "3200.15",
+            "stck_lwpr": "3176.61",
+            "stck_prpr": "3198.14",
+            "cntg_vol": "327358",
+            "acml_vol": "327358"
+          },
+          {
+            "stck_cntg_hour": "20250805",
+            "stck_oprc": "3187.15",
+            "stck_hgpr": "3212.31",
+            "stck_lwpr": "3174.23",
+            "stck_prpr": "3198.00",
+            "cntg_vol": "273440",
+            "acml_vol": "273440"
+          },
+          {
+            "stck_cntg_hour": "20250804",
+            "stck_oprc": "3114.27",
+            "stck_hgpr": "3157.45",
+            "stck_lwpr": "3105.63",
+            "stck_prpr": "3147.75",
+            "cntg_vol": "293454",
+            "acml_vol": "293454"
+          },
+          {
+            "stck_cntg_hour": "20250801",
+            "stck_oprc": "3210.32",
+            "stck_hgpr": "3210.32",
+            "stck_lwpr": "3117.92",
+            "stck_prpr": "3119.41",
+            "cntg_vol": "507776",
+            "acml_vol": "507776"
+          },
+          {
+            "stck_cntg_hour": "20250731",
+            "stck_oprc": "3275.78",
+            "stck_hgpr": "3288.26",
+            "stck_lwpr": "3227.46",
+            "stck_prpr": "3245.44",
+            "cntg_vol": "540324",
+            "acml_vol": "540324"
+          },
+          {
+            "stck_cntg_hour": "20250730",
+            "stck_oprc": "3233.31",
+            "stck_hgpr": "3269.40",
+            "stck_lwpr": "3227.28",
+            "stck_prpr": "3254.47",
+            "cntg_vol": "338074",
+            "acml_vol": "338074"
+          },
+          {
+            "stck_cntg_hour": "20250729",
+            "stck_oprc": "3192.17",
+            "stck_hgpr": "3232.31",
+            "stck_lwpr": "3169.03",
+            "stck_prpr": "3230.57",
+            "cntg_vol": "373203",
+            "acml_vol": "373203"
+          },
+          {
+            "stck_cntg_hour": "20250728",
+            "stck_oprc": "3228.61",
+            "stck_hgpr": "3228.61",
+            "stck_lwpr": "3180.18",
+            "stck_prpr": "3209.52",
+            "cntg_vol": "502720",
+            "acml_vol": "502720"
+          },
+          {
+            "stck_cntg_hour": "20250725",
+            "stck_oprc": "3184.37",
+            "stck_hgpr": "3205.82",
+            "stck_lwpr": "3184.37",
+            "stck_prpr": "3196.05",
+            "cntg_vol": "389291",
+            "acml_vol": "389291"
+          },
+          {
+            "stck_cntg_hour": "20250724",
+            "stck_oprc": "3209.43",
+            "stck_hgpr": "3237.97",
+            "stck_lwpr": "3183.05",
+            "stck_prpr": "3190.45",
+            "cntg_vol": "425500",
+            "acml_vol": "425500"
+          },
+          {
+            "stck_cntg_hour": "20250723",
+            "stck_oprc": "3189.65",
+            "stck_hgpr": "3199.86",
+            "stck_lwpr": "3141.93",
+            "stck_prpr": "3183.77",
+            "cntg_vol": "664826",
+            "acml_vol": "664826"
+          },
+          {
+            "stck_cntg_hour": "20250722",
+            "stck_oprc": "3210.12",
+            "stck_hgpr": "3220.27",
+            "stck_lwpr": "3155.25",
+            "stck_prpr": "3169.94",
+            "cntg_vol": "378486",
+            "acml_vol": "378486"
+          },
+          {
+            "stck_cntg_hour": "20250721",
+            "stck_oprc": "3191.11",
+            "stck_hgpr": "3211.14",
+            "stck_lwpr": "3188.87",
+            "stck_prpr": "3210.81",
+            "cntg_vol": "343911",
+            "acml_vol": "343911"
+          },
+          {
+            "stck_cntg_hour": "20250718",
+            "stck_oprc": "3200.44",
+            "stck_hgpr": "3204.75",
+            "stck_lwpr": "3169.69",
+            "stck_prpr": "3188.07",
+            "cntg_vol": "393449",
+            "acml_vol": "393449"
+          },
+          {
+            "stck_cntg_hour": "20250717",
+            "stck_oprc": "3201.42",
+            "stck_hgpr": "3201.42",
+            "stck_lwpr": "3152.42",
+            "stck_prpr": "3192.29",
+            "cntg_vol": "424788",
+            "acml_vol": "424788"
+          },
+          {
+            "stck_cntg_hour": "20250716",
+            "stck_oprc": "3207.48",
+            "stck_hgpr": "3209.20",
+            "stck_lwpr": "3178.42",
+            "stck_prpr": "3186.38",
+            "cntg_vol": "531499",
+            "acml_vol": "531499"
+          },
+          {
+            "stck_cntg_hour": "20250715",
+            "stck_oprc": "3194.82",
+            "stck_hgpr": "3216.01",
+            "stck_lwpr": "3183.83",
+            "stck_prpr": "3215.28",
+            "cntg_vol": "419652",
+            "acml_vol": "419652"
+          },
+          {
+            "stck_cntg_hour": "20250714",
+            "stck_oprc": "3175.59",
+            "stck_hgpr": "3202.06",
+            "stck_lwpr": "3170.72",
+            "stck_prpr": "3202.03",
+            "cntg_vol": "444036",
+            "acml_vol": "444036"
+          },
+          {
+            "stck_cntg_hour": "20250711",
+            "stck_oprc": "3186.35",
+            "stck_hgpr": "3216.69",
+            "stck_lwpr": "3170.46",
+            "stck_prpr": "3175.77",
+            "cntg_vol": "465292",
+            "acml_vol": "465292"
+          },
+          {
+            "stck_cntg_hour": "20250710",
+            "stck_oprc": "3144.14",
+            "stck_hgpr": "3183.23",
+            "stck_lwpr": "3133.81",
+            "stck_prpr": "3183.23",
+            "cntg_vol": "596572",
+            "acml_vol": "596572"
+          },
+          {
+            "stck_cntg_hour": "20250709",
+            "stck_oprc": "3123.22",
+            "stck_hgpr": "3137.17",
+            "stck_lwpr": "3111.02",
+            "stck_prpr": "3133.74",
+            "cntg_vol": "642961",
+            "acml_vol": "642961"
+          },
+          {
+            "stck_cntg_hour": "20250708",
+            "stck_oprc": "3071.74",
+            "stck_hgpr": "3115.86",
+            "stck_lwpr": "3066.03",
+            "stck_prpr": "3114.95",
+            "cntg_vol": "745793",
+            "acml_vol": "745793"
+          },
+          {
+            "stck_cntg_hour": "20250707",
+            "stck_oprc": "3044.78",
+            "stck_hgpr": "3068.43",
+            "stck_lwpr": "3032.99",
+            "stck_prpr": "3059.47",
+            "cntg_vol": "359405",
+            "acml_vol": "359405"
+          },
+          {
+            "stck_cntg_hour": "20250704",
+            "stck_oprc": "3122.28",
+            "stck_hgpr": "3123.84",
+            "stck_lwpr": "3052.91",
+            "stck_prpr": "3054.28",
+            "cntg_vol": "520763",
+            "acml_vol": "520763"
+          },
+          {
+            "stck_cntg_hour": "20250703",
+            "stck_oprc": "3100.33",
+            "stck_hgpr": "3116.27",
+            "stck_lwpr": "3085.98",
+            "stck_prpr": "3116.27",
+            "cntg_vol": "539120",
+            "acml_vol": "539120"
+          },
+          {
+            "stck_cntg_hour": "20250702",
+            "stck_oprc": "3083.82",
+            "stck_hgpr": "3090.61",
+            "stck_lwpr": "3032.47",
+            "stck_prpr": "3075.06",
+            "cntg_vol": "696799",
+            "acml_vol": "696799"
+          },
+          {
+            "stck_cntg_hour": "20250701",
+            "stck_oprc": "3089.64",
+            "stck_hgpr": "3133.52",
+            "stck_lwpr": "3088.45",
+            "stck_prpr": "3089.65",
+            "cntg_vol": "576017",
+            "acml_vol": "576017"
+          },
+          {
+            "stck_cntg_hour": "20250630",
+            "stck_oprc": "3072.75",
+            "stck_hgpr": "3086.00",
+            "stck_lwpr": "3063.42",
+            "stck_prpr": "3071.70",
+            "cntg_vol": "464163",
+            "acml_vol": "464163"
+          },
+          {
+            "stck_cntg_hour": "20250627",
+            "stck_oprc": "3077.87",
+            "stck_hgpr": "3093.56",
+            "stck_lwpr": "3041.85",
+            "stck_prpr": "3055.94",
+            "cntg_vol": "381634",
+            "acml_vol": "381634"
+          },
+          {
+            "stck_cntg_hour": "20250626",
+            "stck_oprc": "3108.34",
+            "stck_hgpr": "3113.03",
+            "stck_lwpr": "3036.55",
+            "stck_prpr": "3079.56",
+            "cntg_vol": "460612",
+            "acml_vol": "460612"
+          },
+          {
+            "stck_cntg_hour": "20250625",
+            "stck_oprc": "3127.79",
+            "stck_hgpr": "3129.09",
+            "stck_lwpr": "3084.86",
+            "stck_prpr": "3108.25",
+            "cntg_vol": "644761",
+            "acml_vol": "644761"
+          },
+          {
+            "stck_cntg_hour": "20250624",
+            "stck_oprc": "3061.14",
+            "stck_hgpr": "3105.04",
+            "stck_lwpr": "3061.14",
+            "stck_prpr": "3103.64",
+            "cntg_vol": "579201",
+            "acml_vol": "579201"
+          },
+          {
+            "stck_cntg_hour": "20250623",
+            "stck_oprc": "2992.20",
+            "stck_hgpr": "3019.81",
+            "stck_lwpr": "2971.36",
+            "stck_prpr": "3014.47",
+            "cntg_vol": "625651",
+            "acml_vol": "625651"
+          },
+          {
+            "stck_cntg_hour": "20250620",
+            "stck_oprc": "2986.52",
+            "stck_hgpr": "3022.06",
+            "stck_lwpr": "2972.37",
+            "stck_prpr": "3021.84",
+            "cntg_vol": "484865",
+            "acml_vol": "484865"
+          },
+          {
+            "stck_cntg_hour": "20250619",
+            "stck_oprc": "2989.56",
+            "stck_hgpr": "2996.04",
+            "stck_lwpr": "2954.47",
+            "stck_prpr": "2977.74",
+            "cntg_vol": "433311",
+            "acml_vol": "433311"
+          },
+          {
+            "stck_cntg_hour": "20250618",
+            "stck_oprc": "2933.63",
+            "stck_hgpr": "2979.32",
+            "stck_lwpr": "2933.63",
+            "stck_prpr": "2972.19",
+            "cntg_vol": "576548",
+            "acml_vol": "576548"
+          },
+          {
+            "stck_cntg_hour": "20250617",
+            "stck_oprc": "2959.93",
+            "stck_hgpr": "2998.62",
+            "stck_lwpr": "2925.79",
+            "stck_prpr": "2950.30",
+            "cntg_vol": "939594",
+            "acml_vol": "939594"
+          },
+          {
+            "stck_cntg_hour": "20250616",
+            "stck_oprc": "2903.50",
+            "stck_hgpr": "2947.07",
+            "stck_lwpr": "2886.13",
+            "stck_prpr": "2946.66",
+            "cntg_vol": "726352",
+            "acml_vol": "726352"
+          },
+          {
+            "stck_cntg_hour": "20250613",
+            "stck_oprc": "2930.57",
+            "stck_hgpr": "2932.38",
+            "stck_lwpr": "2877.07",
+            "stck_prpr": "2894.62",
+            "cntg_vol": "931658",
+            "acml_vol": "931658"
+          },
+          {
+            "stck_cntg_hour": "20250612",
+            "stck_oprc": "2909.99",
+            "stck_hgpr": "2934.31",
+            "stck_lwpr": "2909.99",
+            "stck_prpr": "2920.03",
+            "cntg_vol": "713706",
+            "acml_vol": "713706"
+          },
+          {
+            "stck_cntg_hour": "20250611",
+            "stck_oprc": "2887.32",
+            "stck_hgpr": "2908.16",
+            "stck_lwpr": "2879.92",
+            "stck_prpr": "2907.04",
+            "cntg_vol": "393930",
+            "acml_vol": "393930"
+          },
+          {
+            "stck_cntg_hour": "20250610",
+            "stck_oprc": "2872.62",
+            "stck_hgpr": "2885.67",
+            "stck_lwpr": "2849.67",
+            "stck_prpr": "2871.85",
+            "cntg_vol": "508185",
+            "acml_vol": "508185"
+          },
+          {
+            "stck_cntg_hour": "20250609",
+            "stck_oprc": "2841.56",
+            "stck_hgpr": "2867.27",
+            "stck_lwpr": "2841.39",
+            "stck_prpr": "2855.77",
+            "cntg_vol": "537617",
+            "acml_vol": "537617"
+          },
+          {
+            "stck_cntg_hour": "20250605",
+            "stck_oprc": "2790.33",
+            "stck_hgpr": "2831.11",
+            "stck_lwpr": "2787.76",
+            "stck_prpr": "2812.05",
+            "cntg_vol": "556013",
+            "acml_vol": "556013"
+          },
+          {
+            "stck_cntg_hour": "20250604",
+            "stck_oprc": "2737.92",
+            "stck_hgpr": "2771.03",
+            "stck_lwpr": "2734.02",
+            "stck_prpr": "2770.84",
+            "cntg_vol": "489938",
+            "acml_vol": "489938"
+          },
+          {
+            "stck_cntg_hour": "20250602",
+            "stck_oprc": "2692.91",
+            "stck_hgpr": "2719.87",
+            "stck_lwpr": "2685.14",
+            "stck_prpr": "2698.97",
+            "cntg_vol": "323604",
+            "acml_vol": "323604"
+          },
+          {
+            "stck_cntg_hour": "20250530",
+            "stck_oprc": "2713.24",
+            "stck_hgpr": "2717.54",
+            "stck_lwpr": "2689.87",
+            "stck_prpr": "2697.67",
+            "cntg_vol": "525661",
+            "acml_vol": "525661"
+          },
+          {
+            "stck_cntg_hour": "20250529",
+            "stck_oprc": "2691.06",
+            "stck_hgpr": "2720.64",
+            "stck_lwpr": "2686.64",
+            "stck_prpr": "2720.64",
+            "cntg_vol": "448341",
+            "acml_vol": "448341"
+          },
+          {
+            "stck_cntg_hour": "20250528",
+            "stck_oprc": "2648.86",
+            "stck_hgpr": "2692.47",
+            "stck_lwpr": "2643.50",
+            "stck_prpr": "2670.15",
+            "cntg_vol": "405474",
+            "acml_vol": "405474"
+          },
+          {
+            "stck_cntg_hour": "20250527",
+            "stck_oprc": "2630.29",
+            "stck_hgpr": "2642.63",
+            "stck_lwpr": "2625.66",
+            "stck_prpr": "2637.22",
+            "cntg_vol": "318286",
+            "acml_vol": "318286"
+          },
+          {
+            "stck_cntg_hour": "20250526",
+            "stck_oprc": "2598.45",
+            "stck_hgpr": "2644.40",
+            "stck_lwpr": "2595.96",
+            "stck_prpr": "2644.40",
+            "cntg_vol": "380173",
+            "acml_vol": "380173"
+          },
+          {
+            "stck_cntg_hour": "20250523",
+            "stck_oprc": "2603.57",
+            "stck_hgpr": "2604.14",
+            "stck_lwpr": "2589.51",
+            "stck_prpr": "2592.09",
+            "cntg_vol": "434024",
+            "acml_vol": "434024"
+          },
+          {
+            "stck_cntg_hour": "20250522",
+            "stck_oprc": "2614.66",
+            "stck_hgpr": "2616.53",
+            "stck_lwpr": "2588.09",
+            "stck_prpr": "2593.67",
+            "cntg_vol": "358064",
+            "acml_vol": "358064"
+          },
+          {
+            "stck_cntg_hour": "20250521",
+            "stck_oprc": "2615.90",
+            "stck_hgpr": "2633.41",
+            "stck_lwpr": "2614.73",
+            "stck_prpr": "2625.58",
+            "cntg_vol": "371527",
+            "acml_vol": "371527"
+          },
+          {
+            "stck_cntg_hour": "20250520",
+            "stck_oprc": "2622.68",
+            "stck_hgpr": "2622.91",
+            "stck_lwpr": "2598.10",
+            "stck_prpr": "2601.80",
+            "cntg_vol": "456989",
+            "acml_vol": "456989"
+          },
+          {
+            "stck_cntg_hour": "20250519",
+            "stck_oprc": "2613.70",
+            "stck_hgpr": "2619.43",
+            "stck_lwpr": "2593.44",
+            "stck_prpr": "2603.42",
+            "cntg_vol": "313296",
+            "acml_vol": "313296"
+          },
+          {
+            "stck_cntg_hour": "20250516",
+            "stck_oprc": "2630.64",
+            "stck_hgpr": "2633.98",
+            "stck_lwpr": "2619.10",
+            "stck_prpr": "2626.87",
+            "cntg_vol": "359707",
+            "acml_vol": "359707"
+          },
+          {
+            "stck_cntg_hour": "20250515",
+            "stck_oprc": "2634.50",
+            "stck_hgpr": "2643.83",
+            "stck_lwpr": "2618.08",
+            "stck_prpr": "2621.36",
+            "cntg_vol": "339579",
+            "acml_vol": "339579"
+          },
+          {
+            "stck_cntg_hour": "20250514",
+            "stck_oprc": "2625.36",
+            "stck_hgpr": "2646.01",
+            "stck_lwpr": "2619.15",
+            "stck_prpr": "2640.57",
+            "cntg_vol": "390504",
+            "acml_vol": "390504"
+          },
+          {
+            "stck_cntg_hour": "20250513",
+            "stck_oprc": "2601.76",
+            "stck_hgpr": "2620.64",
+            "stck_lwpr": "2601.58",
+            "stck_prpr": "2608.42",
+            "cntg_vol": "422460",
+            "acml_vol": "422460"
+          },
+          {
+            "stck_cntg_hour": "20250512",
+            "stck_oprc": "2593.94",
+            "stck_hgpr": "2607.33",
+            "stck_lwpr": "2585.60",
+            "stck_prpr": "2607.33",
+            "cntg_vol": "409749",
+            "acml_vol": "409749"
+          },
+          {
+            "stck_cntg_hour": "20250509",
+            "stck_oprc": "2587.93",
+            "stck_hgpr": "2589.58",
+            "stck_lwpr": "2571.20",
+            "stck_prpr": "2577.27",
+            "cntg_vol": "485550",
+            "acml_vol": "485550"
+          },
+          {
+            "stck_cntg_hour": "20250508",
+            "stck_oprc": "2581.27",
+            "stck_hgpr": "2590.90",
+            "stck_lwpr": "2575.78",
+            "stck_prpr": "2579.48",
+            "cntg_vol": "471636",
+            "acml_vol": "471636"
+          },
+          {
+            "stck_cntg_hour": "20250507",
+            "stck_oprc": "2577.04",
+            "stck_hgpr": "2581.85",
+            "stck_lwpr": "2559.17",
+            "stck_prpr": "2573.80",
+            "cntg_vol": "546755",
+            "acml_vol": "546755"
+          },
+          {
+            "stck_cntg_hour": "20250502",
+            "stck_oprc": "2556.52",
+            "stck_hgpr": "2567.04",
+            "stck_lwpr": "2540.57",
+            "stck_prpr": "2559.79",
+            "cntg_vol": "585492",
+            "acml_vol": "585492"
+          },
+          {
+            "stck_cntg_hour": "20250430",
+            "stck_oprc": "2561.04",
+            "stck_hgpr": "2570.83",
+            "stck_lwpr": "2544.46",
+            "stck_prpr": "2556.61",
+            "cntg_vol": "487489",
+            "acml_vol": "487489"
+          },
+          {
+            "stck_cntg_hour": "20250429",
+            "stck_oprc": "2550.25",
+            "stck_hgpr": "2571.41",
+            "stck_lwpr": "2542.25",
+            "stck_prpr": "2565.42",
+            "cntg_vol": "547082",
+            "acml_vol": "547082"
+          },
+          {
+            "stck_cntg_hour": "20250428",
+            "stck_oprc": "2551.23",
+            "stck_hgpr": "2558.69",
+            "stck_lwpr": "2541.97",
+            "stck_prpr": "2548.86",
+            "cntg_vol": "454102",
+            "acml_vol": "454102"
+          },
+          {
+            "stck_cntg_hour": "20250425",
+            "stck_oprc": "2544.59",
+            "stck_hgpr": "2553.33",
+            "stck_lwpr": "2534.94",
+            "stck_prpr": "2546.30",
+            "cntg_vol": "403528",
+            "acml_vol": "403528"
+          },
+          {
+            "stck_cntg_hour": "20250424",
+            "stck_oprc": "2525.34",
+            "stck_hgpr": "2530.61",
+            "stck_lwpr": "2507.21",
+            "stck_prpr": "2522.33",
+            "cntg_vol": "327935",
+            "acml_vol": "327935"
+          },
+          {
+            "stck_cntg_hour": "20250423",
+            "stck_oprc": "2520.56",
+            "stck_hgpr": "2526.72",
+            "stck_lwpr": "2507.10",
+            "stck_prpr": "2525.56",
+            "cntg_vol": "538116",
+            "acml_vol": "538116"
+          },
+          {
+            "stck_cntg_hour": "20250422",
+            "stck_oprc": "2481.18",
+            "stck_hgpr": "2494.59",
+            "stck_lwpr": "2476.14",
+            "stck_prpr": "2486.64",
+            "cntg_vol": "416680",
+            "acml_vol": "416680"
+          },
+          {
+            "stck_cntg_hour": "20250421",
+            "stck_oprc": "2486.38",
+            "stck_hgpr": "2498.84",
+            "stck_lwpr": "2479.23",
+            "stck_prpr": "2488.42",
+            "cntg_vol": "428977",
+            "acml_vol": "428977"
+          },
+          {
+            "stck_cntg_hour": "20250418",
+            "stck_oprc": "2473.30",
+            "stck_hgpr": "2486.37",
+            "stck_lwpr": "2466.90",
+            "stck_prpr": "2483.42",
+            "cntg_vol": "450985",
+            "acml_vol": "450985"
+          },
+          {
+            "stck_cntg_hour": "20250417",
+            "stck_oprc": "2451.70",
+            "stck_hgpr": "2473.24",
+            "stck_lwpr": "2447.40",
+            "stck_prpr": "2470.41",
+            "cntg_vol": "601739",
+            "acml_vol": "601739"
+          },
+          {
+            "stck_cntg_hour": "20250416",
+            "stck_oprc": "2472.78",
+            "stck_hgpr": "2475.83",
+            "stck_lwpr": "2442.72",
+            "stck_prpr": "2447.43",
+            "cntg_vol": "613174",
+            "acml_vol": "613174"
+          },
+          {
+            "stck_cntg_hour": "20250415",
+            "stck_oprc": "2464.51",
+            "stck_hgpr": "2482.56",
+            "stck_lwpr": "2461.23",
+            "stck_prpr": "2477.41",
+            "cntg_vol": "560340",
+            "acml_vol": "560340"
+          },
+          {
+            "stck_cntg_hour": "20250414",
+            "stck_oprc": "2454.28",
+            "stck_hgpr": "2465.56",
+            "stck_lwpr": "2449.48",
+            "stck_prpr": "2455.89",
+            "cntg_vol": "488618",
+            "acml_vol": "488618"
+          },
+          {
+            "stck_cntg_hour": "20250411",
+            "stck_oprc": "2400.74",
+            "stck_hgpr": "2433.18",
+            "stck_lwpr": "2394.25",
+            "stck_prpr": "2432.72",
+            "cntg_vol": "369703",
+            "acml_vol": "369703"
+          },
+          {
+            "stck_cntg_hour": "20250410",
+            "stck_oprc": "2395.13",
+            "stck_hgpr": "2445.06",
+            "stck_lwpr": "2391.39",
+            "stck_prpr": "2445.06",
+            "cntg_vol": "670388",
+            "acml_vol": "670388"
+          },
+          {
+            "stck_cntg_hour": "20250409",
+            "stck_oprc": "2329.99",
+            "stck_hgpr": "2337.58",
+            "stck_lwpr": "2284.72",
+            "stck_prpr": "2293.70",
+            "cntg_vol": "699642",
+            "acml_vol": "699642"
+          },
+          {
+            "stck_cntg_hour": "20250408",
+            "stck_oprc": "2381.20",
+            "stck_hgpr": "2381.31",
+            "stck_lwpr": "2328.94",
+            "stck_prpr": "2334.23",
+            "cntg_vol": "557018",
+            "acml_vol": "557018"
+          },
+          {
+            "stck_cntg_hour": "20250407",
+            "stck_oprc": "2359.25",
+            "stck_hgpr": "2369.40",
+            "stck_lwpr": "2327.01",
+            "stck_prpr": "2328.20",
+            "cntg_vol": "619501",
+            "acml_vol": "619501"
+          },
+          {
+            "stck_cntg_hour": "20250404",
+            "stck_oprc": "2450.49",
+            "stck_hgpr": "2506.71",
+            "stck_lwpr": "2438.02",
+            "stck_prpr": "2465.42",
+            "cntg_vol": "695075",
+            "acml_vol": "695075"
+          },
+          {
+            "stck_cntg_hour": "20250403",
+            "stck_oprc": "2437.43",
+            "stck_hgpr": "2488.92",
+            "stck_lwpr": "2437.43",
+            "stck_prpr": "2486.70",
+            "cntg_vol": "480057",
+            "acml_vol": "480057"
+          },
+          {
+            "stck_cntg_hour": "20250402",
+            "stck_oprc": "2525.62",
+            "stck_hgpr": "2532.15",
+            "stck_lwpr": "2499.83",
+            "stck_prpr": "2505.86",
+            "cntg_vol": "515600",
+            "acml_vol": "515600"
+          },
+          {
+            "stck_cntg_hour": "20250401",
+            "stck_oprc": "2511.24",
+            "stck_hgpr": "2530.61",
+            "stck_lwpr": "2494.43",
+            "stck_prpr": "2521.39",
+            "cntg_vol": "453394",
+            "acml_vol": "453394"
+          },
+          {
+            "stck_cntg_hour": "20250331",
+            "stck_oprc": "2513.44",
+            "stck_hgpr": "2514.22",
+            "stck_lwpr": "2479.46",
+            "stck_prpr": "2481.12",
+            "cntg_vol": "391593",
+            "acml_vol": "391593"
+          },
+          {
+            "stck_cntg_hour": "20250328",
+            "stck_oprc": "2592.63",
+            "stck_hgpr": "2592.63",
+            "stck_lwpr": "2549.26",
+            "stck_prpr": "2557.98",
+            "cntg_vol": "513562",
+            "acml_vol": "513562"
+          },
+          {
+            "stck_cntg_hour": "20250327",
+            "stck_oprc": "2620.28",
+            "stck_hgpr": "2633.03",
+            "stck_lwpr": "2603.41",
+            "stck_prpr": "2607.15",
+            "cntg_vol": "403314",
+            "acml_vol": "403314"
+          }
+        ]
+      },
+      "movingAverages": {
+        "ma5": [
+          null,
+          null,
+          null,
+          null,
+          224100,
+          224500,
+          224800,
+          224300,
+          225000,
+          227200,
+          227900,
+          229700,
+          231600,
+          230700,
+          230600,
+          231700,
+          231900,
+          232500,
+          234400,
+          232800,
+          232300,
+          232700,
+          233600,
+          235100,
+          238400,
+          242100,
+          245000,
+          246800,
+          249000,
+          252200
+        ],
+        "ma20": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          228675,
+          229100,
+          229775,
+          230500,
+          231300,
+          232250,
+          233500,
+          234825,
+          236125,
+          237300,
+          238500
+        ],
+        "ma60": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "technicalIndicators": {
+        "rsi": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          61.76470588235294,
+          62.37623762376238,
+          57.89473684210526,
+          59.5959595959596,
+          60.20408163265306,
+          51.78571428571429,
+          57.26495726495726,
+          59.677419354838705,
+          58.67768595041322,
+          55.752212389380524,
+          64.70588235294119,
+          66.66666666666666,
+          65.74074074074075,
+          75.53191489361703,
+          71.95121951219512,
+          77.41935483870968
+        ]
+      }
+    },
+    "companyInfo": {
+      "stockCode": "035420",
+      "companyName": "네이버(주)",
+      "industry": "63120",
+      "listingDate": "",
+      "marketCap": 353315,
+      "sharesOutstanding": 158437008,
+      "description": "네이버(주)은(는) 63120 분야의 1999년 설립된 기업입니다.",
+      "ceo": "최수연",
+      "website": "https://www.navercorp.com"
+    },
+    "investmentMetrics": {
+      "per": 18.72,
+      "pbr": 1.34,
+      "roe": 1.78,
+      "eps": 0,
+      "bps": 0,
+      "debtRatio": 0,
+      "currentRatio": 0,
+      "operatingMargin": 0
+    },
+    "performanceConsensus": {
+      "quarterlyResults": [],
+      "annualResults": [],
+      "consensus": {
+        "targetPrice": 100000,
+        "recommendation": "Buy",
+        "numberOfAnalysts": 10,
+        "updatedAt": "2025-08-21T10:54:59.217Z"
+      }
+    },
+    "dividendInfo": {
+      "dividendPerShare": 0,
+      "dividendYield": 0,
+      "payoutRatio": 0,
+      "schedule": {
+        "recordDate": "2025-06-30",
+        "exDividendDate": "2025-12-27",
+        "paymentDate": "2026-04-15"
+      },
+      "history": [
+        {
+          "year": "2024",
+          "dividendPerShare": 1130,
+          "dividendYield": 0.5
+        },
+        {
+          "year": "2023",
+          "dividendPerShare": 1205,
+          "dividendYield": 0.3
+        }
+      ]
+    },
+    "peerComparison": {
+      "industryAverages": {
+        "per": 193.8,
+        "pbr": 1.9,
+        "roe": 1.2,
+        "dividendYield": 2
+      },
+      "ranking": {
+        "byMarketCap": 1,
+        "byRevenue": 1,
+        "byProfit": 1,
+        "totalCompanies": 4
+      },
+      "competitors": [
+        {
+          "name": "카카오",
+          "stockCode": "035720",
+          "currentPrice": 64000,
+          "changeRate": -1.99,
+          "marketCap": 282960,
+          "per": 516.1,
+          "pbr": 2.8,
+          "roe": 1.2
+        },
+        {
+          "name": "엔씨소프트",
+          "stockCode": "036570",
+          "currentPrice": 198100,
+          "changeRate": -0.9,
+          "marketCap": 42679,
+          "per": 46.2,
+          "pbr": 1.1,
+          "roe": -1.2
+        },
+        {
+          "name": "안랩",
+          "stockCode": "053800",
+          "currentPrice": 62400,
+          "changeRate": 0.81,
+          "marketCap": 6943,
+          "per": 19.1,
+          "pbr": 1.7,
+          "roe": 3.6
+        }
+      ]
+    },
+    "analystNews": {
+      "analystReports": [],
+      "news": [],
+      "sentimentAnalysis": {
+        "positive": 40,
+        "neutral": 40,
+        "negative": 20,
+        "overallSentiment": "neutral"
+      }
+    },
+    "financialStatements": {
+      "incomeStatement": [
+        {
+          "period": "2025",
+          "revenue": 29151,
+          "costOfGoodsSold": 20405,
+          "grossProfit": 8745,
+          "operatingExpenses": 4372,
+          "operatingIncome": 5216,
+          "netIncome": 4974
+        },
+        {
+          "period": "2024",
+          "revenue": 107377,
+          "costOfGoodsSold": 75163,
+          "grossProfit": 32213,
+          "operatingExpenses": 16106,
+          "operatingIncome": 19793,
+          "netIncome": 19320
+        },
+        {
+          "period": "2023",
+          "revenue": 96706,
+          "costOfGoodsSold": 67694,
+          "grossProfit": 29011,
+          "operatingExpenses": 14505,
+          "operatingIncome": 14888,
+          "netIncome": 9850
+        }
+      ],
+      "balanceSheet": [
+        {
+          "period": "2025",
+          "totalAssets": 393511,
+          "currentAssets": 157404,
+          "totalLiabilities": 114153,
+          "currentLiabilities": 57076,
+          "totalEquity": 279358
+        },
+        {
+          "period": "2024",
+          "totalAssets": 381679,
+          "currentAssets": 152671,
+          "totalLiabilities": 111670,
+          "currentLiabilities": 55835,
+          "totalEquity": 270009
+        },
+        {
+          "period": "2023",
+          "totalAssets": 357378,
+          "currentAssets": 142951,
+          "totalLiabilities": 114998,
+          "currentLiabilities": 57499,
+          "totalEquity": 242380
+        }
+      ],
+      "cashFlow": [
+        {
+          "period": "2025",
+          "operatingCashFlow": 5968,
+          "investingCashFlow": -3980,
+          "financingCashFlow": -1990,
+          "netCashFlow": 497,
+          "freeCashFlow": 3979
+        },
+        {
+          "period": "2024",
+          "operatingCashFlow": 23184,
+          "investingCashFlow": -15456,
+          "financingCashFlow": -7728,
+          "netCashFlow": 1932,
+          "freeCashFlow": 15456
+        },
+        {
+          "period": "2023",
+          "operatingCashFlow": 11820,
+          "investingCashFlow": -7880,
+          "financingCashFlow": -3940,
+          "netCashFlow": 985,
+          "freeCashFlow": 7880
+        }
+      ]
+    },
+    "riskAnalysis": {
+      "volatility": {
+        "daily": 0.018,
+        "weekly": 0.04,
+        "monthly": 0.082,
+        "annual": 0.284,
+        "beta": 1
+      },
+      "financialRisk": {
+        "debtToEquity": 0.41,
+        "interestCoverage": 5,
+        "quickRatio": 1.2,
+        "altmanZScore": 3.5,
+        "riskLevel": "low"
+      },
+      "riskFactors": [
+        {
+          "category": "시장",
+          "description": "연간 변동성 28.4%로 비교적 높은 편이며, 기술·인터넷섹터 민감도로 인해 경기·금리·투심 변화에 따른 주가 급락 가능성이 존재.",
+          "impact": "medium",
+          "probability": "medium"
+        },
+        {
+          "category": "시장",
+          "description": "최근 최대낙폭(MDD) -4.46% 및 최근 거래일 가격대(221,500~226,000원)는 단기내 큰 조정은 제한적임을 시사하나, 중대 악재 발생 시 변동성은 재급증할 수 있음.",
+          "impact": "low",
+          "probability": "medium"
+        },
+        {
+          "category": "재무",
+          "description": "부채비율 41% 및 당좌비율 1.2, Altman Z-Score 3.5는 재무 건전성을 뒷받침. 이자보상배율 5배로 이자지급 여력은 양호하지만 금리 급등 시 부담이 커질 수 있음.",
+          "impact": "medium",
+          "probability": "low"
+        },
+        {
+          "category": "운영/사업",
+          "description": "수익원이 광고·커머스·핀테크 등으로 다변화되어 있으나 핵심 사업의 경쟁 심화(플랫폼·콘텐츠 경쟁)와 사용자 행동 변화는 매출 변동성 요인이 될 수 있음.",
+          "impact": "medium",
+          "probability": "medium"
+        },
+        {
+          "category": "규제/정책",
+          "description": "플랫폼 규제, 개인정보·콘텐츠 규제, 금융서비스(페이·핀테크) 관련 감독 강화 가능성은 사업모델·수익성에 직접적 영향을 줄 수 있음.",
+          "impact": "high",
+          "probability": "medium"
+        },
+        {
+          "category": "유동성/거래",
+          "description": "대형주 특성상 유동성은 양호하나 단기 급락 시 단타성 주문·알고리듬 매매로 변동성이 증폭될 가능성 있음.",
+          "impact": "low",
+          "probability": "medium"
+        }
+      ],
+      "aiAnalysis": {
+        "summary": "NAVER는 연간 변동성(28.4%)이 높은 성장주 특성을 보이지만 최근 단기 낙폭(MDD -4.46%)과 최근 며칠간의 가격 안정성(약 221,500~226,000원)으로 단기 급락 위험은 제한적입니다. 재무 지표(부채비율 41%, 이자보상배율 5배, 당좌비율 1.2, Altman Z-Score 3.5)는 전반적으로 안정적이어서 재무적 파산 위험은 낮습니다.",
+        "score": 40,
+        "recommendations": [
+          "포지션 크기 관리: 전체 포트폴리오 대비 3~5% 내외로 보수적으로 비중을 두고, 시장 상황(특히 기술/인터넷 섹터 변동성)에 따라 조정하세요.",
+          "리스크 관리 도구 활용: 변동성 확대 시 손실을 제한하기 위해 8~12% 범위의 손절(스톱로스)을 설정하거나, 필요 시 풋옵션 또는 섹터-인버스 상품으로 부분 헤지하세요.",
+          "지속적 모니터링: 분기 실적(광고·커머스·핀테크 매출), 규제·개인정보 이슈, 금리 상승이 이자비용·할인율에 미치는 영향 등을 분기별로 점검해 재평가하세요."
+        ]
+      }
+    }
+  },
+  "message": "1. 현재 투자 매력도 평가: NAVER는 안정적인 재무 지표와 성장 잠재력을 가진 기업으로, 현재 PER과 PBR 수치가 상대적으로 매력적이지만 ROE가 낮아 투자 시 신중한 접근이 필요합니다.\n\n2. 주요 강점:\n   - 안정적인 재무 상태: 낮은 부채비율(41%)과 높은 이자보상배율(5배)로 재무적 안정성이 확보됨.\n   - 높은 매출 성장 가능성: 2024년에 비해 2025년 매출이 증가할 것으로 예상되어 지속적인 성장세를 보일 것으로 기대됨.\n   - 가격 안정성: 최근 가격의 변동성이 제한적이며 단기 급락 위험이 낮음.\n\n3. 주요 위험 요인:\n   - 낮은 ROE(1.78%): 자본 수익성이 낮아 투자자에게 매력적이지 않을 수 있음.\n   - 높은 변동성(연간 28.4%): 시장 상황에 따라 주가가 크게 흔들릴 수 있어 투자 리스크가 존재함.\n   - 외부 환경 변화: 광고 및 IT 산업의 트렌드 변화에 민감하여 외부 요인에 영향을 받을 가능성이 있음.\n\n4. 투자 추천 의견: NAVER는 안정적인 재무 구조와 성장 잠재력을 바탕으로 장기적인 투자 관점에서 긍정적인 평가를 받을 수 있지만, 낮은 ROE와 높은 변동성을 고려하여 신중하게 접근하는 것이 바람직합니다.\n\n📈 상세 분석 정보는 오른쪽 캔버스에서 확인하실 수 있습니다.",
+  "stockInfo": {
+    "code": "035420",
+    "name": "NAVER",
+    "detectedFrom": "name"
+  },
+  "structuredData": {
+    "type": "investmentAnalysis",
+    "stockCode": "035420",
+    "analysisDate": "2025-08-21T10:55:20.836Z",
+    "chartData": {
+      "dailyChart": {
+        "rt_cd": "0",
+        "msg_cd": "MCA00000",
+        "msg1": "정상처리 되었습니다.",
+        "output": [
+          {
+            "stck_cntg_hour": "20250821",
+            "stck_oprc": "222000",
+            "stck_hgpr": "226500",
+            "stck_lwpr": "222000",
+            "stck_prpr": "223000",
+            "cntg_vol": "463923",
+            "acml_vol": "463923"
+          },
+          {
+            "stck_cntg_hour": "20250820",
+            "stck_oprc": "221500",
+            "stck_hgpr": "224000",
+            "stck_lwpr": "219500",
+            "stck_prpr": "221500",
+            "cntg_vol": "507825",
+            "acml_vol": "507825"
+          },
+          {
+            "stck_cntg_hour": "20250819",
+            "stck_oprc": "228000",
+            "stck_hgpr": "228500",
+            "stck_lwpr": "223000",
+            "stck_prpr": "225500",
+            "cntg_vol": "419214",
+            "acml_vol": "419214"
+          },
+          {
+            "stck_cntg_hour": "20250818",
+            "stck_oprc": "224500",
+            "stck_hgpr": "228500",
+            "stck_lwpr": "223500",
+            "stck_prpr": "226000",
+            "cntg_vol": "479724",
+            "acml_vol": "479724"
+          },
+          {
+            "stck_cntg_hour": "20250814",
+            "stck_oprc": "228500",
+            "stck_hgpr": "233500",
+            "stck_lwpr": "224000",
+            "stck_prpr": "224500",
+            "cntg_vol": "1165222",
+            "acml_vol": "1165222"
+          },
+          {
+            "stck_cntg_hour": "20250813",
+            "stck_oprc": "225500",
+            "stck_hgpr": "226000",
+            "stck_lwpr": "221500",
+            "stck_prpr": "225000",
+            "cntg_vol": "1017399",
+            "acml_vol": "1017399"
+          },
+          {
+            "stck_cntg_hour": "20250812",
+            "stck_oprc": "223500",
+            "stck_hgpr": "228000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "743541",
+            "acml_vol": "743541"
+          },
+          {
+            "stck_cntg_hour": "20250811",
+            "stck_oprc": "229500",
+            "stck_hgpr": "230000",
+            "stck_lwpr": "222500",
+            "stck_prpr": "223000",
+            "cntg_vol": "1264837",
+            "acml_vol": "1264837"
+          },
+          {
+            "stck_cntg_hour": "20250808",
+            "stck_oprc": "241000",
+            "stck_hgpr": "241500",
+            "stck_lwpr": "228500",
+            "stck_prpr": "229500",
+            "cntg_vol": "1638049",
+            "acml_vol": "1638049"
+          },
+          {
+            "stck_cntg_hour": "20250807",
+            "stck_oprc": "230000",
+            "stck_hgpr": "235500",
+            "stck_lwpr": "228000",
+            "stck_prpr": "235500",
+            "cntg_vol": "1019496",
+            "acml_vol": "1019496"
+          },
+          {
+            "stck_cntg_hour": "20250806",
+            "stck_oprc": "236500",
+            "stck_hgpr": "236500",
+            "stck_lwpr": "226000",
+            "stck_prpr": "228500",
+            "cntg_vol": "1076418",
+            "acml_vol": "1076418"
+          },
+          {
+            "stck_cntg_hour": "20250805",
+            "stck_oprc": "236000",
+            "stck_hgpr": "236500",
+            "stck_lwpr": "229000",
+            "stck_prpr": "232000",
+            "cntg_vol": "683813",
+            "acml_vol": "683813"
+          },
+          {
+            "stck_cntg_hour": "20250804",
+            "stck_oprc": "225500",
+            "stck_hgpr": "239500",
+            "stck_lwpr": "225000",
+            "stck_prpr": "232500",
+            "cntg_vol": "1276649",
+            "acml_vol": "1276649"
+          },
+          {
+            "stck_cntg_hour": "20250801",
+            "stck_oprc": "232500",
+            "stck_hgpr": "233000",
+            "stck_lwpr": "224000",
+            "stck_prpr": "225000",
+            "cntg_vol": "827729",
+            "acml_vol": "827729"
+          },
+          {
+            "stck_cntg_hour": "20250731",
+            "stck_oprc": "235000",
+            "stck_hgpr": "236500",
+            "stck_lwpr": "232500",
+            "stck_prpr": "235000",
+            "cntg_vol": "521064",
+            "acml_vol": "521064"
+          },
+          {
+            "stck_cntg_hour": "20250730",
+            "stck_oprc": "233500",
+            "stck_hgpr": "240000",
+            "stck_lwpr": "233500",
+            "stck_prpr": "234000",
+            "cntg_vol": "768748",
+            "acml_vol": "768748"
+          },
+          {
+            "stck_cntg_hour": "20250729",
+            "stck_oprc": "235500",
+            "stck_hgpr": "240000",
+            "stck_lwpr": "232000",
+            "stck_prpr": "233000",
+            "cntg_vol": "928345",
+            "acml_vol": "928345"
+          },
+          {
+            "stck_cntg_hour": "20250728",
+            "stck_oprc": "236000",
+            "stck_hgpr": "237000",
+            "stck_lwpr": "232000",
+            "stck_prpr": "235500",
+            "cntg_vol": "600063",
+            "acml_vol": "600063"
+          },
+          {
+            "stck_cntg_hour": "20250725",
+            "stck_oprc": "226500",
+            "stck_hgpr": "236000",
+            "stck_lwpr": "225000",
+            "stck_prpr": "234500",
+            "cntg_vol": "1202489",
+            "acml_vol": "1202489"
+          },
+          {
+            "stck_cntg_hour": "20250724",
+            "stck_oprc": "233000",
+            "stck_hgpr": "234500",
+            "stck_lwpr": "225000",
+            "stck_prpr": "227000",
+            "cntg_vol": "1177878",
+            "acml_vol": "1177878"
+          },
+          {
+            "stck_cntg_hour": "20250723",
+            "stck_oprc": "236000",
+            "stck_hgpr": "237500",
+            "stck_lwpr": "229500",
+            "stck_prpr": "231500",
+            "cntg_vol": "719824",
+            "acml_vol": "719824"
+          },
+          {
+            "stck_cntg_hour": "20250722",
+            "stck_oprc": "241500",
+            "stck_hgpr": "242000",
+            "stck_lwpr": "234500",
+            "stck_prpr": "235000",
+            "cntg_vol": "930384",
+            "acml_vol": "930384"
+          },
+          {
+            "stck_cntg_hour": "20250721",
+            "stck_oprc": "241500",
+            "stck_hgpr": "245500",
+            "stck_lwpr": "240000",
+            "stck_prpr": "240000",
+            "cntg_vol": "674282",
+            "acml_vol": "674282"
+          },
+          {
+            "stck_cntg_hour": "20250718",
+            "stck_oprc": "243500",
+            "stck_hgpr": "245000",
+            "stck_lwpr": "240000",
+            "stck_prpr": "242000",
+            "cntg_vol": "703602",
+            "acml_vol": "703602"
+          },
+          {
+            "stck_cntg_hour": "20250717",
+            "stck_oprc": "254000",
+            "stck_hgpr": "255000",
+            "stck_lwpr": "242500",
+            "stck_prpr": "243500",
+            "cntg_vol": "1262077",
+            "acml_vol": "1262077"
+          },
+          {
+            "stck_cntg_hour": "20250716",
+            "stck_oprc": "251000",
+            "stck_hgpr": "255500",
+            "stck_lwpr": "249000",
+            "stck_prpr": "250000",
+            "cntg_vol": "785410",
+            "acml_vol": "785410"
+          },
+          {
+            "stck_cntg_hour": "20250715",
+            "stck_oprc": "247500",
+            "stck_hgpr": "253000",
+            "stck_lwpr": "247000",
+            "stck_prpr": "249500",
+            "cntg_vol": "791762",
+            "acml_vol": "791762"
+          },
+          {
+            "stck_cntg_hour": "20250714",
+            "stck_oprc": "252000",
+            "stck_hgpr": "252500",
+            "stck_lwpr": "244000",
+            "stck_prpr": "249000",
+            "cntg_vol": "1205192",
+            "acml_vol": "1205192"
+          },
+          {
+            "stck_cntg_hour": "20250711",
+            "stck_oprc": "261000",
+            "stck_hgpr": "261500",
+            "stck_lwpr": "253000",
+            "stck_prpr": "253000",
+            "cntg_vol": "1249355",
+            "acml_vol": "1249355"
+          },
+          {
+            "stck_cntg_hour": "20250710",
+            "stck_oprc": "255500",
+            "stck_hgpr": "265000",
+            "stck_lwpr": "251000",
+            "stck_prpr": "259500",
+            "cntg_vol": "1754234",
+            "acml_vol": "1754234"
+          }
+        ]
+      },
+      "itemChart": {
+        "rt_cd": "0",
+        "msg_cd": "MCA00000",
+        "msg1": "정상처리 되었습니다.",
+        "output": [
+          {
+            "stck_cntg_hour": "195400",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "31351",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "195300",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "195200",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "195100",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "195000",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194900",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194800",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194700",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194600",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194500",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194400",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194300",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194200",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194100",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "194000",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193900",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193800",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193700",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193600",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193500",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193400",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193300",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193200",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193100",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "193000",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192900",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192800",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192700",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192600",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          },
+          {
+            "stck_cntg_hour": "192500",
+            "stck_oprc": "223000",
+            "stck_hgpr": "223000",
+            "stck_lwpr": "223000",
+            "stck_prpr": "223000",
+            "cntg_vol": "0",
+            "acml_vol": "0"
+          }
+        ]
+      },
+      "indexChart": {
+        "rt_cd": "0",
+        "msg_cd": "MCA00000",
+        "msg1": "정상처리 되었습니다.",
+        "output": [
+          {
+            "stck_cntg_hour": "20250821",
+            "stck_oprc": "3140.71",
+            "stck_hgpr": "3166.54",
+            "stck_lwpr": "3134.86",
+            "stck_prpr": "3141.74",
+            "cntg_vol": "276915",
+            "acml_vol": "276915"
+          },
+          {
+            "stck_cntg_hour": "20250820",
+            "stck_oprc": "3121.52",
+            "stck_hgpr": "3132.83",
+            "stck_lwpr": "3079.27",
+            "stck_prpr": "3130.09",
+            "cntg_vol": "335285",
+            "acml_vol": "335285"
+          },
+          {
+            "stck_cntg_hour": "20250819",
+            "stck_oprc": "3185.04",
+            "stck_hgpr": "3185.48",
+            "stck_lwpr": "3142.48",
+            "stck_prpr": "3151.56",
+            "cntg_vol": "285291",
+            "acml_vol": "285291"
+          },
+          {
+            "stck_cntg_hour": "20250818",
+            "stck_oprc": "3202.63",
+            "stck_hgpr": "3206.77",
+            "stck_lwpr": "3177.28",
+            "stck_prpr": "3177.28",
+            "cntg_vol": "326133",
+            "acml_vol": "326133"
+          },
+          {
+            "stck_cntg_hour": "20250814",
+            "stck_oprc": "3226.52",
+            "stck_hgpr": "3239.55",
+            "stck_lwpr": "3210.83",
+            "stck_prpr": "3225.66",
+            "cntg_vol": "441468",
+            "acml_vol": "441468"
+          },
+          {
+            "stck_cntg_hour": "20250813",
+            "stck_oprc": "3225.40",
+            "stck_hgpr": "3226.37",
+            "stck_lwpr": "3192.17",
+            "stck_prpr": "3224.37",
+            "cntg_vol": "320070",
+            "acml_vol": "320070"
+          },
+          {
+            "stck_cntg_hour": "20250812",
+            "stck_oprc": "3209.75",
+            "stck_hgpr": "3242.17",
+            "stck_lwpr": "3189.58",
+            "stck_prpr": "3189.91",
+            "cntg_vol": "373217",
+            "acml_vol": "373217"
+          },
+          {
+            "stck_cntg_hour": "20250811",
+            "stck_oprc": "3220.72",
+            "stck_hgpr": "3223.23",
+            "stck_lwpr": "3199.90",
+            "stck_prpr": "3206.77",
+            "cntg_vol": "304968",
+            "acml_vol": "304968"
+          },
+          {
+            "stck_cntg_hour": "20250808",
+            "stck_oprc": "3220.58",
+            "stck_hgpr": "3227.28",
+            "stck_lwpr": "3198.31",
+            "stck_prpr": "3210.01",
+            "cntg_vol": "341443",
+            "acml_vol": "341443"
+          },
+          {
+            "stck_cntg_hour": "20250807",
+            "stck_oprc": "3214.81",
+            "stck_hgpr": "3227.68",
+            "stck_lwpr": "3200.28",
+            "stck_prpr": "3227.68",
+            "cntg_vol": "327048",
+            "acml_vol": "327048"
+          },
+          {
+            "stck_cntg_hour": "20250806",
+            "stck_oprc": "3182.06",
+            "stck_hgpr": "3200.15",
+            "stck_lwpr": "3176.61",
+            "stck_prpr": "3198.14",
+            "cntg_vol": "327358",
+            "acml_vol": "327358"
+          },
+          {
+            "stck_cntg_hour": "20250805",
+            "stck_oprc": "3187.15",
+            "stck_hgpr": "3212.31",
+            "stck_lwpr": "3174.23",
+            "stck_prpr": "3198.00",
+            "cntg_vol": "273440",
+            "acml_vol": "273440"
+          },
+          {
+            "stck_cntg_hour": "20250804",
+            "stck_oprc": "3114.27",
+            "stck_hgpr": "3157.45",
+            "stck_lwpr": "3105.63",
+            "stck_prpr": "3147.75",
+            "cntg_vol": "293454",
+            "acml_vol": "293454"
+          },
+          {
+            "stck_cntg_hour": "20250801",
+            "stck_oprc": "3210.32",
+            "stck_hgpr": "3210.32",
+            "stck_lwpr": "3117.92",
+            "stck_prpr": "3119.41",
+            "cntg_vol": "507776",
+            "acml_vol": "507776"
+          },
+          {
+            "stck_cntg_hour": "20250731",
+            "stck_oprc": "3275.78",
+            "stck_hgpr": "3288.26",
+            "stck_lwpr": "3227.46",
+            "stck_prpr": "3245.44",
+            "cntg_vol": "540324",
+            "acml_vol": "540324"
+          },
+          {
+            "stck_cntg_hour": "20250730",
+            "stck_oprc": "3233.31",
+            "stck_hgpr": "3269.40",
+            "stck_lwpr": "3227.28",
+            "stck_prpr": "3254.47",
+            "cntg_vol": "338074",
+            "acml_vol": "338074"
+          },
+          {
+            "stck_cntg_hour": "20250729",
+            "stck_oprc": "3192.17",
+            "stck_hgpr": "3232.31",
+            "stck_lwpr": "3169.03",
+            "stck_prpr": "3230.57",
+            "cntg_vol": "373203",
+            "acml_vol": "373203"
+          },
+          {
+            "stck_cntg_hour": "20250728",
+            "stck_oprc": "3228.61",
+            "stck_hgpr": "3228.61",
+            "stck_lwpr": "3180.18",
+            "stck_prpr": "3209.52",
+            "cntg_vol": "502720",
+            "acml_vol": "502720"
+          },
+          {
+            "stck_cntg_hour": "20250725",
+            "stck_oprc": "3184.37",
+            "stck_hgpr": "3205.82",
+            "stck_lwpr": "3184.37",
+            "stck_prpr": "3196.05",
+            "cntg_vol": "389291",
+            "acml_vol": "389291"
+          },
+          {
+            "stck_cntg_hour": "20250724",
+            "stck_oprc": "3209.43",
+            "stck_hgpr": "3237.97",
+            "stck_lwpr": "3183.05",
+            "stck_prpr": "3190.45",
+            "cntg_vol": "425500",
+            "acml_vol": "425500"
+          },
+          {
+            "stck_cntg_hour": "20250723",
+            "stck_oprc": "3189.65",
+            "stck_hgpr": "3199.86",
+            "stck_lwpr": "3141.93",
+            "stck_prpr": "3183.77",
+            "cntg_vol": "664826",
+            "acml_vol": "664826"
+          },
+          {
+            "stck_cntg_hour": "20250722",
+            "stck_oprc": "3210.12",
+            "stck_hgpr": "3220.27",
+            "stck_lwpr": "3155.25",
+            "stck_prpr": "3169.94",
+            "cntg_vol": "378486",
+            "acml_vol": "378486"
+          },
+          {
+            "stck_cntg_hour": "20250721",
+            "stck_oprc": "3191.11",
+            "stck_hgpr": "3211.14",
+            "stck_lwpr": "3188.87",
+            "stck_prpr": "3210.81",
+            "cntg_vol": "343911",
+            "acml_vol": "343911"
+          },
+          {
+            "stck_cntg_hour": "20250718",
+            "stck_oprc": "3200.44",
+            "stck_hgpr": "3204.75",
+            "stck_lwpr": "3169.69",
+            "stck_prpr": "3188.07",
+            "cntg_vol": "393449",
+            "acml_vol": "393449"
+          },
+          {
+            "stck_cntg_hour": "20250717",
+            "stck_oprc": "3201.42",
+            "stck_hgpr": "3201.42",
+            "stck_lwpr": "3152.42",
+            "stck_prpr": "3192.29",
+            "cntg_vol": "424788",
+            "acml_vol": "424788"
+          },
+          {
+            "stck_cntg_hour": "20250716",
+            "stck_oprc": "3207.48",
+            "stck_hgpr": "3209.20",
+            "stck_lwpr": "3178.42",
+            "stck_prpr": "3186.38",
+            "cntg_vol": "531499",
+            "acml_vol": "531499"
+          },
+          {
+            "stck_cntg_hour": "20250715",
+            "stck_oprc": "3194.82",
+            "stck_hgpr": "3216.01",
+            "stck_lwpr": "3183.83",
+            "stck_prpr": "3215.28",
+            "cntg_vol": "419652",
+            "acml_vol": "419652"
+          },
+          {
+            "stck_cntg_hour": "20250714",
+            "stck_oprc": "3175.59",
+            "stck_hgpr": "3202.06",
+            "stck_lwpr": "3170.72",
+            "stck_prpr": "3202.03",
+            "cntg_vol": "444036",
+            "acml_vol": "444036"
+          },
+          {
+            "stck_cntg_hour": "20250711",
+            "stck_oprc": "3186.35",
+            "stck_hgpr": "3216.69",
+            "stck_lwpr": "3170.46",
+            "stck_prpr": "3175.77",
+            "cntg_vol": "465292",
+            "acml_vol": "465292"
+          },
+          {
+            "stck_cntg_hour": "20250710",
+            "stck_oprc": "3144.14",
+            "stck_hgpr": "3183.23",
+            "stck_lwpr": "3133.81",
+            "stck_prpr": "3183.23",
+            "cntg_vol": "596572",
+            "acml_vol": "596572"
+          },
+          {
+            "stck_cntg_hour": "20250709",
+            "stck_oprc": "3123.22",
+            "stck_hgpr": "3137.17",
+            "stck_lwpr": "3111.02",
+            "stck_prpr": "3133.74",
+            "cntg_vol": "642961",
+            "acml_vol": "642961"
+          },
+          {
+            "stck_cntg_hour": "20250708",
+            "stck_oprc": "3071.74",
+            "stck_hgpr": "3115.86",
+            "stck_lwpr": "3066.03",
+            "stck_prpr": "3114.95",
+            "cntg_vol": "745793",
+            "acml_vol": "745793"
+          },
+          {
+            "stck_cntg_hour": "20250707",
+            "stck_oprc": "3044.78",
+            "stck_hgpr": "3068.43",
+            "stck_lwpr": "3032.99",
+            "stck_prpr": "3059.47",
+            "cntg_vol": "359405",
+            "acml_vol": "359405"
+          },
+          {
+            "stck_cntg_hour": "20250704",
+            "stck_oprc": "3122.28",
+            "stck_hgpr": "3123.84",
+            "stck_lwpr": "3052.91",
+            "stck_prpr": "3054.28",
+            "cntg_vol": "520763",
+            "acml_vol": "520763"
+          },
+          {
+            "stck_cntg_hour": "20250703",
+            "stck_oprc": "3100.33",
+            "stck_hgpr": "3116.27",
+            "stck_lwpr": "3085.98",
+            "stck_prpr": "3116.27",
+            "cntg_vol": "539120",
+            "acml_vol": "539120"
+          },
+          {
+            "stck_cntg_hour": "20250702",
+            "stck_oprc": "3083.82",
+            "stck_hgpr": "3090.61",
+            "stck_lwpr": "3032.47",
+            "stck_prpr": "3075.06",
+            "cntg_vol": "696799",
+            "acml_vol": "696799"
+          },
+          {
+            "stck_cntg_hour": "20250701",
+            "stck_oprc": "3089.64",
+            "stck_hgpr": "3133.52",
+            "stck_lwpr": "3088.45",
+            "stck_prpr": "3089.65",
+            "cntg_vol": "576017",
+            "acml_vol": "576017"
+          },
+          {
+            "stck_cntg_hour": "20250630",
+            "stck_oprc": "3072.75",
+            "stck_hgpr": "3086.00",
+            "stck_lwpr": "3063.42",
+            "stck_prpr": "3071.70",
+            "cntg_vol": "464163",
+            "acml_vol": "464163"
+          },
+          {
+            "stck_cntg_hour": "20250627",
+            "stck_oprc": "3077.87",
+            "stck_hgpr": "3093.56",
+            "stck_lwpr": "3041.85",
+            "stck_prpr": "3055.94",
+            "cntg_vol": "381634",
+            "acml_vol": "381634"
+          },
+          {
+            "stck_cntg_hour": "20250626",
+            "stck_oprc": "3108.34",
+            "stck_hgpr": "3113.03",
+            "stck_lwpr": "3036.55",
+            "stck_prpr": "3079.56",
+            "cntg_vol": "460612",
+            "acml_vol": "460612"
+          },
+          {
+            "stck_cntg_hour": "20250625",
+            "stck_oprc": "3127.79",
+            "stck_hgpr": "3129.09",
+            "stck_lwpr": "3084.86",
+            "stck_prpr": "3108.25",
+            "cntg_vol": "644761",
+            "acml_vol": "644761"
+          },
+          {
+            "stck_cntg_hour": "20250624",
+            "stck_oprc": "3061.14",
+            "stck_hgpr": "3105.04",
+            "stck_lwpr": "3061.14",
+            "stck_prpr": "3103.64",
+            "cntg_vol": "579201",
+            "acml_vol": "579201"
+          },
+          {
+            "stck_cntg_hour": "20250623",
+            "stck_oprc": "2992.20",
+            "stck_hgpr": "3019.81",
+            "stck_lwpr": "2971.36",
+            "stck_prpr": "3014.47",
+            "cntg_vol": "625651",
+            "acml_vol": "625651"
+          },
+          {
+            "stck_cntg_hour": "20250620",
+            "stck_oprc": "2986.52",
+            "stck_hgpr": "3022.06",
+            "stck_lwpr": "2972.37",
+            "stck_prpr": "3021.84",
+            "cntg_vol": "484865",
+            "acml_vol": "484865"
+          },
+          {
+            "stck_cntg_hour": "20250619",
+            "stck_oprc": "2989.56",
+            "stck_hgpr": "2996.04",
+            "stck_lwpr": "2954.47",
+            "stck_prpr": "2977.74",
+            "cntg_vol": "433311",
+            "acml_vol": "433311"
+          },
+          {
+            "stck_cntg_hour": "20250618",
+            "stck_oprc": "2933.63",
+            "stck_hgpr": "2979.32",
+            "stck_lwpr": "2933.63",
+            "stck_prpr": "2972.19",
+            "cntg_vol": "576548",
+            "acml_vol": "576548"
+          },
+          {
+            "stck_cntg_hour": "20250617",
+            "stck_oprc": "2959.93",
+            "stck_hgpr": "2998.62",
+            "stck_lwpr": "2925.79",
+            "stck_prpr": "2950.30",
+            "cntg_vol": "939594",
+            "acml_vol": "939594"
+          },
+          {
+            "stck_cntg_hour": "20250616",
+            "stck_oprc": "2903.50",
+            "stck_hgpr": "2947.07",
+            "stck_lwpr": "2886.13",
+            "stck_prpr": "2946.66",
+            "cntg_vol": "726352",
+            "acml_vol": "726352"
+          },
+          {
+            "stck_cntg_hour": "20250613",
+            "stck_oprc": "2930.57",
+            "stck_hgpr": "2932.38",
+            "stck_lwpr": "2877.07",
+            "stck_prpr": "2894.62",
+            "cntg_vol": "931658",
+            "acml_vol": "931658"
+          },
+          {
+            "stck_cntg_hour": "20250612",
+            "stck_oprc": "2909.99",
+            "stck_hgpr": "2934.31",
+            "stck_lwpr": "2909.99",
+            "stck_prpr": "2920.03",
+            "cntg_vol": "713706",
+            "acml_vol": "713706"
+          },
+          {
+            "stck_cntg_hour": "20250611",
+            "stck_oprc": "2887.32",
+            "stck_hgpr": "2908.16",
+            "stck_lwpr": "2879.92",
+            "stck_prpr": "2907.04",
+            "cntg_vol": "393930",
+            "acml_vol": "393930"
+          },
+          {
+            "stck_cntg_hour": "20250610",
+            "stck_oprc": "2872.62",
+            "stck_hgpr": "2885.67",
+            "stck_lwpr": "2849.67",
+            "stck_prpr": "2871.85",
+            "cntg_vol": "508185",
+            "acml_vol": "508185"
+          },
+          {
+            "stck_cntg_hour": "20250609",
+            "stck_oprc": "2841.56",
+            "stck_hgpr": "2867.27",
+            "stck_lwpr": "2841.39",
+            "stck_prpr": "2855.77",
+            "cntg_vol": "537617",
+            "acml_vol": "537617"
+          },
+          {
+            "stck_cntg_hour": "20250605",
+            "stck_oprc": "2790.33",
+            "stck_hgpr": "2831.11",
+            "stck_lwpr": "2787.76",
+            "stck_prpr": "2812.05",
+            "cntg_vol": "556013",
+            "acml_vol": "556013"
+          },
+          {
+            "stck_cntg_hour": "20250604",
+            "stck_oprc": "2737.92",
+            "stck_hgpr": "2771.03",
+            "stck_lwpr": "2734.02",
+            "stck_prpr": "2770.84",
+            "cntg_vol": "489938",
+            "acml_vol": "489938"
+          },
+          {
+            "stck_cntg_hour": "20250602",
+            "stck_oprc": "2692.91",
+            "stck_hgpr": "2719.87",
+            "stck_lwpr": "2685.14",
+            "stck_prpr": "2698.97",
+            "cntg_vol": "323604",
+            "acml_vol": "323604"
+          },
+          {
+            "stck_cntg_hour": "20250530",
+            "stck_oprc": "2713.24",
+            "stck_hgpr": "2717.54",
+            "stck_lwpr": "2689.87",
+            "stck_prpr": "2697.67",
+            "cntg_vol": "525661",
+            "acml_vol": "525661"
+          },
+          {
+            "stck_cntg_hour": "20250529",
+            "stck_oprc": "2691.06",
+            "stck_hgpr": "2720.64",
+            "stck_lwpr": "2686.64",
+            "stck_prpr": "2720.64",
+            "cntg_vol": "448341",
+            "acml_vol": "448341"
+          },
+          {
+            "stck_cntg_hour": "20250528",
+            "stck_oprc": "2648.86",
+            "stck_hgpr": "2692.47",
+            "stck_lwpr": "2643.50",
+            "stck_prpr": "2670.15",
+            "cntg_vol": "405474",
+            "acml_vol": "405474"
+          },
+          {
+            "stck_cntg_hour": "20250527",
+            "stck_oprc": "2630.29",
+            "stck_hgpr": "2642.63",
+            "stck_lwpr": "2625.66",
+            "stck_prpr": "2637.22",
+            "cntg_vol": "318286",
+            "acml_vol": "318286"
+          },
+          {
+            "stck_cntg_hour": "20250526",
+            "stck_oprc": "2598.45",
+            "stck_hgpr": "2644.40",
+            "stck_lwpr": "2595.96",
+            "stck_prpr": "2644.40",
+            "cntg_vol": "380173",
+            "acml_vol": "380173"
+          },
+          {
+            "stck_cntg_hour": "20250523",
+            "stck_oprc": "2603.57",
+            "stck_hgpr": "2604.14",
+            "stck_lwpr": "2589.51",
+            "stck_prpr": "2592.09",
+            "cntg_vol": "434024",
+            "acml_vol": "434024"
+          },
+          {
+            "stck_cntg_hour": "20250522",
+            "stck_oprc": "2614.66",
+            "stck_hgpr": "2616.53",
+            "stck_lwpr": "2588.09",
+            "stck_prpr": "2593.67",
+            "cntg_vol": "358064",
+            "acml_vol": "358064"
+          },
+          {
+            "stck_cntg_hour": "20250521",
+            "stck_oprc": "2615.90",
+            "stck_hgpr": "2633.41",
+            "stck_lwpr": "2614.73",
+            "stck_prpr": "2625.58",
+            "cntg_vol": "371527",
+            "acml_vol": "371527"
+          },
+          {
+            "stck_cntg_hour": "20250520",
+            "stck_oprc": "2622.68",
+            "stck_hgpr": "2622.91",
+            "stck_lwpr": "2598.10",
+            "stck_prpr": "2601.80",
+            "cntg_vol": "456989",
+            "acml_vol": "456989"
+          },
+          {
+            "stck_cntg_hour": "20250519",
+            "stck_oprc": "2613.70",
+            "stck_hgpr": "2619.43",
+            "stck_lwpr": "2593.44",
+            "stck_prpr": "2603.42",
+            "cntg_vol": "313296",
+            "acml_vol": "313296"
+          },
+          {
+            "stck_cntg_hour": "20250516",
+            "stck_oprc": "2630.64",
+            "stck_hgpr": "2633.98",
+            "stck_lwpr": "2619.10",
+            "stck_prpr": "2626.87",
+            "cntg_vol": "359707",
+            "acml_vol": "359707"
+          },
+          {
+            "stck_cntg_hour": "20250515",
+            "stck_oprc": "2634.50",
+            "stck_hgpr": "2643.83",
+            "stck_lwpr": "2618.08",
+            "stck_prpr": "2621.36",
+            "cntg_vol": "339579",
+            "acml_vol": "339579"
+          },
+          {
+            "stck_cntg_hour": "20250514",
+            "stck_oprc": "2625.36",
+            "stck_hgpr": "2646.01",
+            "stck_lwpr": "2619.15",
+            "stck_prpr": "2640.57",
+            "cntg_vol": "390504",
+            "acml_vol": "390504"
+          },
+          {
+            "stck_cntg_hour": "20250513",
+            "stck_oprc": "2601.76",
+            "stck_hgpr": "2620.64",
+            "stck_lwpr": "2601.58",
+            "stck_prpr": "2608.42",
+            "cntg_vol": "422460",
+            "acml_vol": "422460"
+          },
+          {
+            "stck_cntg_hour": "20250512",
+            "stck_oprc": "2593.94",
+            "stck_hgpr": "2607.33",
+            "stck_lwpr": "2585.60",
+            "stck_prpr": "2607.33",
+            "cntg_vol": "409749",
+            "acml_vol": "409749"
+          },
+          {
+            "stck_cntg_hour": "20250509",
+            "stck_oprc": "2587.93",
+            "stck_hgpr": "2589.58",
+            "stck_lwpr": "2571.20",
+            "stck_prpr": "2577.27",
+            "cntg_vol": "485550",
+            "acml_vol": "485550"
+          },
+          {
+            "stck_cntg_hour": "20250508",
+            "stck_oprc": "2581.27",
+            "stck_hgpr": "2590.90",
+            "stck_lwpr": "2575.78",
+            "stck_prpr": "2579.48",
+            "cntg_vol": "471636",
+            "acml_vol": "471636"
+          },
+          {
+            "stck_cntg_hour": "20250507",
+            "stck_oprc": "2577.04",
+            "stck_hgpr": "2581.85",
+            "stck_lwpr": "2559.17",
+            "stck_prpr": "2573.80",
+            "cntg_vol": "546755",
+            "acml_vol": "546755"
+          },
+          {
+            "stck_cntg_hour": "20250502",
+            "stck_oprc": "2556.52",
+            "stck_hgpr": "2567.04",
+            "stck_lwpr": "2540.57",
+            "stck_prpr": "2559.79",
+            "cntg_vol": "585492",
+            "acml_vol": "585492"
+          },
+          {
+            "stck_cntg_hour": "20250430",
+            "stck_oprc": "2561.04",
+            "stck_hgpr": "2570.83",
+            "stck_lwpr": "2544.46",
+            "stck_prpr": "2556.61",
+            "cntg_vol": "487489",
+            "acml_vol": "487489"
+          },
+          {
+            "stck_cntg_hour": "20250429",
+            "stck_oprc": "2550.25",
+            "stck_hgpr": "2571.41",
+            "stck_lwpr": "2542.25",
+            "stck_prpr": "2565.42",
+            "cntg_vol": "547082",
+            "acml_vol": "547082"
+          },
+          {
+            "stck_cntg_hour": "20250428",
+            "stck_oprc": "2551.23",
+            "stck_hgpr": "2558.69",
+            "stck_lwpr": "2541.97",
+            "stck_prpr": "2548.86",
+            "cntg_vol": "454102",
+            "acml_vol": "454102"
+          },
+          {
+            "stck_cntg_hour": "20250425",
+            "stck_oprc": "2544.59",
+            "stck_hgpr": "2553.33",
+            "stck_lwpr": "2534.94",
+            "stck_prpr": "2546.30",
+            "cntg_vol": "403528",
+            "acml_vol": "403528"
+          },
+          {
+            "stck_cntg_hour": "20250424",
+            "stck_oprc": "2525.34",
+            "stck_hgpr": "2530.61",
+            "stck_lwpr": "2507.21",
+            "stck_prpr": "2522.33",
+            "cntg_vol": "327935",
+            "acml_vol": "327935"
+          },
+          {
+            "stck_cntg_hour": "20250423",
+            "stck_oprc": "2520.56",
+            "stck_hgpr": "2526.72",
+            "stck_lwpr": "2507.10",
+            "stck_prpr": "2525.56",
+            "cntg_vol": "538116",
+            "acml_vol": "538116"
+          },
+          {
+            "stck_cntg_hour": "20250422",
+            "stck_oprc": "2481.18",
+            "stck_hgpr": "2494.59",
+            "stck_lwpr": "2476.14",
+            "stck_prpr": "2486.64",
+            "cntg_vol": "416680",
+            "acml_vol": "416680"
+          },
+          {
+            "stck_cntg_hour": "20250421",
+            "stck_oprc": "2486.38",
+            "stck_hgpr": "2498.84",
+            "stck_lwpr": "2479.23",
+            "stck_prpr": "2488.42",
+            "cntg_vol": "428977",
+            "acml_vol": "428977"
+          },
+          {
+            "stck_cntg_hour": "20250418",
+            "stck_oprc": "2473.30",
+            "stck_hgpr": "2486.37",
+            "stck_lwpr": "2466.90",
+            "stck_prpr": "2483.42",
+            "cntg_vol": "450985",
+            "acml_vol": "450985"
+          },
+          {
+            "stck_cntg_hour": "20250417",
+            "stck_oprc": "2451.70",
+            "stck_hgpr": "2473.24",
+            "stck_lwpr": "2447.40",
+            "stck_prpr": "2470.41",
+            "cntg_vol": "601739",
+            "acml_vol": "601739"
+          },
+          {
+            "stck_cntg_hour": "20250416",
+            "stck_oprc": "2472.78",
+            "stck_hgpr": "2475.83",
+            "stck_lwpr": "2442.72",
+            "stck_prpr": "2447.43",
+            "cntg_vol": "613174",
+            "acml_vol": "613174"
+          },
+          {
+            "stck_cntg_hour": "20250415",
+            "stck_oprc": "2464.51",
+            "stck_hgpr": "2482.56",
+            "stck_lwpr": "2461.23",
+            "stck_prpr": "2477.41",
+            "cntg_vol": "560340",
+            "acml_vol": "560340"
+          },
+          {
+            "stck_cntg_hour": "20250414",
+            "stck_oprc": "2454.28",
+            "stck_hgpr": "2465.56",
+            "stck_lwpr": "2449.48",
+            "stck_prpr": "2455.89",
+            "cntg_vol": "488618",
+            "acml_vol": "488618"
+          },
+          {
+            "stck_cntg_hour": "20250411",
+            "stck_oprc": "2400.74",
+            "stck_hgpr": "2433.18",
+            "stck_lwpr": "2394.25",
+            "stck_prpr": "2432.72",
+            "cntg_vol": "369703",
+            "acml_vol": "369703"
+          },
+          {
+            "stck_cntg_hour": "20250410",
+            "stck_oprc": "2395.13",
+            "stck_hgpr": "2445.06",
+            "stck_lwpr": "2391.39",
+            "stck_prpr": "2445.06",
+            "cntg_vol": "670388",
+            "acml_vol": "670388"
+          },
+          {
+            "stck_cntg_hour": "20250409",
+            "stck_oprc": "2329.99",
+            "stck_hgpr": "2337.58",
+            "stck_lwpr": "2284.72",
+            "stck_prpr": "2293.70",
+            "cntg_vol": "699642",
+            "acml_vol": "699642"
+          },
+          {
+            "stck_cntg_hour": "20250408",
+            "stck_oprc": "2381.20",
+            "stck_hgpr": "2381.31",
+            "stck_lwpr": "2328.94",
+            "stck_prpr": "2334.23",
+            "cntg_vol": "557018",
+            "acml_vol": "557018"
+          },
+          {
+            "stck_cntg_hour": "20250407",
+            "stck_oprc": "2359.25",
+            "stck_hgpr": "2369.40",
+            "stck_lwpr": "2327.01",
+            "stck_prpr": "2328.20",
+            "cntg_vol": "619501",
+            "acml_vol": "619501"
+          },
+          {
+            "stck_cntg_hour": "20250404",
+            "stck_oprc": "2450.49",
+            "stck_hgpr": "2506.71",
+            "stck_lwpr": "2438.02",
+            "stck_prpr": "2465.42",
+            "cntg_vol": "695075",
+            "acml_vol": "695075"
+          },
+          {
+            "stck_cntg_hour": "20250403",
+            "stck_oprc": "2437.43",
+            "stck_hgpr": "2488.92",
+            "stck_lwpr": "2437.43",
+            "stck_prpr": "2486.70",
+            "cntg_vol": "480057",
+            "acml_vol": "480057"
+          },
+          {
+            "stck_cntg_hour": "20250402",
+            "stck_oprc": "2525.62",
+            "stck_hgpr": "2532.15",
+            "stck_lwpr": "2499.83",
+            "stck_prpr": "2505.86",
+            "cntg_vol": "515600",
+            "acml_vol": "515600"
+          },
+          {
+            "stck_cntg_hour": "20250401",
+            "stck_oprc": "2511.24",
+            "stck_hgpr": "2530.61",
+            "stck_lwpr": "2494.43",
+            "stck_prpr": "2521.39",
+            "cntg_vol": "453394",
+            "acml_vol": "453394"
+          },
+          {
+            "stck_cntg_hour": "20250331",
+            "stck_oprc": "2513.44",
+            "stck_hgpr": "2514.22",
+            "stck_lwpr": "2479.46",
+            "stck_prpr": "2481.12",
+            "cntg_vol": "391593",
+            "acml_vol": "391593"
+          },
+          {
+            "stck_cntg_hour": "20250328",
+            "stck_oprc": "2592.63",
+            "stck_hgpr": "2592.63",
+            "stck_lwpr": "2549.26",
+            "stck_prpr": "2557.98",
+            "cntg_vol": "513562",
+            "acml_vol": "513562"
+          },
+          {
+            "stck_cntg_hour": "20250327",
+            "stck_oprc": "2620.28",
+            "stck_hgpr": "2633.03",
+            "stck_lwpr": "2603.41",
+            "stck_prpr": "2607.15",
+            "cntg_vol": "403314",
+            "acml_vol": "403314"
+          }
+        ]
+      },
+      "movingAverages": {
+        "ma5": [
+          null,
+          null,
+          null,
+          null,
+          224100,
+          224500,
+          224800,
+          224300,
+          225000,
+          227200,
+          227900,
+          229700,
+          231600,
+          230700,
+          230600,
+          231700,
+          231900,
+          232500,
+          234400,
+          232800,
+          232300,
+          232700,
+          233600,
+          235100,
+          238400,
+          242100,
+          245000,
+          246800,
+          249000,
+          252200
+        ],
+        "ma20": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          228675,
+          229100,
+          229775,
+          230500,
+          231300,
+          232250,
+          233500,
+          234825,
+          236125,
+          237300,
+          238500
+        ],
+        "ma60": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "technicalIndicators": {
+        "rsi": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          61.76470588235294,
+          62.37623762376238,
+          57.89473684210526,
+          59.5959595959596,
+          60.20408163265306,
+          51.78571428571429,
+          57.26495726495726,
+          59.677419354838705,
+          58.67768595041322,
+          55.752212389380524,
+          64.70588235294119,
+          66.66666666666666,
+          65.74074074074075,
+          75.53191489361703,
+          71.95121951219512,
+          77.41935483870968
+        ]
+      }
+    },
+    "companyInfo": {
+      "stockCode": "035420",
+      "companyName": "네이버(주)",
+      "industry": "63120",
+      "listingDate": "",
+      "marketCap": 353315,
+      "sharesOutstanding": 158437008,
+      "description": "네이버(주)은(는) 63120 분야의 1999년 설립된 기업입니다.",
+      "ceo": "최수연",
+      "website": "https://www.navercorp.com"
+    },
+    "investmentMetrics": {
+      "per": 18.72,
+      "pbr": 1.34,
+      "roe": 1.78,
+      "eps": 0,
+      "bps": 0,
+      "debtRatio": 0,
+      "currentRatio": 0,
+      "operatingMargin": 0
+    },
+    "performanceConsensus": {
+      "quarterlyResults": [],
+      "annualResults": [],
+      "consensus": {
+        "targetPrice": 100000,
+        "recommendation": "Buy",
+        "numberOfAnalysts": 10,
+        "updatedAt": "2025-08-21T10:54:59.217Z"
+      }
+    },
+    "dividendInfo": {
+      "dividendPerShare": 0,
+      "dividendYield": 0,
+      "payoutRatio": 0,
+      "schedule": {
+        "recordDate": "2025-06-30",
+        "exDividendDate": "2025-12-27",
+        "paymentDate": "2026-04-15"
+      },
+      "history": [
+        {
+          "year": "2024",
+          "dividendPerShare": 1130,
+          "dividendYield": 0.5
+        },
+        {
+          "year": "2023",
+          "dividendPerShare": 1205,
+          "dividendYield": 0.3
+        }
+      ]
+    },
+    "peerComparison": {
+      "industryAverages": {
+        "per": 193.8,
+        "pbr": 1.9,
+        "roe": 1.2,
+        "dividendYield": 2
+      },
+      "ranking": {
+        "byMarketCap": 1,
+        "byRevenue": 1,
+        "byProfit": 1,
+        "totalCompanies": 4
+      },
+      "competitors": [
+        {
+          "name": "카카오",
+          "stockCode": "035720",
+          "currentPrice": 64000,
+          "changeRate": -1.99,
+          "marketCap": 282960,
+          "per": 516.1,
+          "pbr": 2.8,
+          "roe": 1.2
+        },
+        {
+          "name": "엔씨소프트",
+          "stockCode": "036570",
+          "currentPrice": 198100,
+          "changeRate": -0.9,
+          "marketCap": 42679,
+          "per": 46.2,
+          "pbr": 1.1,
+          "roe": -1.2
+        },
+        {
+          "name": "안랩",
+          "stockCode": "053800",
+          "currentPrice": 62400,
+          "changeRate": 0.81,
+          "marketCap": 6943,
+          "per": 19.1,
+          "pbr": 1.7,
+          "roe": 3.6
+        }
+      ]
+    },
+    "analystNews": {
+      "analystReports": [],
+      "news": [],
+      "sentimentAnalysis": {
+        "positive": 40,
+        "neutral": 40,
+        "negative": 20,
+        "overallSentiment": "neutral"
+      }
+    },
+    "financialStatements": {
+      "incomeStatement": [
+        {
+          "period": "2025",
+          "revenue": 29151,
+          "costOfGoodsSold": 20405,
+          "grossProfit": 8745,
+          "operatingExpenses": 4372,
+          "operatingIncome": 5216,
+          "netIncome": 4974
+        },
+        {
+          "period": "2024",
+          "revenue": 107377,
+          "costOfGoodsSold": 75163,
+          "grossProfit": 32213,
+          "operatingExpenses": 16106,
+          "operatingIncome": 19793,
+          "netIncome": 19320
+        },
+        {
+          "period": "2023",
+          "revenue": 96706,
+          "costOfGoodsSold": 67694,
+          "grossProfit": 29011,
+          "operatingExpenses": 14505,
+          "operatingIncome": 14888,
+          "netIncome": 9850
+        }
+      ],
+      "balanceSheet": [
+        {
+          "period": "2025",
+          "totalAssets": 393511,
+          "currentAssets": 157404,
+          "totalLiabilities": 114153,
+          "currentLiabilities": 57076,
+          "totalEquity": 279358
+        },
+        {
+          "period": "2024",
+          "totalAssets": 381679,
+          "currentAssets": 152671,
+          "totalLiabilities": 111670,
+          "currentLiabilities": 55835,
+          "totalEquity": 270009
+        },
+        {
+          "period": "2023",
+          "totalAssets": 357378,
+          "currentAssets": 142951,
+          "totalLiabilities": 114998,
+          "currentLiabilities": 57499,
+          "totalEquity": 242380
+        }
+      ],
+      "cashFlow": [
+        {
+          "period": "2025",
+          "operatingCashFlow": 5968,
+          "investingCashFlow": -3980,
+          "financingCashFlow": -1990,
+          "netCashFlow": 497,
+          "freeCashFlow": 3979
+        },
+        {
+          "period": "2024",
+          "operatingCashFlow": 23184,
+          "investingCashFlow": -15456,
+          "financingCashFlow": -7728,
+          "netCashFlow": 1932,
+          "freeCashFlow": 15456
+        },
+        {
+          "period": "2023",
+          "operatingCashFlow": 11820,
+          "investingCashFlow": -7880,
+          "financingCashFlow": -3940,
+          "netCashFlow": 985,
+          "freeCashFlow": 7880
+        }
+      ]
+    },
+    "riskAnalysis": {
+      "volatility": {
+        "daily": 0.018,
+        "weekly": 0.04,
+        "monthly": 0.082,
+        "annual": 0.284,
+        "beta": 1
+      },
+      "financialRisk": {
+        "debtToEquity": 0.41,
+        "interestCoverage": 5,
+        "quickRatio": 1.2,
+        "altmanZScore": 3.5,
+        "riskLevel": "low"
+      },
+      "riskFactors": [
+        {
+          "category": "시장",
+          "description": "연간 변동성 28.4%로 비교적 높은 편이며, 기술·인터넷섹터 민감도로 인해 경기·금리·투심 변화에 따른 주가 급락 가능성이 존재.",
+          "impact": "medium",
+          "probability": "medium"
+        },
+        {
+          "category": "시장",
+          "description": "최근 최대낙폭(MDD) -4.46% 및 최근 거래일 가격대(221,500~226,000원)는 단기내 큰 조정은 제한적임을 시사하나, 중대 악재 발생 시 변동성은 재급증할 수 있음.",
+          "impact": "low",
+          "probability": "medium"
+        },
+        {
+          "category": "재무",
+          "description": "부채비율 41% 및 당좌비율 1.2, Altman Z-Score 3.5는 재무 건전성을 뒷받침. 이자보상배율 5배로 이자지급 여력은 양호하지만 금리 급등 시 부담이 커질 수 있음.",
+          "impact": "medium",
+          "probability": "low"
+        },
+        {
+          "category": "운영/사업",
+          "description": "수익원이 광고·커머스·핀테크 등으로 다변화되어 있으나 핵심 사업의 경쟁 심화(플랫폼·콘텐츠 경쟁)와 사용자 행동 변화는 매출 변동성 요인이 될 수 있음.",
+          "impact": "medium",
+          "probability": "medium"
+        },
+        {
+          "category": "규제/정책",
+          "description": "플랫폼 규제, 개인정보·콘텐츠 규제, 금융서비스(페이·핀테크) 관련 감독 강화 가능성은 사업모델·수익성에 직접적 영향을 줄 수 있음.",
+          "impact": "high",
+          "probability": "medium"
+        },
+        {
+          "category": "유동성/거래",
+          "description": "대형주 특성상 유동성은 양호하나 단기 급락 시 단타성 주문·알고리듬 매매로 변동성이 증폭될 가능성 있음.",
+          "impact": "low",
+          "probability": "medium"
+        }
+      ],
+      "aiAnalysis": {
+        "summary": "NAVER는 연간 변동성(28.4%)이 높은 성장주 특성을 보이지만 최근 단기 낙폭(MDD -4.46%)과 최근 며칠간의 가격 안정성(약 221,500~226,000원)으로 단기 급락 위험은 제한적입니다. 재무 지표(부채비율 41%, 이자보상배율 5배, 당좌비율 1.2, Altman Z-Score 3.5)는 전반적으로 안정적이어서 재무적 파산 위험은 낮습니다.",
+        "score": 40,
+        "recommendations": [
+          "포지션 크기 관리: 전체 포트폴리오 대비 3~5% 내외로 보수적으로 비중을 두고, 시장 상황(특히 기술/인터넷 섹터 변동성)에 따라 조정하세요.",
+          "리스크 관리 도구 활용: 변동성 확대 시 손실을 제한하기 위해 8~12% 범위의 손절(스톱로스)을 설정하거나, 필요 시 풋옵션 또는 섹터-인버스 상품으로 부분 헤지하세요.",
+          "지속적 모니터링: 분기 실적(광고·커머스·핀테크 매출), 규제·개인정보 이슈, 금리 상승이 이자비용·할인율에 미치는 영향 등을 분기별로 점검해 재평가하세요."
+        ]
+      }
+    }
+  }
+}

@@ -40,6 +40,18 @@ export class PriceResponseDto {
 
   @ApiProperty({ description: 'PBR', example: '1.25' })
   pbr: string;
+
+  @ApiProperty({ description: '상장 주수', example: '5969782550' })
+  lstn_stcn?: string;
+
+  @ApiProperty({ description: 'HTS 시가총액', example: '471000000000000' })
+  hts_avls?: string;
+
+  @ApiProperty({ description: '누적 거래량', example: '12345678' })
+  acml_vol?: string;
+
+  @ApiProperty({ description: '누적 거래 대금', example: '987654321000' })
+  acml_tr_pbmn?: string;
 }
 
 export class KisTimeDailyChartRequestDto {
@@ -63,7 +75,7 @@ export class KisTimeDailyChartRequestDto {
   FID_INPUT_ISCD: string;
 
   @ApiProperty({
-    description: '기간 분류 코드(D, W, M)',
+    description: '기간 분류 코드(D: 일, W: 주, M: 월, Y: 년)',
     example: 'D',
     minLength: 1,
     maxLength: 1,
@@ -128,12 +140,11 @@ export class KisTimeDailyChartResponseData {
   output: TimeChartItemDto[];
 }
 
-export class KisTimeDailyChartResponseDto {}
-{
+export class KisTimeDailyChartResponseDto {
   stock: KisTimeDailyChartResponseData;
   index: KisTimeDailyChartResponseData;
-  status: Number;
-  msg: String;
+  status: number;
+  msg: string;
 }
 
 export class KisTimeItemChartResponseData {

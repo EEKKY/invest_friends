@@ -8,6 +8,7 @@ import { SocialModule } from './social/social.module';
 import { KisModule } from './stock/kis/kis.module';
 import { DartModule } from './stock/dart/dart.module';
 import { AgenticaModule } from './stock/agentica/agentica.module';
+import { InvestmentAnalysisModule } from './investment-analysis/investment-analysis.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AgenticaModule } from './stock/agentica/agentica.module';
     SocialModule,
     DartModule,
     AgenticaModule,
+    InvestmentAnalysisModule,
   ],
   controllers: [],
   providers: [],

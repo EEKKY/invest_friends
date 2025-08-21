@@ -40,6 +40,22 @@ export class DartService implements OnModuleInit {
   }
 
   async getCorpCode(): Promise<CorpCodeDto[]> {
+    // DB에서 corp_code 데이터 가져오기
+    const entities = await this.corpCodeRepo.find();
+
+    // Entity를 DTO로 변환
+    const corpList: CorpCodeDto[] = entities.map((entity) => ({
+      corp_code: entity.corp_code,
+      corp_name: entity.corp_name,
+      corp_eng_name: entity.corp_eng_name,
+      stock_code: entity.stock_code || '',
+      modify_date: entity.modify_date,
+    }));
+
+    return corpList;
+  }
+
+  async getCorpCodeFromAPI(): Promise<CorpCodeDto[]> {
     const params = {
       crtfc_key: this.crtfcKey,
     };
@@ -61,6 +77,25 @@ export class DartService implements OnModuleInit {
     const corpList: CorpCodeDto[] = Array.isArray(list) ? list : [list];
 
     return corpList;
+  }
+
+  // 수동으로 corp_code 데이터를 다시 가져오는 메서드
+  async refreshCorpCodes(): Promise<{ message: string; count: number }> {
+    this.logger.log('Refreshing corp_code data...');
+
+    // 기존 데이터 삭제
+    await this.corpCodeRepo.clear();
+    this.logger.log('Cleared existing corp_code data');
+
+    // 새로운 데이터 가져오기
+    await this.fetchAndStoreCorpCode();
+
+    // 새로운 데이터 개수 확인
+    const newCount = await this.corpCodeRepo.count();
+    const message = `Successfully refreshed corp_code data. Total: ${newCount} records`;
+    this.logger.log(message);
+
+    return { message, count: newCount };
   }
 
   async getSingleIndex(
@@ -86,14 +121,23 @@ export class DartService implements OnModuleInit {
   }
 
   async fetchAndStoreCorpCode() {
-    const corpList = await this.getCorpCode();
+    const corpList = await this.getCorpCodeFromAPI();
 
-    const entities = corpList.map((item) => {
+    // 상장회사만 필터링 (stock_code가 있는 회사만)
+    const listedCompanies = corpList.filter((item) => {
+      return (
+        item.stock_code && item.stock_code !== '' && item.stock_code !== 'null'
+      );
+    });
+
+    const entities = listedCompanies.map((item) => {
       const corp = new CorpCode();
-      corp.corp_code = Number(item.corp_code);
+      // corp_code를 8자리 문자열로 변환하여 저장 (앞에 0 패딩)
+      corp.corp_code = String(item.corp_code).padStart(8, '0');
       corp.corp_name = item.corp_name;
       corp.corp_eng_name = item.corp_eng_name ?? '';
-      corp.stock_code = item.stock_code ?? null;
+      // stock_code를 6자리 문자열로 변환하여 저장 (앞에 0 패딩)
+      corp.stock_code = String(item.stock_code).padStart(6, '0');
       corp.modify_date = Number(item.modify_date);
       return corp;
     });
@@ -106,27 +150,66 @@ export class DartService implements OnModuleInit {
       await this.corpCodeRepo.save(batch);
       totalSaved += batch.length;
       this.logger.log(
-        `corp_code 데이터 ${totalSaved}/${entities.length}건 적재 중...`,
+        `상장회사 데이터 ${totalSaved}/${entities.length}건 적재 중...`,
       );
     }
 
-    this.logger.log(`corp_code 데이터 ${entities.length}건 적재 완료!`);
+    this.logger.log(`상장회사 데이터 ${entities.length}건 적재 완료!`);
   }
 
-  async getByCorpCode(corp_code: number) {
-    return this.corpCodeRepo.findOne({ where: { corp_code } });
+  async getByCorpCode(corp_code: string) {
+    // Ensure corp_code is 8 digits
+    const paddedCorpCode = corp_code.padStart(8, '0');
+    return this.corpCodeRepo.findOne({ where: { corp_code: paddedCorpCode } });
   }
 
   async getFinancialStatements(
     query: FinancialDataRequestDto,
   ): Promise<FinancialDataResponseDto> {
     try {
+      // Ensure corp_code is 8 digits (DART API requirement)
+      const paddedCorpCode = query.corpCode.padStart(8, '0');
+
+      // 현재 날짜 기준으로 적절한 보고서 코드 선택
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear();
+      const currentMonth = currentDate.getMonth() + 1; // 0-based to 1-based
+      let requestYear = query.year || currentYear;
+
+      let reprtCode = '11011'; // 기본값: 사업보고서
+
+      // 요청 연도가 현재 연도인 경우, 월별로 적절한 보고서 선택
+      if (requestYear === currentYear) {
+        if (currentMonth <= 3) {
+          // 1-3월: 전년도 사업보고서 사용
+          requestYear = currentYear - 1;
+          reprtCode = '11011';
+        } else if (currentMonth <= 5) {
+          // 4-5월: 1분기 보고서 (3월 말 기준, 5월 중순까지 제출)
+          reprtCode = '11013';
+        } else if (currentMonth <= 8) {
+          // 6-8월: 반기 보고서 (6월 말 기준, 8월 중순까지 제출)
+          reprtCode = '11012';
+        } else if (currentMonth <= 11) {
+          // 9-11월: 3분기 보고서 (9월 말 기준, 11월 중순까지 제출)
+          reprtCode = '11014';
+        } else {
+          // 12월: 3분기 보고서 사용
+          reprtCode = '11014';
+        }
+      }
+      // 요청 연도가 과거 연도인 경우, 사업보고서 사용
+
+      this.logger.log(
+        `Using report code ${reprtCode} for year ${requestYear} (current month: ${currentMonth})`,
+      );
+
       // 재무제표 데이터 가져오기
       const params = {
         crtfc_key: this.crtfcKey,
-        corp_code: query.corpCode,
-        bsns_year: query.year.toString(),
-        reprt_code: '11011', // 사업보고서
+        corp_code: paddedCorpCode,
+        bsns_year: requestYear.toString(),
+        reprt_code: reprtCode,
       };
 
       const { data } = await firstValueFrom(
@@ -155,7 +238,10 @@ export class DartService implements OnModuleInit {
 
       if (processedData.totalEquity > 0) {
         // ROE = 당기순이익 / 자본총계 * 100
-        roe = (processedData.netIncome / processedData.totalEquity) * 100;
+        roe =
+          (Number(processedData.netIncome) /
+            Number(processedData.totalEquity)) *
+          100;
         this.logger.log(
           `ROE calculation: ${processedData.netIncome} / ${processedData.totalEquity} * 100 = ${roe}`,
         );
@@ -163,7 +249,10 @@ export class DartService implements OnModuleInit {
 
       if (processedData.totalAssets > 0) {
         // ROA = 당기순이익 / 자산총계 * 100
-        roa = (processedData.netIncome / processedData.totalAssets) * 100;
+        roa =
+          (Number(processedData.netIncome) /
+            Number(processedData.totalAssets)) *
+          100;
         this.logger.log(
           `ROA calculation: ${processedData.netIncome} / ${processedData.totalAssets} * 100 = ${roa}`,
         );
@@ -184,24 +273,147 @@ export class DartService implements OnModuleInit {
       };
     } catch (error) {
       this.logger.error(`Failed to get financial statements: ${error.message}`);
+      throw error;
+    }
+  }
 
-      // 오류 발생 시 모의 데이터 반환 (개발/테스트용)
-      this.logger.warn('Returning mock financial data due to API error');
+  async getDividendInfo(query: {
+    corpCode: string;
+    year?: number;
+  }): Promise<any> {
+    try {
+      // Ensure corp_code is 8 digits (DART API requirement)
+      const paddedCorpCode = query.corpCode.padStart(8, '0');
+      const currentYear = new Date().getFullYear();
+      const requestYear = query.year || currentYear;
 
-      const mockData = {
-        corpCode: query.corpCode,
-        year: query.year,
-        revenue: 2589355, // 매출액 (억원)
-        operatingProfit: 65670, // 영업이익 (억원)
-        netIncome: 154871, // 당기순이익 (억원)
-        totalAssets: 4559060, // 총자산 (억원)
-        totalEquity: 3636779, // 총자본 (억원)
-        eps: 2594, // EPS (원)
-        roe: 4.26, // ROE (%)
-        roa: 3.4, // ROA (%)
+      // Determine appropriate report code based on current date
+      const currentMonth = new Date().getMonth() + 1;
+      let reprtCode = '11011'; // Default: annual report
+
+      if (requestYear === currentYear) {
+        if (currentMonth <= 3) {
+          // Use previous year's annual report
+          return this.getDividendInfo({
+            corpCode: query.corpCode,
+            year: currentYear - 1,
+          });
+        } else if (currentMonth <= 5) {
+          reprtCode = '11013'; // Q1 report
+        } else if (currentMonth <= 8) {
+          reprtCode = '11012'; // Half-year report
+        } else if (currentMonth <= 11) {
+          reprtCode = '11014'; // Q3 report
+        }
+      }
+
+      const params = {
+        crtfc_key: this.crtfcKey,
+        corp_code: paddedCorpCode,
+        bsns_year: requestYear.toString(),
+        reprt_code: reprtCode,
       };
 
-      return mockData;
+      this.logger.log(
+        `Fetching dividend info for ${paddedCorpCode}, year: ${requestYear}, report: ${reprtCode}`,
+      );
+
+      const { data } = await firstValueFrom(
+        this.httpService.get('https://opendart.fss.or.kr/api/alotMatter.json', {
+          params,
+        }),
+      );
+
+      console.log(data);
+      // Check API response status
+      if (data.status !== '000') {
+        this.logger.warn(`DART Dividend API error: ${data.message}`);
+        throw new Error(`DART API error: ${data.message}`);
+      }
+
+      // Process dividend data
+      const dividendData = data.list || [];
+
+      if (!dividendData || dividendData.length === 0) {
+        this.logger.log('No dividend data found');
+        return {
+          hasDividend: false,
+          dividendPerShare: 0,
+          dividendYield: 0,
+          exDividendDate: null,
+          paymentDate: null,
+          recordDate: null,
+        };
+      }
+
+      // Find specific dividend items
+      const dividendPerShareItem = dividendData.find(
+        (item: any) => 
+          item.se === '주당 현금배당금(원)' && 
+          item.stock_knd === '보통주'
+      );
+
+      const dividendYieldItem = dividendData.find(
+        (item: any) => 
+          item.se === '현금배당수익률(%)' && 
+          item.stock_knd === '보통주'
+      );
+
+      // Helper function to parse numeric values
+      const parseNumericValue = (value: string | undefined | null): number => {
+        if (!value || value === '-' || value === '') {
+          return 0;
+        }
+        return parseFloat(value.replace(/,/g, '')) || 0;
+      };
+
+      // Parse dividend per share
+      let dividendPerShare = {
+        current: 0,
+        previous: 0,
+        twoYearsAgo: 0,
+      };
+      
+      if (dividendPerShareItem) {
+        dividendPerShare = {
+          current: parseNumericValue(dividendPerShareItem.thstrm),
+          previous: parseNumericValue(dividendPerShareItem.frmtrm),
+          twoYearsAgo: parseNumericValue(dividendPerShareItem.lwfr),
+        };
+      }
+
+      // Parse dividend yield
+      let dividendYield = {
+        current: 0,
+        previous: 0,
+        twoYearsAgo: 0,
+      };
+      
+      if (dividendYieldItem) {
+        dividendYield = {
+          current: parseNumericValue(dividendYieldItem.thstrm),
+          previous: parseNumericValue(dividendYieldItem.frmtrm),
+          twoYearsAgo: parseNumericValue(dividendYieldItem.lwfr),
+        };
+      }
+
+      // Get first item for general info
+      const firstItem = dividendData[0];
+
+      return {
+        hasDividend: dividendPerShare.current > 0 || dividendPerShare.previous > 0,
+        corpCode: query.corpCode,
+        corpName: firstItem.corp_name,
+        year: requestYear,
+        dividendPerShare,
+        dividendYield,
+        recordDate: firstItem.stlm_dt,
+        receiptNo: firstItem.rcept_no,
+        rawData: dividendData, // Include all raw data for reference
+      };
+    } catch (error) {
+      this.logger.error(`Failed to get dividend info: ${error.message}`);
+      throw error;
     }
   }
 }

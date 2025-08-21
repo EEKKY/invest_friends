@@ -14,16 +14,18 @@ This is an investment analysis application (invest_friends) with a NestJS backen
 - PostgreSQL with TypeORM
 - JWT authentication with Passport.js (Google, Naver, Kakao OAuth)
 - External APIs: KIS (Korea Investment Securities), DART (Financial Supervisory Service)
+- OpenAI integration via Agentica for natural language processing
 
 **Frontend:**
 
 - React 19 with TypeScript
-- Vite as build tool
-- TailwindCSS for styling
+- Vite as build tool with SWC
+- TailwindCSS v4 (using @tailwindcss/vite plugin)
 - Chart.js (with react-chartjs-2) for data visualization
-- React Router v7 for navigation
+- React Router DOM v7 for navigation
 - Axios for API calls
 - shadcn/ui component library
+- React Hook Form with Zod validation
 
 ## Development Commands
 
@@ -97,6 +99,12 @@ KAKAO_CLIENT_ID=your-kakao-client-id
 KIS_APP_KEY=your-kis-app-key
 KIS_APP_SECRET=your-kis-app-secret
 DART_API_KEY=your-dart-api-key
+OPENAI_API_KEY=your-openai-api-key
+
+# Application
+APP_HOST=http://localhost:3000
+NODE_ENV=development
+PORT=3000
 ```
 
 ## Architecture Overview
@@ -110,15 +118,19 @@ DART_API_KEY=your-dart-api-key
 - `AuthModule` - OAuth authentication strategies (Google, Naver, Kakao)
 - `LoginModule` - JWT-based login/refresh token management
 - `JwtAuthModule` - JWT authentication guards and strategies
-- `ChartModule` - Main stock market data module that imports:
-  - `KisModule` - KIS API integration for real-time stock/index prices
-  - `DartModule` - DART API integration for financial statements and corp codes
+- `SocialModule` - Social OAuth callback handling
+- `KisModule` - KIS API integration for real-time stock/index prices
+- `DartModule` - DART API integration for financial statements and corp codes
+- `AgenticaModule` - AI-powered natural language processing for API interactions
+- `InvestmentAnalysisModule` - Comprehensive investment analysis aggregating data from multiple sources
+- `ChatModule` - Chat functionality for investment discussions
 
 **Key Services:**
 
 - `KisService` - Handles KIS API token management and stock/index price queries
 - `DartService` - Manages corp codes and financial statement data with fallback to mock data
-- `ChartService` - Aggregates data from KIS/DART for frontend consumption
+- `AgenticaService` - Processes natural language queries using OpenAI and converts them to API calls
+- `InvestmentAnalysisService` - Provides comprehensive stock analysis combining KIS, DART, and AI insights
 
 **Database Entities:**
 
@@ -132,16 +144,33 @@ DART_API_KEY=your-dart-api-key
 - `/components/charts/` - Reusable chart components
   - `StockChart` - Individual stock price charts
   - `FinancialChart` - Financial statement visualizations
-  - `IndexChart` - KOSPI/KOSDAQ index charts
   - `ComparisonChart` - Stock vs market index comparison
-- `/pages/charts/` - Main dashboard page combining all charts
+- `/components/investment-analysis/` - Investment analysis components
+  - `StockPriceChart` - Real-time price visualization
+  - `FinancialStatementsView` - Financial data display
+  - `CompanyInfoCard` - Company overview
+  - `InvestmentMetricsCard` - Key investment metrics
+  - `PeerComparisonView` - Competitor analysis
+  - `AnalystNewsView` - News and analyst reports
+- `/components/chat/` - Chat interface components
+  - `ChatArea` - Main chat display
+  - `ChatInput` - Message input interface
+- `/pages/` - Main application pages
+  - `charts/` - Main dashboard page
+  - `investment-analysis/` - Detailed analysis page
+  - `login/`, `login2/` - Authentication pages
+  - `auth/callback` - OAuth callback handler
 - `/services/` - API integration layer
   - `chart/index.ts` - Chart data API calls
   - `auth/index.ts` - Authentication API calls
+  - `investment-analysis/index.ts` - Investment analysis API
+  - `chat/index.ts` - Chat API integration
 
 **State Management:**
 
-- Context API for authentication state
+- Context API for authentication state (`AuthContext`)
+- Chat context for managing chat sessions (`ChatContext`)
+- Common context for shared UI state
 - Local component state for chart data
 
 ## API Integration Notes
@@ -164,7 +193,9 @@ DART_API_KEY=your-dart-api-key
 
 - Backend: Jest for unit tests, Supertest for E2E
 - Frontend: Component testing with React Testing Library (if configured)
-- Run specific backend test: `npm test -- <test-file-name>`
+- Run specific backend test: `pnpm test -- <test-file-name>`
+- Run backend tests with coverage: `pnpm test:cov`
+- Run backend E2E tests: `pnpm test:e2e`
 
 ## Common Development Tasks
 
@@ -192,18 +223,19 @@ Available at `http://localhost:3000/api/v1` in development mode.
 
 ## Project Structure
 
-### Monorepo Setup
+### Project Setup
 
-This project uses pnpm workspaces with the following structure:
+This project consists of two separate applications managed with pnpm:
 
 ```
 invest_friends/
 ├── backend/              # NestJS backend application
 ├── frontend/             # React frontend application
-├── pnpm-workspace.yaml   # Workspace configuration
 ├── Jenkinsfile          # CI/CD pipeline
 └── CLAUDE.md            # This file
 ```
+
+Note: Each directory has its own `pnpm-lock.yaml` and manages dependencies independently.
 
 ### Key Configuration Files
 
@@ -214,10 +246,10 @@ invest_friends/
 - `backend/.prettierrc` - Prettier configuration
 
 **Frontend:**
-- `frontend/vite.config.ts` - Vite build configuration
+- `frontend/vite.config.ts` - Vite build configuration with path aliases
 - `frontend/tsconfig.json` - TypeScript configuration
-- `frontend/tailwind.config.js` - TailwindCSS configuration
 - `frontend/components.json` - shadcn/ui configuration
+- TailwindCSS v4 configured via @tailwindcss/vite plugin
 
 ## Development Workflow
 
@@ -267,3 +299,42 @@ Both KIS and DART services include automatic fallback to mock data when API call
 - `DartService`: Returns sample financial statements
 
 Set `NODE_ENV=development` to enable detailed error logging.
+
+### Frontend API Configuration
+
+The frontend uses axios with interceptors for:
+- Automatic token attachment from localStorage
+- Global error handling with toast notifications
+- Automatic redirect to login on 401 errors
+- Base URL configuration via `VITE_API_BASE_URL` environment variable
+
+### CI/CD Pipeline
+
+Jenkins pipeline (Node.js 24) performs:
+1. pnpm installation globally
+2. Backend: Install dependencies, lint, build, and start
+3. Frontend: Install dependencies, lint, build, and preview
+4. Uses `--frozen-lockfile` to ensure consistent dependencies
+
+## Code Quality Standards
+
+### Backend ESLint Rules
+- **Required**: Explicit function return types and module boundary types
+- **Forbidden**: `any` type usage, empty functions (except arrow functions)
+- **Enforced**: Single quotes, semicolons, max line length 150 chars
+- **Member ordering**: public static → protected static → public instance → protected instance → private instance
+- **Warnings**: Unused variables, console.log, debugger statements
+
+### Prettier Configuration
+- Single quotes
+- Trailing commas in all cases
+
+## Important Notes
+
+- Database synchronization is enabled (`synchronize: true`) - disable in production
+- JWT tokens stored in localStorage (migration to cookies planned)
+- CORS is configured to allow all origins (*) in development
+- Mock data fallback is available for both KIS and DART services when APIs fail
+- Swagger API documentation includes all endpoints with proper tagging
+- Path alias `@` configured in frontend for `src` directory imports
+- TypeORM configured with auto entity loading and connection retry disabled

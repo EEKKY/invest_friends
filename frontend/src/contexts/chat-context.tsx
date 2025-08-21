@@ -3,16 +3,21 @@ import {
   useCallback,
   useTransition,
   useMemo,
+  useContext,
 } from "react";
 import { ChatContext, type Message, type ChatProviderProps } from "./chat-context.types";
 import type { ChatMessage } from "@/types/chat";
 import { chatApi } from "@/services/chat";
+import { useStock } from "./stock-context";
+import { useCommon } from "./common";
 
 const ChatProvider = ({ children }: ChatProviderProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const { setSelectedStock } = useStock();
+  const { canvasMode, handleCanvasMode } = useCommon();
 
   const sendMessage = useCallback(
     async (content: string) => {
@@ -73,12 +78,27 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
         const response = await chatApi.sendMessage(content, chatHistory);
         
         if (response.success) {
+          // Check if stock information was detected
+          if (response.stockInfo) {
+            // Update the selected stock in the global context
+            setSelectedStock(response.stockInfo.code, response.stockInfo.name);
+            
+            // Automatically open canvas when stock is detected
+            if (!canvasMode) {
+              handleCanvasMode();
+            }
+          }
+          
+          // Use the actual message from the backend
+          // The backend already formats the message appropriately
+          
           const aiMessage: Message = {
             id: crypto.randomUUID(),
             type: "ai",
             content: response.message,
             timestamp: new Date(),
             status: "sent",
+            structuredData: response.structuredData, // Store structured data if available
           };
           
           // Update chat history with AI response
@@ -126,7 +146,7 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
         setIsTyping(false);
       }
     },
-    [chatHistory]
+    [chatHistory, canvasMode, handleCanvasMode, setSelectedStock]
   );
 
   const regenerateMessage = useCallback(
@@ -251,3 +271,11 @@ const ChatProvider = ({ children }: ChatProviderProps) => {
 };
 
 export default ChatProvider;
+
+export const useChat = () => {
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error("useChat must be used within a ChatProvider");
+  }
+  return context;
+};

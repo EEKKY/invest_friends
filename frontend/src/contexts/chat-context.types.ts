@@ -8,6 +8,7 @@ export type Message = {
   timestamp: Date;
   isTyping?: boolean;
   status?: "sending" | "sent" | "error";
+  structuredData?: any; // Structured data from backend (investment analysis, etc.)
 };
 
 export type ChatContextType = {

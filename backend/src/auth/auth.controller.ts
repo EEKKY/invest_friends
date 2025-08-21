@@ -12,9 +12,15 @@ import { AuthService } from './auth.service';
 import { AuthEntity } from './entity/auth.entity';
 
 import { Public } from 'src/authguard/jwt.decorator';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExcludeController,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiExcludeController()
 export class AuthController {
   constructor(private readonly service: AuthService) {}
 
