@@ -53,7 +53,6 @@ export const StockChart: React.FC<StockChartProps> = ({ stockCode, companyName }
       formatChartData(data);
     } catch (error) {
       console.error('Failed to fetch chart data:', error);
-      generateMockData();
     } finally {
       setLoading(false);
     }
@@ -61,7 +60,6 @@ export const StockChart: React.FC<StockChartProps> = ({ stockCode, companyName }
 
   const formatChartData = (data: any) => {
     if (!data || !data.output2 || data.output2.length === 0) {
-      generateMockData();
       return;
     }
 
@@ -101,37 +99,6 @@ export const StockChart: React.FC<StockChartProps> = ({ stockCode, companyName }
     });
   };
 
-  const generateMockData = () => {
-    const labels = Array.from({ length: 30 }, (_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (30 - i));
-      return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
-    });
-
-    const prices = Array.from({ length: 30 }, (_, i) => 
-      50000 + Math.random() * 10000 + i * 100
-    );
-
-    const volumes = Array.from({ length: 30 }, () => 
-      Math.floor(Math.random() * 1000000) + 500000
-    );
-
-    const firstPrice = prices[0];
-    const lastPrice = prices[prices.length - 1];
-    const change = lastPrice - firstPrice;
-    const changePercent = (change / firstPrice) * 100;
-
-    setChartData({
-      labels,
-      prices,
-      volumes,
-      highs: prices.map(p => p + Math.random() * 1000),
-      lows: prices.map(p => p - Math.random() * 1000),
-      change,
-      changePercent,
-      currentPrice: lastPrice,
-    });
-  };
 
   if (loading || !chartData) {
     return (

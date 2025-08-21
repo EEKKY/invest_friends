@@ -2,12 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 
-import { AtuhService } from '../src/auth/auth.service';
+import { AuthService } from '../src/auth/auth.service';
 import { AuthEntity } from '../src/auth/entity/auth.entity';
 import { CreateUserInput } from '../src/auth/dto/auth.dto';
 
-describe('AtuhService', () => {
-  let service: AtuhService;
+describe('AuthService', () => {
+  let service: AuthService;
 
   let mockAuthRepository: {
     create: jest.Mock;

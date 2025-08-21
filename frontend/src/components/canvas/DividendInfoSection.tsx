@@ -175,25 +175,15 @@ export const DividendInfoSection: React.FC<DividendInfoSectionProps> = ({ divide
         </div>
 
         {/* Dividend Schedule */}
-        {dividendInfo.schedule && (
+        {dividendInfo.schedule && dividendInfo.schedule.recordDate && (
           <div className="border rounded-lg p-4">
             <div className="flex items-center gap-2 mb-3">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <span className="font-medium">배당 일정</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <span className="text-sm text-muted-foreground">배당락일</span>
-                <p className="font-medium">{formatDate(dividendInfo.schedule.exDividendDate)}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">배당기준일</span>
-                <p className="font-medium">{formatDate(dividendInfo.schedule.recordDate)}</p>
-              </div>
-              <div>
-                <span className="text-sm text-muted-foreground">지급일</span>
-                <p className="font-medium">{formatDate(dividendInfo.schedule.paymentDate)}</p>
-              </div>
+            <div>
+              <span className="text-sm text-muted-foreground">배당기준일</span>
+              <p className="font-medium text-lg mt-1">{formatDate(dividendInfo.schedule.recordDate)}</p>
             </div>
           </div>
         )}

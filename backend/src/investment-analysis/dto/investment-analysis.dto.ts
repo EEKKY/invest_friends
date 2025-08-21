@@ -180,6 +180,8 @@ export class PeerComparisonDto {
   competitors: Array<{
     name: string;
     stockCode: string;
+    currentPrice: number;
+    changeRate: number;
     marketCap: number;
     per: number;
     pbr: number;

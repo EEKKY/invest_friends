@@ -85,16 +85,20 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
     return ((current - previous) / Math.abs(previous)) * 100;
   };
 
-  // Format large numbers
+  // Format large numbers - backend sends values in 억원 units
   const formatValue = (value: number) => {
-    if (Math.abs(value) >= 1000000000000) {
-      return `${(value / 1000000000000).toFixed(1)}조`;
-    } else if (Math.abs(value) >= 100000000) {
-      return `${(value / 100000000).toFixed(0)}억`;
-    } else if (Math.abs(value) >= 10000000) {
-      return `${(value / 10000000).toFixed(1)}천만`;
+    // Backend sends data in 억원 (hundred million won) units
+    // So we need to convert: value * 100,000,000 to get actual won amount
+    const actualValue = value * 100000000; // Convert 억원 to 원
+    
+    if (Math.abs(actualValue) >= 1000000000000) {
+      return `${(actualValue / 1000000000000).toFixed(1)}조`;
+    } else if (Math.abs(actualValue) >= 100000000) {
+      return `${(actualValue / 100000000).toFixed(0)}억`;
+    } else if (Math.abs(actualValue) >= 10000000) {
+      return `${(actualValue / 10000000).toFixed(1)}천만`;
     }
-    return value.toLocaleString();
+    return actualValue.toLocaleString();
   };
 
   // Income Statement Chart Data
@@ -287,10 +291,6 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
 
   // Calculate key metrics
   const latestIncome = incomeData[incomeData.length - 1];
-  const previousIncome = incomeData[incomeData.length - 2];
-  const revenueGrowth = previousIncome 
-    ? calculateGrowth(latestIncome?.revenue || 0, previousIncome.revenue)
-    : 0;
   const profitMargin = latestIncome 
     ? (latestIncome.netIncome / latestIncome.revenue) * 100
     : 0;
@@ -304,12 +304,6 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
               <FileText className="h-5 w-5" />
               재무제표
             </CardTitle>
-            {revenueGrowth !== 0 && (
-              <Badge variant={revenueGrowth > 0 ? "default" : "destructive"}>
-                {revenueGrowth > 0 ? <ArrowUpRight className="h-3 w-3 mr-1" /> : <ArrowDownRight className="h-3 w-3 mr-1" />}
-                {Math.abs(revenueGrowth).toFixed(1)}%
-              </Badge>
-            )}
           </div>
           <div className="flex items-center gap-2">
             <div className="flex bg-gray-100 rounded-lg p-1">
@@ -379,11 +373,6 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
               <p className="text-sm font-bold text-blue-900">
                 {formatValue(latestIncome.revenue)}원
               </p>
-              {previousIncome && (
-                <p className={`text-xs mt-1 ${revenueGrowth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {revenueGrowth >= 0 ? '+' : ''}{revenueGrowth.toFixed(1)}%
-                </p>
-              )}
             </div>
             <div className="bg-green-50 rounded-lg p-3">
               <div className="flex items-center gap-1 text-xs text-green-700 mb-1">
@@ -393,16 +382,6 @@ export const FinancialStatementsChart: React.FC<FinancialStatementsChartProps> =
               <p className="text-sm font-bold text-green-900">
                 {formatValue(latestIncome.operatingIncome)}원
               </p>
-              {previousIncome && (
-                <p className={`text-xs mt-1 ${
-                  calculateGrowth(latestIncome.operatingIncome, previousIncome.operatingIncome) >= 0 
-                    ? 'text-green-600' 
-                    : 'text-red-600'
-                }`}>
-                  {calculateGrowth(latestIncome.operatingIncome, previousIncome.operatingIncome) >= 0 ? '+' : ''}
-                  {calculateGrowth(latestIncome.operatingIncome, previousIncome.operatingIncome).toFixed(1)}%
-                </p>
-              )}
             </div>
             <div className="bg-yellow-50 rounded-lg p-3">
               <div className="flex items-center gap-1 text-xs text-yellow-700 mb-1">

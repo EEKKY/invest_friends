@@ -223,6 +223,13 @@ export const investmentAnalysisService = {
     return response.data;
   },
 
+  async getChartData(stockCode: string, period: 'D' | 'W' | 'M' | 'Y' = 'M'): Promise<ChartData> {
+    const response = await api.get(`/investment-analysis?stockCode=${stockCode}&sections=chart&period=${period}`, {
+      timeout: 30000, // 30 second timeout
+    });
+    return response.data.chartData;
+  },
+
   async getCompany(stockCode: string): Promise<Partial<InvestmentAnalysisResponse>> {
     const response = await api.get(`/investment-analysis?stockCode=${stockCode}&sections=company`, {
       timeout: 30000, // 30 seconds for company info

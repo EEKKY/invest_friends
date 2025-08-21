@@ -74,6 +74,21 @@ export class AgenticaResponseDto {
     example: ['삼성전자 주가 알려줘', '005930 차트 보여줘'],
   })
   examples?: string[];
+
+  @ApiProperty({
+    description: '감지된 주식 정보',
+    required: false,
+    example: {
+      code: '005930',
+      name: '삼성전자',
+      detectedFrom: 'name'
+    },
+  })
+  stockInfo?: {
+    code: string;
+    name: string | null;
+    detectedFrom: string;
+  };
 }
 
 @ApiTags('agentica')

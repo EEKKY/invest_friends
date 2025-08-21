@@ -160,4 +160,48 @@ GPT-4와 자유롭게 대화할 수 있는 채팅 기능입니다.
       dto.chatHistory,
     );
   }
+
+  @Public()
+  @Post('chat/generateSectorAnalysis')
+  @ApiOperation({
+    summary: '섹터 분석 생성',
+    description: `
+특정 섹터에 대한 시장 분석과 전망을 AI가 생성합니다.
+한국 주식시장의 섹터별 현황과 투자 포인트를 제공합니다.
+    `,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        sector: {
+          type: 'string',
+          description: '분석할 섹터명',
+          example: '반도체',
+        },
+      },
+      required: ['sector'],
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: '섹터 분석 생성 성공',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: {
+          type: 'string',
+          example:
+            '반도체 섹터는 AI 수요 증가로 긍정적 전망이 지속되고 있습니다...',
+        },
+      },
+    },
+  })
+  async generateSectorAnalysis(@Body() dto: { sector: string }): Promise<{
+    success: boolean;
+    message: string;
+  }> {
+    return this.ChatService.generateSectorAnalysis(dto.sector);
+  }
 }

@@ -12,6 +12,14 @@ export interface ChatRequest {
 export interface ChatResponse {
   success: boolean;
   message: string;
+  data?: any;
+  error?: string;
+  stockInfo?: {
+    code: string;
+    name: string | null;
+    detectedFrom: string;
+  };
+  structuredData?: any; // Structured data from backend (investment analysis, etc.)
 }
 
 export interface ChatHistoryItem extends ChatMessage {

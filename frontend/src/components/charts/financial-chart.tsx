@@ -45,7 +45,6 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, compan
       formatFinancialData(data);
     } catch (error) {
       console.error('Failed to fetch financial data:', error);
-      generateMockFinancialData();
     } finally {
       setLoading(false);
     }
@@ -53,7 +52,6 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, compan
 
   const formatFinancialData = (data: any) => {
     if (!data || !data.list || data.list.length === 0) {
-      generateMockFinancialData();
       return;
     }
 
@@ -79,16 +77,6 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, compan
     });
   };
 
-  const generateMockFinancialData = () => {
-    setFinancialData({
-      quarters: ['1Q', '2Q', '3Q', '4Q'],
-      revenue: [1000000000, 1100000000, 1200000000, 1300000000],
-      operatingProfit: [100000000, 120000000, 150000000, 180000000],
-      netProfit: [80000000, 95000000, 110000000, 130000000],
-      totalAssets: [5000000000, 5200000000, 5400000000, 5600000000],
-      totalEquity: [3000000000, 3100000000, 3200000000, 3300000000],
-    });
-  };
 
   if (loading || !financialData) {
     return (
@@ -101,10 +89,18 @@ export const FinancialChart: React.FC<FinancialChartProps> = ({ corpCode, compan
   }
 
   const formatValue = (value: number) => {
-    if (value >= 1000000000) {
-      return (value / 1000000000).toFixed(1) + '억';
+    // Backend sends data in 억원 (hundred million won) units
+    // So we need to convert: value * 100,000,000 to get actual won amount
+    const actualValue = value * 100000000; // Convert 억원 to 원
+    
+    if (Math.abs(actualValue) >= 1000000000000) {
+      return `${(actualValue / 1000000000000).toFixed(1)}조`;
+    } else if (Math.abs(actualValue) >= 100000000) {
+      return `${(actualValue / 100000000).toFixed(0)}억`;
+    } else if (Math.abs(actualValue) >= 10000000) {
+      return `${(actualValue / 10000000).toFixed(1)}천만`;
     }
-    return (value / 1000000).toFixed(0) + '백만';
+    return actualValue.toLocaleString();
   };
 
   const incomeChartData = {

@@ -15,6 +15,7 @@ import { CommonProvider } from "@/contexts/common";
 import { AppLeft } from "@/components/layouts/app-left";
 import { UnifiedLoginPage } from "@/pages/login";
 import { AuthProvider } from "@/contexts/auth-provider";
+import { StockProvider } from "@/contexts/stock-context";
 import { AuthCallbackPage } from "@/pages/auth/callback";
 // import { LoginPage2 } from "@/pages/login2/loginpage";
 import SignupPage from "@/pages/auth/signuppage";
@@ -78,7 +79,9 @@ function App() {
   return (
     <AuthProvider>
       <CommonProvider>
-        <AppContent />
+        <StockProvider>
+          <AppContent />
+        </StockProvider>
       </CommonProvider>
     </AuthProvider>
   );

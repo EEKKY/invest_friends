@@ -52,7 +52,6 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ stockCode, com
       formatComparisonData(stockData, indexData);
     } catch (error) {
       console.error('Failed to fetch comparison data:', error);
-      generateMockComparisonData();
     } finally {
       setLoading(false);
     }
@@ -60,7 +59,6 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ stockCode, com
 
   const formatComparisonData = (stockData: any, indexData: any) => {
     if (!stockData?.output2 || !indexData?.output2) {
-      generateMockComparisonData();
       return;
     }
 
@@ -99,29 +97,6 @@ export const ComparisonChart: React.FC<ComparisonChartProps> = ({ stockCode, com
     });
   };
 
-  const generateMockComparisonData = () => {
-    const labels = Array.from({ length: 30 }, (_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() - (30 - i));
-      return `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
-    });
-
-    const stockData = Array.from({ length: 30 }, (_, i) => 
-      (Math.random() - 0.5) * 20 + i * 0.3
-    );
-
-    const indexData = Array.from({ length: 30 }, (_, i) => 
-      (Math.random() - 0.5) * 10 + i * 0.2
-    );
-
-    setChartData({
-      labels,
-      stockData,
-      indexData,
-      stockName: companyName,
-      performance: stockData[stockData.length - 1] - indexData[indexData.length - 1]
-    });
-  };
 
   if (loading || !chartData) {
     return (

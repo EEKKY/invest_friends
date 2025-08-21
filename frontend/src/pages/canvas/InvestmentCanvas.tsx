@@ -16,11 +16,21 @@ import { RiskAnalysisSection } from '@/components/canvas/RiskAnalysisSection';
 import { RefreshCw, Download, AlertCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-export const InvestmentCanvas: React.FC = () => {
+interface InvestmentCanvasProps {
+  stockCode?: string;
+  stockName?: string | null;
+}
+
+export const InvestmentCanvas: React.FC<InvestmentCanvasProps> = ({ 
+  stockCode: propStockCode, 
+  stockName: propStockName 
+}) => {
   const { stockCode: urlStockCode } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   
-  const [stockCode, setStockCode] = useState(urlStockCode || searchParams.get('code') || '005930');
+  const [stockCode, setStockCode] = useState(
+    propStockCode || urlStockCode || searchParams.get('code') || '005930'
+  );
   const [data, setData] = useState<InvestmentAnalysisResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +46,13 @@ export const InvestmentCanvas: React.FC = () => {
     news: false,
     risk: false
   });
+
+  useEffect(() => {
+    // Update stockCode when prop changes
+    if (propStockCode && propStockCode !== stockCode) {
+      setStockCode(propStockCode);
+    }
+  }, [propStockCode]);
 
   useEffect(() => {
     if (stockCode) {
@@ -230,7 +247,9 @@ export const InvestmentCanvas: React.FC = () => {
       {/* Header */}
       <div className="mb-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">투자 분석 캔버스</h1>
+          <h1 className="text-3xl font-bold">
+            {propStockName ? `${propStockName} (${stockCode})` : stockCode} 투자 분석
+          </h1>
           <div className="flex items-center gap-2">
             <Button
               variant="outline"

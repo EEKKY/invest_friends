@@ -238,7 +238,10 @@ export class DartService implements OnModuleInit {
 
       if (processedData.totalEquity > 0) {
         // ROE = 당기순이익 / 자본총계 * 100
-        roe = (processedData.netIncome / processedData.totalEquity) * 100;
+        roe =
+          (Number(processedData.netIncome) /
+            Number(processedData.totalEquity)) *
+          100;
         this.logger.log(
           `ROE calculation: ${processedData.netIncome} / ${processedData.totalEquity} * 100 = ${roe}`,
         );
@@ -246,7 +249,10 @@ export class DartService implements OnModuleInit {
 
       if (processedData.totalAssets > 0) {
         // ROA = 당기순이익 / 자산총계 * 100
-        roa = (processedData.netIncome / processedData.totalAssets) * 100;
+        roa =
+          (Number(processedData.netIncome) /
+            Number(processedData.totalAssets)) *
+          100;
         this.logger.log(
           `ROA calculation: ${processedData.netIncome} / ${processedData.totalAssets} * 100 = ${roa}`,
         );
@@ -267,24 +273,147 @@ export class DartService implements OnModuleInit {
       };
     } catch (error) {
       this.logger.error(`Failed to get financial statements: ${error.message}`);
+      throw error;
+    }
+  }
 
-      // 오류 발생 시 모의 데이터 반환 (개발/테스트용)
-      this.logger.warn('Returning mock financial data due to API error');
+  async getDividendInfo(query: {
+    corpCode: string;
+    year?: number;
+  }): Promise<any> {
+    try {
+      // Ensure corp_code is 8 digits (DART API requirement)
+      const paddedCorpCode = query.corpCode.padStart(8, '0');
+      const currentYear = new Date().getFullYear();
+      const requestYear = query.year || currentYear;
 
-      const mockData = {
-        corpCode: query.corpCode,
-        year: query.year,
-        revenue: 2589355, // 매출액 (억원)
-        operatingProfit: 65670, // 영업이익 (억원)
-        netIncome: 154871, // 당기순이익 (억원)
-        totalAssets: 4559060, // 총자산 (억원)
-        totalEquity: 3636779, // 총자본 (억원)
-        eps: 2594, // EPS (원)
-        roe: 4.26, // ROE (%)
-        roa: 3.4, // ROA (%)
+      // Determine appropriate report code based on current date
+      const currentMonth = new Date().getMonth() + 1;
+      let reprtCode = '11011'; // Default: annual report
+
+      if (requestYear === currentYear) {
+        if (currentMonth <= 3) {
+          // Use previous year's annual report
+          return this.getDividendInfo({
+            corpCode: query.corpCode,
+            year: currentYear - 1,
+          });
+        } else if (currentMonth <= 5) {
+          reprtCode = '11013'; // Q1 report
+        } else if (currentMonth <= 8) {
+          reprtCode = '11012'; // Half-year report
+        } else if (currentMonth <= 11) {
+          reprtCode = '11014'; // Q3 report
+        }
+      }
+
+      const params = {
+        crtfc_key: this.crtfcKey,
+        corp_code: paddedCorpCode,
+        bsns_year: requestYear.toString(),
+        reprt_code: reprtCode,
       };
 
-      return mockData;
+      this.logger.log(
+        `Fetching dividend info for ${paddedCorpCode}, year: ${requestYear}, report: ${reprtCode}`,
+      );
+
+      const { data } = await firstValueFrom(
+        this.httpService.get('https://opendart.fss.or.kr/api/alotMatter.json', {
+          params,
+        }),
+      );
+
+      console.log(data);
+      // Check API response status
+      if (data.status !== '000') {
+        this.logger.warn(`DART Dividend API error: ${data.message}`);
+        throw new Error(`DART API error: ${data.message}`);
+      }
+
+      // Process dividend data
+      const dividendData = data.list || [];
+
+      if (!dividendData || dividendData.length === 0) {
+        this.logger.log('No dividend data found');
+        return {
+          hasDividend: false,
+          dividendPerShare: 0,
+          dividendYield: 0,
+          exDividendDate: null,
+          paymentDate: null,
+          recordDate: null,
+        };
+      }
+
+      // Find specific dividend items
+      const dividendPerShareItem = dividendData.find(
+        (item: any) => 
+          item.se === '주당 현금배당금(원)' && 
+          item.stock_knd === '보통주'
+      );
+
+      const dividendYieldItem = dividendData.find(
+        (item: any) => 
+          item.se === '현금배당수익률(%)' && 
+          item.stock_knd === '보통주'
+      );
+
+      // Helper function to parse numeric values
+      const parseNumericValue = (value: string | undefined | null): number => {
+        if (!value || value === '-' || value === '') {
+          return 0;
+        }
+        return parseFloat(value.replace(/,/g, '')) || 0;
+      };
+
+      // Parse dividend per share
+      let dividendPerShare = {
+        current: 0,
+        previous: 0,
+        twoYearsAgo: 0,
+      };
+      
+      if (dividendPerShareItem) {
+        dividendPerShare = {
+          current: parseNumericValue(dividendPerShareItem.thstrm),
+          previous: parseNumericValue(dividendPerShareItem.frmtrm),
+          twoYearsAgo: parseNumericValue(dividendPerShareItem.lwfr),
+        };
+      }
+
+      // Parse dividend yield
+      let dividendYield = {
+        current: 0,
+        previous: 0,
+        twoYearsAgo: 0,
+      };
+      
+      if (dividendYieldItem) {
+        dividendYield = {
+          current: parseNumericValue(dividendYieldItem.thstrm),
+          previous: parseNumericValue(dividendYieldItem.frmtrm),
+          twoYearsAgo: parseNumericValue(dividendYieldItem.lwfr),
+        };
+      }
+
+      // Get first item for general info
+      const firstItem = dividendData[0];
+
+      return {
+        hasDividend: dividendPerShare.current > 0 || dividendPerShare.previous > 0,
+        corpCode: query.corpCode,
+        corpName: firstItem.corp_name,
+        year: requestYear,
+        dividendPerShare,
+        dividendYield,
+        recordDate: firstItem.stlm_dt,
+        receiptNo: firstItem.rcept_no,
+        rawData: dividendData, // Include all raw data for reference
+      };
+    } catch (error) {
+      this.logger.error(`Failed to get dividend info: ${error.message}`);
+      throw error;
     }
   }
 }

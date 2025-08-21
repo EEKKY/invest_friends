@@ -133,11 +133,16 @@ export class InvestmentAnalysisService {
     period: string,
   ): Promise<ChartDataDto> {
     try {
+      // Convert frontend period format to KIS API format
+      // Frontend sends: 'D', 'W', 'M', 'Y'
+      // KIS API expects: 'D', 'W', 'M', 'Y'
+      const periodCode = period?.toUpperCase() || 'D';
+
       // KIS API로 일별 차트 데이터 가져오기
       const dailyChartResponse = await this.kisService.getDailyChart({
         FID_COND_MRKT_DIV_CODE: 'J',
         FID_INPUT_ISCD: stockCode,
-        FID_PERIOD_DIV_CODE: 'D',
+        FID_PERIOD_DIV_CODE: periodCode as 'D' | 'W' | 'M' | 'Y',
         FID_ORG_ADJ_PRC: '0',
       });
 
@@ -256,8 +261,8 @@ export class InvestmentAnalysisService {
       const bps = this.calculateBPS(financialData, sharesOutstanding);
 
       return {
-        per: eps > 0 ? currentPrice / eps : 0,
-        pbr: bps > 0 ? currentPrice / bps : 0,
+        per: Number(priceData.per),
+        pbr: Number(priceData.pbr),
         roe: financialData.roe || 0,
         eps,
         bps,
@@ -296,7 +301,7 @@ export class InvestmentAnalysisService {
     }
   }
 
-  // 5. 배당 정보 (DART + KIS)
+  // 5. 배당 정보 (DART 배당 API + KIS 현재가)
   private async getDividendInfo(stockCode: string): Promise<DividendInfoDto> {
     try {
       // Get corp code from database
@@ -315,7 +320,12 @@ export class InvestmentAnalysisService {
       });
       const currentPrice = parseFloat(priceData.stck_prpr || '0');
 
-      // Get financial data for dividend info (using last year's data)
+      // Get dividend info from DART API
+      const dividendData = await this.dartService.getDividendInfo({
+        corpCode: corpCodeObj.corp_code,
+      });
+
+      // Get financial data for additional calculations
       const lastYear = new Date().getFullYear() - 1;
       const financialData = await this.dartService
         .getFinancialStatements({
@@ -324,36 +334,76 @@ export class InvestmentAnalysisService {
         })
         .catch(() => null);
 
-      // Calculate dividend info based on available data
-      // Note: OpenDART doesn't directly provide DPS, so we'll estimate
-      // In production, you'd parse the actual business report for dividend info
-      const estimatedDPS = 1500; // This should be fetched from business report
-      const dividendYield =
-        currentPrice > 0 ? (estimatedDPS / currentPrice) * 100 : 0;
-      const payoutRatio =
-        financialData && financialData.eps > 0
-          ? (estimatedDPS / financialData.eps) * 100
-          : 30; // Default payout ratio
+      // Calculate dividend metrics
+      let dividendPerShare = 0;
+      let dividendYield = 0;
+      let payoutRatio = 0;
 
-      // Get historical dividend data (simplified)
+      if (dividendData.hasDividend && dividendData.dividendPerShare) {
+        // Use actual dividend data from DART
+        dividendPerShare = dividendData.dividendPerShare.current || 0;
+        
+        // Use DART's dividend yield if available, otherwise calculate
+        dividendYield = dividendData.dividendYield?.current || 
+          (currentPrice > 0 ? (dividendPerShare / currentPrice) * 100 : 0);
+        
+        payoutRatio =
+          financialData && financialData.eps > 0
+            ? (dividendPerShare / financialData.eps) * 100
+            : 0;
+      }
+
+      // Build historical dividend data
       const history = [];
-      for (let i = 0; i < 3; i++) {
-        const year = lastYear - i;
-        history.push({
-          year: year.toString(),
-          dividendPerShare: Math.floor(estimatedDPS * (1 - i * 0.1)), // Simplified trend
-          dividendYield: Math.round(dividendYield * (1 - i * 0.05) * 10) / 10,
-        });
+      if (dividendData.hasDividend && dividendData.dividendPerShare) {
+        // Current year
+        if (dividendData.dividendPerShare.current > 0) {
+          history.push({
+            year: dividendData.year.toString(),
+            dividendPerShare: dividendData.dividendPerShare.current,
+            dividendYield: dividendData.dividendYield?.current || Math.round(dividendYield * 100) / 100,
+          });
+        }
+        // Previous year
+        if (dividendData.dividendPerShare.previous > 0) {
+          history.push({
+            year: (dividendData.year - 1).toString(),
+            dividendPerShare: dividendData.dividendPerShare.previous,
+            dividendYield: dividendData.dividendYield?.previous || 
+              Math.round((dividendData.dividendPerShare.previous / currentPrice) * 100 * 100) / 100,
+          });
+        }
+        // Two years ago
+        if (dividendData.dividendPerShare.twoYearsAgo > 0) {
+          history.push({
+            year: (dividendData.year - 2).toString(),
+            dividendPerShare: dividendData.dividendPerShare.twoYearsAgo,
+            dividendYield: dividendData.dividendYield?.twoYearsAgo ||
+              Math.round((dividendData.dividendPerShare.twoYearsAgo / currentPrice) * 100 * 100) / 100,
+          });
+        }
+      }
+
+      // If no history from DART, use estimates
+      if (history.length === 0 && dividendPerShare > 0) {
+        for (let i = 0; i < 3; i++) {
+          const year = lastYear - i;
+          history.push({
+            year: year.toString(),
+            dividendPerShare: Math.floor(dividendPerShare * (1 - i * 0.1)),
+            dividendYield: Math.round(dividendYield * (1 - i * 0.05) * 100) / 100,
+          });
+        }
       }
 
       return {
-        dividendPerShare: estimatedDPS,
+        dividendPerShare,
         dividendYield: Math.round(dividendYield * 100) / 100,
         payoutRatio: Math.round(payoutRatio * 10) / 10,
         schedule: {
-          // Korean companies typically pay dividends in Q1 for previous year
+          // Use record date from DART if available
+          recordDate: dividendData.recordDate || `${new Date().getFullYear()}-12-31`,
           exDividendDate: `${new Date().getFullYear()}-12-27`,
-          recordDate: `${new Date().getFullYear()}-12-31`,
           paymentDate: `${new Date().getFullYear() + 1}-04-15`,
         },
         history,
@@ -419,26 +469,21 @@ export class InvestmentAnalysisService {
           }
 
           const currentPrice = parseFloat(priceData.stck_prpr || '0');
+          const changeRate = parseFloat(priceData.prdy_ctrt || '0');
           const marketCap =
             parseFloat(priceData.hts_avls || '0') ||
             currentPrice * parseFloat(priceData.lstn_stcn || '0');
 
           // Calculate metrics
-          const per =
-            financialData && financialData.eps > 0
-              ? currentPrice / financialData.eps
-              : 0;
-          const pbr =
-            financialData &&
-            financialData.totalEquity > 0 &&
-            parseFloat(priceData.lstn_stcn || '0') > 0
-              ? (marketCap * 100000000) / financialData.totalEquity // Convert to same unit
-              : 0;
+          const per = Number(priceData.per);
+          const pbr = Number(priceData.pbr);
           const roe = financialData?.roe || 0;
 
           return {
             stockCode: code,
             name: corpCodeObj?.corp_name || `Company_${code}`,
+            currentPrice,
+            changeRate,
             marketCap,
             per: Math.round(per * 10) / 10,
             pbr: Math.round(pbr * 10) / 10,
@@ -510,6 +555,8 @@ export class InvestmentAnalysisService {
         competitors: peerData.map((s) => ({
           name: s.name,
           stockCode: s.stockCode,
+          currentPrice: s.currentPrice,
+          changeRate: s.changeRate,
           marketCap: Math.round(s.marketCap),
           per: s.per,
           pbr: s.pbr,
@@ -645,7 +692,7 @@ export class InvestmentAnalysisService {
       const priceData = await this.kisService.getDailyChart({
         FID_COND_MRKT_DIV_CODE: 'J',
         FID_INPUT_ISCD: stockCode,
-        FID_PERIOD_DIV_CODE: 'D',
+        FID_PERIOD_DIV_CODE: 'D', // Always use daily for risk analysis calculations
         FID_ORG_ADJ_PRC: '0',
       });
       const stockData = priceData.stock?.output || [];
@@ -1143,18 +1190,7 @@ export class InvestmentAnalysisService {
       this.logger.error(
         `Failed to get company info from APIs: ${error.message}`,
       );
-
-      // Fallback to mock data
-      return {
-        companyName: `Company_${stockCode}`,
-        industry: 'N/A',
-        listingDate: '',
-        marketCap: 0,
-        sharesOutstanding: 0,
-        description: '',
-        ceo: '',
-        website: '',
-      };
+      throw error;
     }
   }
 
@@ -1177,65 +1213,6 @@ export class InvestmentAnalysisService {
     }
   }
 
-  private async getDartDividendInfo(corpCode: string | number): Promise<any> {
-    try {
-      // TODO: Implement DART dividend API call
-      return {
-        dividend_per_share: 1000,
-        dividend_yield: 2.5,
-        payout_ratio: 30,
-        history: [],
-      };
-    } catch (error) {
-      this.logger.error(`Failed to get DART dividend info: ${error.message}`);
-      return {};
-    }
-  }
-
-  private async getAgentDividendSchedule(stockCode: string): Promise<any> {
-    try {
-      // TODO: Implement actual GPT agent call
-      return {
-        schedule: {
-          exDividendDate: '2024-06-01',
-          recordDate: '2024-06-05',
-          paymentDate: '2024-06-30',
-        },
-      };
-    } catch (error) {
-      this.logger.error(
-        `Failed to get agent dividend schedule: ${error.message}`,
-      );
-      return {};
-    }
-  }
-
-  private async getAgentPeerComparison(stockCode: string): Promise<any> {
-    try {
-      // TODO: Implement actual GPT agent call
-      return {
-        industryAverages: {
-          per: 18.5,
-          pbr: 1.5,
-          roe: 10.2,
-          dividendYield: 2.0,
-        },
-        ranking: {
-          byMarketCap: 5,
-          byRevenue: 3,
-          byProfit: 4,
-          totalCompanies: 20,
-        },
-        competitors: [],
-      };
-    } catch (error) {
-      this.logger.error(
-        `Failed to get agent peer comparison: ${error.message}`,
-      );
-      return {};
-    }
-  }
-
   private async getAgentNewsAndReports(stockCode: string): Promise<any> {
     try {
       // TODO: Implement actual GPT agent call
@@ -1253,24 +1230,6 @@ export class InvestmentAnalysisService {
       this.logger.error(
         `Failed to get agent news and reports: ${error.message}`,
       );
-      return {};
-    }
-  }
-
-  private async getAgentRiskAnalysis(
-    stockCode: string,
-    data: any,
-  ): Promise<any> {
-    try {
-      // TODO: Implement actual GPT agent call
-      return {
-        riskFactors: [],
-        summary: 'Moderate risk profile with stable financials',
-        score: 65,
-        recommendations: ['Monitor debt levels', 'Diversify portfolio'],
-      };
-    } catch (error) {
-      this.logger.error(`Failed to get agent risk analysis: ${error.message}`);
       return {};
     }
   }
@@ -1475,6 +1434,8 @@ export class InvestmentAnalysisService {
           6,
           '0',
         ),
+        currentPrice: Math.floor(30000 + Math.random() * 200000),
+        changeRate: Math.round((-5 + Math.random() * 10) * 100) / 100,
         marketCap: Math.floor(500000000000 + Math.random() * 2000000000000),
         per: Math.round((10 + Math.random() * 20) * 10) / 10,
         pbr: Math.round((0.8 + Math.random() * 2) * 10) / 10,
