@@ -55,7 +55,7 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
   chartData: initialData,
   className = ''
 }) => {
-  const [period, setPeriod] = useState<'1D' | '1W' | '1M' | '3M' | '1Y'>('1M');
+  const [period, setPeriod] = useState<'D' | 'W' | 'M' | 'Y'>('M');
   const [chartType, setChartType] = useState<'candle' | 'line' | 'area'>('area');
   const [loading, setLoading] = useState(false);
   const [chartData, setChartData] = useState<ChartData | undefined>(initialData);
@@ -88,11 +88,10 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
     if (sortedData.length === 0) return [];
     
     const periodDays = {
-      '1D': 1,
-      '1W': 7,
-      '1M': 30,
-      '3M': 90,
-      '1Y': 365
+      'D': 1,
+      'W': 7,
+      'M': 30,
+      'Y': 365
     };
     
     const daysToShow = periodDays[period];
@@ -145,9 +144,9 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
     const month = dateStr.substring(4, 6);
     const day = dateStr.substring(6, 8);
     
-    if (period === '1D' || period === '1W') {
+    if (period === 'D' || period === 'W') {
       return `${month}/${day}`;
-    } else if (period === '1Y') {
+    } else if (period === 'Y') {
       return `${year}.${month}`;
     }
     return `${month}/${day}`;
@@ -178,7 +177,7 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
       },
       {
         label: 'MA20',
-        data: filteredData.map((item: any, index: number) => {
+        data: filteredData.map((_: any, index: number) => {
           if (index < 19) return null;
           const sum = filteredData
             .slice(index - 19, index + 1)
@@ -196,7 +195,7 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
       },
       {
         label: 'MA60',
-        data: filteredData.map((item: any, index: number) => {
+        data: filteredData.map((_: any, index: number) => {
           if (index < 59) return null;
           const sum = filteredData
             .slice(index - 59, index + 1)
@@ -278,7 +277,7 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
         cornerRadius: 8,
         titleFont: {
           size: 12,
-          weight: '600',
+          weight: 600,
         },
         bodyFont: {
           size: 12,
@@ -319,7 +318,6 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
         position: 'right',
         grid: {
           color: 'rgba(229, 231, 235, 0.5)',
-          drawBorder: false,
         },
         border: {
           display: false,
@@ -358,7 +356,7 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
         cornerRadius: 8,
         titleFont: {
           size: 12,
-          weight: '600',
+          weight: 600,
         },
         bodyFont: {
           size: 12,
@@ -394,7 +392,6 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
         position: 'right',
         grid: {
           color: 'rgba(229, 231, 235, 0.5)',
-          drawBorder: false,
         },
         border: {
           display: false,
@@ -458,7 +455,7 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
           </div>
           <div className="flex items-center gap-2">
             <div className="flex bg-gray-100 rounded-lg p-1">
-              {(['1D', '1W', '1M', '3M', '1Y'] as const).map((p) => (
+              {(['D', 'W', 'M', 'Y'] as const).map((p) => (
                 <Button
                   key={p}
                   variant={period === p ? 'default' : 'ghost'}
@@ -470,7 +467,7 @@ export const StockPriceVolumeChart: React.FC<StockPriceVolumeChartProps> = ({
                       : 'hover:bg-gray-50'
                   }`}
                 >
-                  {p}
+                  {p === 'D' ? '1일' : p === 'W' ? '1주' : p === 'M' ? '1개월' : '1년'}
                 </Button>
               ))}
             </div>

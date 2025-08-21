@@ -75,7 +75,7 @@ export class KisTimeDailyChartRequestDto {
   FID_INPUT_ISCD: string;
 
   @ApiProperty({
-    description: '기간 분류 코드(D, W, M)',
+    description: '기간 분류 코드(D: 일, W: 주, M: 월, Y: 년)',
     example: 'D',
     minLength: 1,
     maxLength: 1,
