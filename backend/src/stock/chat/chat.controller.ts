@@ -76,6 +76,7 @@ GPT-4와 자유롭게 대화할 수 있는 채팅 기능입니다.
       totalTokens: number;
     };
   }> {
+    console.log('chatting init');
     return this.ChatService.chat(dto.message, dto.context);
   }
 
