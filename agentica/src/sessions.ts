@@ -1,11 +1,11 @@
-import { Agentica } from "@agentica/core";
+import { Agentica, IAgenticaController, IAgenticaProps } from "@agentica/core";
 import OpenAI from "openai";
+import { Model } from "openai/resources/models";
 
-const sessions = new Map<string, Agentica<any>>();
+const sessions = new Map<string, Agentica<"chatgpt">>();
 
-export function getAgent(key: string) {
-  if (!sessions.has(key)) {
-    const agent = new Agentica({
+export function setAgent(key: string, controller: IAgenticaController.IHttp<"chatgpt">) {
+const agent = new Agentica({
       model: "chatgpt",
       vendor: {
         api: new OpenAI({
@@ -14,11 +14,16 @@ export function getAgent(key: string) {
         model: "gpt-4o-mini",
       },
 
-      controllers: [],
+      controllers: [controller],
     });
 
     sessions.set(key, agent);
+}
+
+export function getAgent(key: string) : Agentica<"chatgpt"> | null {
+  if (!sessions.has(key)) {
+    return null;
   }
 
-  return sessions.get(key);
+  return sessions.get(key)!!;
 }
